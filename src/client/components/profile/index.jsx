@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import "./style.scss";
 const ProfileComponent= ({
     user,
@@ -8,7 +8,6 @@ const ProfileComponent= ({
     connection,
     job,
     others,
-    csrfToken,
     post,
     postImpression,
     aboutData,
@@ -26,6 +25,9 @@ const ProfileComponent= ({
     function addNewSkill(){
         skills?.push()
     }
+    // useEffect(()=>{
+
+    // },[])
     return (
         <div className="profileContainer">
             {/* Main Container */}
@@ -134,7 +136,6 @@ const ProfileComponent= ({
                         {/* Apply for Alumni Form (conditionally rendered) */}
                         {usermain?.role === 'student' && !others && (
                             <form className='alumni-submit ms-auto' action="/apply-for-alumni" method="post">
-                                <input type="hidden" name="_csrf" value={csrfToken} />
                                 <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                             </form>
                         )}
@@ -215,7 +216,6 @@ const ProfileComponent= ({
                                         <textarea className="form-control" name="about" rows={3} defaultValue={aboutData !== '' ? aboutData : ''}></textarea>
                                     </div>
                                     <button type="submit" className="btn submitButton" style={{ width: '100%' }}>Add About</button>
-                                    <input type="hidden" name="_csrf" value={csrfToken} />
                                 </form>
                             </div>
                             <div className="modal-footer">
@@ -299,19 +299,19 @@ const ProfileComponent= ({
                                 </div>
                                 <div className="modal-body">
                                     {/* Skill Form */}
-                                    <form>
-                                        <div className="mb-3">
-                                            <label htmlFor="exampleInputEmail1" className="form-label">Skill</label>
-                                            <input type="text" onChange={(e)=>{setNewSkill(e.target.value)}} className="form-control" name="skill" />
-                                        </div>
-                                        <button onClick={()=>{
+                                    <form onSubmit={(e)=>{
+                                            e.preventDefault();
+                                            console.log(skills);
                                             const skill={
                                                 skill:newSkill
                                             }
                                             skills?.push(skill);
-                                            // e.preventDefault();
-                                        }} className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Add Skill</button>
-                                        {/* <input type="hidden" name="_csrf" value={csrfToken} /> */}
+                                        }}>
+                                        <div className="mb-3">
+                                            <label htmlFor="exampleInputEmail1" className="form-label">Skill</label>
+                                            <input type="text" onChange={(e)=>{setNewSkill(e.target.value)}} className="form-control" name="skill" />
+                                        </div>
+                                        <button type="submit"  className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Add Skill</button>
                                     </form>
                                 </div>
                                 <div className="modal-footer">
@@ -367,7 +367,6 @@ const ProfileComponent= ({
                                             <input type="text" className="form-control" name="interest" />
                                         </div>
                                         <button type="submit" className="btn submitButton" style={{ width: '100%' }}>Add Interest</button>
-                                        <input type="hidden" name="_csrf" value={csrfToken} />
                                     </form>
                                 </div>
                                 <div className="modal-footer">
@@ -413,7 +412,6 @@ const ProfileComponent= ({
                                                     </div>
                                                 </div>
                                             </a>
-                                            <input type="hidden" name="_csrf" value={csrfToken} />
                                             <input type="hidden" name="from" value={user?.user} />
                                             <input type="hidden" name="to" value={requser?.user} />
                                             <input type="hidden" name="type" value="MUTUAL" />
