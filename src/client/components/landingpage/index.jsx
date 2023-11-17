@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.scss";
+import { Link } from "react-router-dom";
 
 const Landing = () => {
   return (
@@ -7,9 +8,9 @@ const Landing = () => {
       <nav className="navbar navbar-expand-lg">
         <div className="container custom-container">
           <div className="custom-brand">
-            <a href="#" className="navbar-brand">
+            <Link to="#" className="navbar-brand">
               <img src="/logo/logo.png" alt="mascot" className="logoImg" />
-            </a>
+            </Link>
             <form
               className="d-flex justify-content-center align-items-center form-inline my-2 my-lg-0 form-explore mr-auto"
               role="search"
@@ -62,24 +63,24 @@ const Landing = () => {
                 className="navbar-nav justify-content-end flex-grow-1 pe-3"
                 style={{ gap: "0.5rem" }}
               >
-                <a className="nav-item nav-link" href="/login">
+                <Link className="nav-item nav-link" to="/login">
                   <i className="fa-regular fa-compass"></i> Discover
-                </a>
-                <a className="nav-item nav-link" href="/login">
+                </Link>
+                <Link className="nav-item nav-link" to="/login">
                   <i className="fa-solid fa-user-group"></i> People
-                </a>
-                <a className="nav-item nav-link" href="/login">
+                </Link>
+                <Link className="nav-item nav-link" to="/login">
                   <i className="fa-brands fa-youtube"></i> Learning
-                </a>
-                <a className="nav-item nav-link" href="/login">
+                </Link>
+                <Link className="nav-item nav-link" to="/login">
                   <i className="fa-solid fa-briefcase"></i> Jobs
-                </a>
+                </Link>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <a href="/login">
+                  <Link to="/login">
                     <button type="button" className="btn btn-info">
                       Login
                     </button>
-                  </a>
+                  </Link>
                   {/* <a href="/admin-login">
                     <button type="button" className="btn btn-light">Admin Login</button>
                   </a> */}

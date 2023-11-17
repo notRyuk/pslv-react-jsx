@@ -1,6 +1,7 @@
-import React, { useState,useEffect } from 'react';
 import "./style.scss";
-const ProfileComponent= ({
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
+const ProfileComponent = ({
     user,
     usermain,
     contact,
@@ -22,7 +23,7 @@ const ProfileComponent= ({
     const [showInterestModal, setShowInterestModal] = useState(false);
     const [newSkill, setNewSkill] = useState("");
 
-    function addNewSkill(){
+    function addNewSkill() {
         skills?.push()
     }
     // useEffect(()=>{
@@ -36,9 +37,9 @@ const ProfileComponent= ({
                 <div className="card profileCard-profile">
                     {/* Cover and Edit Button */}
                     <div className="cover"></div>
-                    <a href="/edit-details">
+                    <Link to="/edit-details">
                         <span className="material-symbols-rounded cover-edit">edit</span>
-                    </a>
+                    </Link>
 
                     {/* Profile Information */}
                     <div className="profileInfo">
@@ -61,13 +62,13 @@ const ProfileComponent= ({
 
                             {/* Location Information */}
                             <p className="location-info">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#addressModal" className="linkStyle">
+                                <Link to="#" data-bs-toggle="modal" data-bs-target="#addressModal" className="linkStyle">
                                     Address
-                                </a>
+                                </Link>
                                 <span style={{ fontSize: '15px' }}>•</span>
-                                <a href="#" className="linkStyle" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                <Link to="#" className="linkStyle" data-bs-toggle="modal" data-bs-target="#contactModal">
                                     Contact Info
-                                </a>
+                                </Link>
                             </p>
 
                             <div className={`modal profileModal fade ${showContactModal ? 'show' : ''}`} id="contactModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
@@ -159,7 +160,7 @@ const ProfileComponent= ({
                                 <span className="material-symbols-rounded">description</span>
                             </div>
                             <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                <a href={others ? '#' : '/edit-posts'} className="linkStyle">{post?.length} Posts</a>
+                                <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{post?.length} Posts</Link>
                                 <div style={{ fontSize: '12px' }}>Discover and Edit your post.</div>
                             </div>
                         </div>
@@ -168,7 +169,7 @@ const ProfileComponent= ({
                                 <span className="material-symbols-rounded">bar_chart</span>
                             </div>
                             <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                <a href={others ? '#' : '/edit-posts'} className="linkStyle">{postImpression} Post impressions</a>
+                                <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{postImpression} Post impressions</Link>
                                 <div style={{ fontSize: '12px' }}>Checkout who's engaging with your posts.</div>
                             </div>
                         </div>
@@ -177,7 +178,7 @@ const ProfileComponent= ({
                                 <span className="material-symbols-rounded">group</span>
                             </div>
                             <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                <a href={others ? '#' : '/network'} className="linkStyle">{connection} connections</a>
+                                <Link to={others ? '#' : '/network'} className="linkStyle">{connection} connections</Link>
                                 <div style={{ fontSize: '12px' }}>See Your connections.</div>
                             </div>
                         </div>
@@ -190,9 +191,9 @@ const ProfileComponent= ({
                         <div style={{ fontSize: '22px', fontWeight: 'bold' }}>About</div>
                         {!others &&
                             <div>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle">
+                                <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle">
                                     <span className="material-symbols-rounded about-edit">edit</span>
-                                </a>
+                                </Link>
                             </div>
                         }
                     </div>
@@ -281,9 +282,9 @@ const ProfileComponent= ({
                             {!others && (
                                 <div>
                                     {/* Add Skill Button */}
-                                    <a data-bs-toggle="modal" data-bs-target="#skillModal">
+                                    <Link data-bs-toggle="modal" data-bs-target="#skillModal">
                                         <span className="material-symbols-rounded about-edit">add</span>
-                                    </a>
+                                    </Link>
                                 </div>
                             )}
                         </div>
@@ -299,19 +300,19 @@ const ProfileComponent= ({
                                 </div>
                                 <div className="modal-body">
                                     {/* Skill Form */}
-                                    <form onSubmit={(e)=>{
-                                            e.preventDefault();
-                                            console.log(skills);
-                                            const skill={
-                                                skill:newSkill
-                                            }
-                                            skills?.push(skill);
-                                        }}>
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        console.log(skills);
+                                        const skill = {
+                                            skill: newSkill
+                                        }
+                                        skills?.push(skill);
+                                    }}>
                                         <div className="mb-3">
                                             <label htmlFor="exampleInputEmail1" className="form-label">Skill</label>
-                                            <input type="text" onChange={(e)=>{setNewSkill(e.target.value)}} className="form-control" name="skill" />
+                                            <input type="text" onChange={(e) => { setNewSkill(e.target.value) }} className="form-control" name="skill" />
                                         </div>
-                                        <button type="submit"  className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Add Skill</button>
+                                        <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Add Skill</button>
                                     </form>
                                 </div>
                                 <div className="modal-footer">
@@ -344,9 +345,9 @@ const ProfileComponent= ({
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
                             {!others &&
                                 <div>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#interestModal">
+                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#interestModal">
                                         <span className="material-symbols-rounded about-edit">add</span>
-                                    </a>
+                                    </Link>
                                 </div>
                             }
                         </div>
@@ -403,7 +404,7 @@ const ProfileComponent= ({
                                 {users.map((reqUser, index) => (
                                     <form key={index} action="/api/connection/create" method="post">
                                         <div className="connectSuggestion">
-                                            <a href={`/profile/${requser?.user}`}>
+                                            <Link to={`/profile/${requser?.user}`}>
                                                 <div className="connectProfile">
                                                     <img src={requser?.imageUrl} alt="personImg" />
                                                     <div className="connectInfo">
@@ -411,7 +412,7 @@ const ProfileComponent= ({
                                                         <small>{requser?.bio}</small>
                                                     </div>
                                                 </div>
-                                            </a>
+                                            </Link>
                                             <input type="hidden" name="from" value={user?.user} />
                                             <input type="hidden" name="to" value={requser?.user} />
                                             <input type="hidden" name="type" value="MUTUAL" />

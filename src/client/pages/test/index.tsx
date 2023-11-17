@@ -1,7 +1,9 @@
 import IHead from "@types_/head"
+import React from "react"
+import { Link } from "react-router-dom"
 
 export default function Page() {
-    return <>Head && <a href="/">Index page</a></>
+    return <>Head && <Link to="/">Index page</Link></>
 }
 
 // /test
