@@ -19,22 +19,38 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Navigate } from 'react-router-dom';
 
-export default function SignIn() {
+import { useSelector, useDispatch } from 'react-redux';
+import { updateUserAsync, selectCreatedUser, selectDetailsAdded  } from '../auth/authSlice';
+
+
+export default function Details() {
+  const user = useSelector(selectCreatedUser);
+  const isDetailsAdded = useSelector(selectDetailsAdded)
+  const dispatch = useDispatch();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const firstName = data.get('firstName');
+    const lastName = data.get('lastName');
+    const dob = new Date(data.get('dob'));
+    const phoneNumber = +data.get('phoneNumber');
+    const userBio = data.get('userBio');
+    const profileImageUrl = data.get('profileImageUrl');
+    const newUser = { ...user, detials: { firstName, lastName, dob, phoneNumber, userBio, profileImageUrl } }
+    dispatch(updateUserAsync(newUser))
+    console.log(user);
   };
 
   return (
-      <Container component="main" maxWidth="lg">
+    <>
+      {isDetailsAdded && <Navigate to="/signin" replace={true}></Navigate>}
+      {console.log(`${'details' in user}`)}
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
-          className = {classes.box}
+          className={classes.box}
           sx={{
             marginTop: 8,
             display: 'flex',
@@ -50,182 +66,164 @@ export default function SignIn() {
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2, color: 'white' }}>
             <Stack direction={'row'} spacing={8}>
-            <Box sx={{bgcolor: 'primary.dark', padding: '1rem', borderRadius:'10px', boxShadow: '-4px 4px 5px 1px black'}}>
-            <Stack direction={'column'}>
-            <Typography component="h1" variant="h5">
-            Personal Details
-          </Typography>
-            <Stack sx={{mt:2}} direction={'row'} spacing={2}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="firstName"
-              label="First Name"
-              name="firstName"
-              autoComplete="firstName"
-              autoFocus
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="lastName"
-              label="Last Name"
-              id="lastName"
-              autoComplete="lastName"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            </Stack>
-            <Stack sx={{mt: 2}} direction={'row'} spacing={2}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="dob"
-              label="Date of Birth"
-              id="dob"
-              autoComplete="dob"
-              type="date"
-              InputLabelProps={{shrink: true}}
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="phoneNumber"
-              label="Phone Number"
-              id="phoneNumber"
-              autoComplete="phoneNumber"
-              type="number"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            </Stack>
-            <Stack sx={{mt: 2}} direction={'row'} spacing={2}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="instituteName"
-              label="Institute Name"
-              id="instituteName"
-              autoComplete="instituteName"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            </Stack>
-            <Stack sx={{mt: 2}} direction={'row'} spacing={2}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="joiningYear"
-              label="Joining Year"
-              id="joiningYear"
-              autoComplete="joiningYear"
-              type="number"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="passingYear"
-              label="Passing Year"
-              id="passingYear"
-              autoComplete="passingYear"
-              type="number"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            </Stack>
-            </Stack>
-            </Box>
-            <Box sx={{bgcolor: 'primary.dark', padding: '1rem', borderRadius:'10px', boxShadow: '-4px 4px 5px 1px black'}}>
+              <Box sx={{ bgcolor: 'primary.dark', padding: '1rem', borderRadius: '10px', boxShadow: '-4px 4px 5px 1px black' }}>
+                <Stack direction={'column'}>
+                  <Typography component="h1" variant="h5">
+                    Personal Details
+                  </Typography>
+                  <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      name="firstName"
+                      autoComplete="firstName"
+                      autoFocus
+                      sx={{
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                          color: "white"
+                        },
+                        "& .MuiInputLabel-outlined.Mui-focused": {
+                          color: "white"
+                        },
+                        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                      }}
+                    />
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="lastName"
+                      label="Last Name"
+                      id="lastName"
+                      autoComplete="lastName"
+                      sx={{
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                          color: "white"
+                        },
+                        "& .MuiInputLabel-outlined.Mui-focused": {
+                          color: "white"
+                        },
+                        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                      }}
+                    />
+                  </Stack>
+                  <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="dob"
+                      label="Date of Birth"
+                      id="dob"
+                      autoComplete="dob"
+                      type="date"
+                      InputLabelProps={{ shrink: true }}
+                      sx={{
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                          color: "white"
+                        },
+                        "& .MuiInputLabel-outlined.Mui-focused": {
+                          color: "white"
+                        },
+                        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                      }}
+                    />
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="phoneNumber"
+                      label="Phone Number"
+                      id="phoneNumber"
+                      autoComplete="phoneNumber"
+                      type="number"
+                      sx={{
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                          color: "white"
+                        },
+                        "& .MuiInputLabel-outlined.Mui-focused": {
+                          color: "white"
+                        },
+                        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                      }}
+                    />
+                  </Stack>
+                  <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="userBio"
+                      label="Write a brief about your bio"
+                      id="userBio"
+                      autoComplete="userBio"
+                      sx={{
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                          color: "white"
+                        },
+                        "& .MuiInputLabel-outlined.Mui-focused": {
+                          color: "white"
+                        },
+                        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                      }}
+                    />
+                  </Stack>
+                  <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="profileImageUrl"
+                      label="Profile Image Url"
+                      id="profileImageUrl"
+                      autoComplete="profileImageUrl"
+                      sx={{
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                          color: "white"
+                        },
+                        "& .MuiInputLabel-outlined.Mui-focused": {
+                          color: "white"
+                        },
+                        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "white"
+                        },
+                      }}
+                    />
+                  </Stack>
+                </Stack>
+              </Box>
+              {/* <Box sx={{bgcolor: 'primary.dark', padding: '1rem', borderRadius:'10px', boxShadow: '-4px 4px 5px 1px black'}}>
             <Stack direction={'column'}>
             <Typography component="h1" variant="h5">
             Address and Bio
@@ -306,10 +304,10 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              name="bio"
+              name="userBio"
               label="Write a brief about your bio"
-              id="bio"
-              autoComplete="bio"
+              id="userBio"
+              autoComplete="userBio"
               sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "white"
               },
@@ -350,16 +348,18 @@ export default function SignIn() {
             />
             </Stack>
             </Stack>
-            </Box>  
+            </Box>   */}
             </Stack>
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, "&.MuiButton-root:hover": {
-                borderColor: '#1565c0',
-                bgcolor: '#1565c0',
-              },}}
+              sx={{
+                mt: 3, mb: 2, "&.MuiButton-root:hover": {
+                  borderColor: '#1565c0',
+                  bgcolor: '#1565c0',
+                },
+              }}
             >
               Submit
             </Button>
@@ -367,5 +367,6 @@ export default function SignIn() {
         </Box>
         {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
+    </>
   );
 }

@@ -54,8 +54,15 @@
       "email": "tusharph1@gmail.com",
       "password": "tushar786@",
       "role": "student",
-      "details": [],
-      "id": 4
+      "id": 4,
+      "detials": {
+        "firstName": "Tushar",
+        "lastName": "Pathak",
+        "dob": "2003-09-09T00:00:00.000Z",
+        "phoneNumber": 7667448297,
+        "userBio": "web Developer",
+        "profileImageUrl": "https://lh3.googleusercontent.com/ogw/AKPQZvxB1iPFhXtEu-HsnX7JphRai6AEdRXo2MFOAvUEeQ=s32-c-mo"
+      }
     }
   ]
 }

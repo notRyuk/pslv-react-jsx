@@ -20,14 +20,14 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormGroup from '@mui/material/FormGroup';
 import classes from "./styles.module.scss";
 
-import { selectLoggedInUser, createUserAsync } from '../authSlice';
+import { selectCreatedUser, createUserAsync } from '../authSlice';
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function SignUp() {
 
   const dispatch = useDispatch();
-  const user = useSelector(selectLoggedInUser);
+  const user = useSelector(selectCreatedUser);
   const [selectedValue, setSelectedValue] = useState('student');
 
   const handleSubmit = (event) => {
@@ -43,7 +43,6 @@ export default function SignUp() {
         email: data.get('email'),
         password: data.get('password'),
         role : selectedValue,
-        details : [],
       })
     );
   };
@@ -53,7 +52,7 @@ export default function SignUp() {
   };
   return (
       <>
-        {user && <Navigate to="/" replace={true}></Navigate>}
+        {user && <Navigate to={`/details`} replace={true}></Navigate>}
         <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -132,13 +131,13 @@ export default function SignUp() {
         checked={selectedValue === 'alumni'}
         onChange={handleChange}
       />
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Radio />}
         label="Admin"
         value="admin"
         checked={selectedValue === 'admin'}
         onChange={handleChange}
-      />
+      /> */}
             <Button
               type="submit"
               fullWidth
