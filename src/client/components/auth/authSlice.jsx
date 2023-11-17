@@ -1,8 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { checkUser, createUser, signOut } from "./authAPI";
+import { updateUser } from "./user/userAPI";
 
 const initialState = {
+  isDetailsAdded:false,
   loggedInUser: null,
+  createdUser:null,
   status: "idle",
   error: null,
 };
@@ -16,14 +19,14 @@ export const createUserAsync = createAsyncThunk(
   }
 );
 
-// export const updateUserAsync = createAsyncThunk(
-//   'user/updateUser',
-//   async (update) => {
-//     const response = await updateUser(update);
-//     // The value we return becomes the `fulfilled` action payload
-//     return response.data;
-//   }
-// );
+export const updateUserAsync = createAsyncThunk(
+  'user/updateUser',
+  async (update) => {
+    const response = await updateUser(update);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
 
 
 export const checkUserAsync = createAsyncThunk(
@@ -55,7 +58,7 @@ export const authSlice = createSlice({
       })
       .addCase(createUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.loggedInUser = action.payload;
+        state.createdUser = action.payload;
       })
       .addCase(checkUserAsync.pending, (state) => {
         state.status = "loading";
@@ -68,13 +71,14 @@ export const authSlice = createSlice({
         state.status = "idle";
         state.error = action.error;
       })
-    //   .addCase(updateUserAsync.pending, (state) => {
-    //     state.status = 'loading';
-    //   })
-    //   .addCase(updateUserAsync.fulfilled, (state, action) => {
-    //     state.status = 'idle';
-    //     state.loggedInUser = action.payload;
-    //   })
+      .addCase(updateUserAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateUserAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.createdUser = action.payload;
+        state.isDetailsAdded = true;
+      })
       .addCase(signOutAsync.pending, (state) => {
         state.status = 'loading';
       })
@@ -86,7 +90,9 @@ export const authSlice = createSlice({
 });
 
 export const selectLoggedInUser = (state) => state.auth.loggedInUser;
+export const selectCreatedUser = (state) => state.auth.createdUser;
 export const selectError = (state) => state.auth.error;
+export const selectDetailsAdded = (state) => state.auth.isDetailsAdded;
 
 // export const { } = authSlice.actions;
 

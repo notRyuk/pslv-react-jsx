@@ -20,7 +20,6 @@ export default interface IUser extends IMongoDocument {
     
     email: string
     phone: string
-    username: string
     password: string
     
     bio?: string

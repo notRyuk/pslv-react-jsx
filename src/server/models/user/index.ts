@@ -40,15 +40,6 @@ const userSchema = new Schema<IUser>({
             message: handler.fieldInvalid("phone")
         }
     },
-    username: {
-        type: String,
-        unique: true,
-        required: handler.fieldRequired("username"),
-        validate: {
-            validator: Validator.username,
-            message: handler.fieldInvalid("username", "Min 4 characters, Starts and ends with an alphabet.")
-        }
-    },
     password: {
         type: String,
         required: handler.fieldRequired("password")
