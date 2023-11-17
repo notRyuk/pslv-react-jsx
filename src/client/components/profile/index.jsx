@@ -24,7 +24,7 @@ const ProfileComponent = ({
     const [showInterestModal, setShowInterestModal] = useState(false);
     const [newSkill, setNewSkill] = useState("");
 
-    function addNewSkill() {
+    function addNewSkill()  {
         skills?.push()
     }
     // useEffect(()=>{
@@ -42,9 +42,9 @@ const ProfileComponent = ({
                     <div className="card profileCard-profile">
                         {/* Cover and Edit Button */}
                         <div className="cover"></div>
-                        <a href="/edit-details">
+                        <Link to="/edit-details">
                             <span className="material-symbols-rounded cover-edit">edit</span>
-                        </a>
+                        </Link>
 
                         {/* Profile Information */}
                         <div className="profileInfo">
@@ -75,6 +75,16 @@ const ProfileComponent = ({
                                         Contact Info
                                     </a>
                                 </p>
+                            {/* Location Information */}
+                            <p className="location-info">
+                                <Link to="#" data-bs-toggle="modal" data-bs-target="#addressModal" className="linkStyle">
+                                    Address
+                                </Link>
+                                <span style={{ fontSize: '15px' }}>•</span>
+                                <Link to="#" className="linkStyle" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                    Contact Info
+                                </Link>
+                            </p>
 
                                 <div className={`modal profileModal fade ${showContactModal ? 'show' : ''}`} id="contactModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
                                     <div className="modal-dialog">
@@ -151,61 +161,61 @@ const ProfileComponent = ({
 
                     {/* Profile Card - Analytics */}
 
-                    <div className="profile-card card">
-                        <div className="analytics-title section-title">
-                            <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Analytics</div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                                <span className="material-symbols-rounded" style={{ fontSize: '15px' }}>visibility</span>
-                                <div style={{ fontSize: '12px' }}>Private for you</div>
+                <div className="profile-card card">
+                    <div className="analytics-title section-title">
+                        <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Analytics</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                            <span className="material-symbols-rounded" style={{ fontSize: '15px' }}>visibility</span>
+                            <div style={{ fontSize: '12px' }}>Private for you</div>
+                        </div>
+                    </div>
+                    <div className="analytics-stats">
+                        <div>
+                            <div>
+                                <span className="material-symbols-rounded">description</span>
+                            </div>
+                            <div style={{ fontSize: '20px', textDecoration: 'none' }}>
+                                <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{post?.length} Posts</Link>
+                                <div style={{ fontSize: '12px' }}>Discover and Edit your post.</div>
                             </div>
                         </div>
-                        <div className="analytics-stats">
+                        <div>
                             <div>
-                                <div>
-                                    <span className="material-symbols-rounded">description</span>
-                                </div>
-                                <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                    <a href={others ? '#' : '/edit-posts'} className="linkStyle">{post?.length} Posts</a>
-                                    <div style={{ fontSize: '12px' }}>Discover and Edit your post.</div>
-                                </div>
+                                <span className="material-symbols-rounded">bar_chart</span>
                             </div>
-                            <div>
-                                <div>
-                                    <span className="material-symbols-rounded">bar_chart</span>
-                                </div>
-                                <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                    <a href={others ? '#' : '/edit-posts'} className="linkStyle">{postImpression} Post impressions</a>
-                                    <div style={{ fontSize: '12px' }}>Checkout who's engaging with your posts.</div>
-                                </div>
+                            <div style={{ fontSize: '20px', textDecoration: 'none' }}>
+                                <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{postImpression} Post impressions</Link>
+                                <div style={{ fontSize: '12px' }}>Checkout who's engaging with your posts.</div>
                             </div>
+                        </div>
+                        <div>
                             <div>
-                                <div>
-                                    <span className="material-symbols-rounded">group</span>
-                                </div>
-                                <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                    <a href={others ? '#' : '/network'} className="linkStyle">{connection} connections</a>
-                                    <div style={{ fontSize: '12px' }}>See Your connections.</div>
-                                </div>
+                                <span className="material-symbols-rounded">group</span>
+                            </div>
+                            <div style={{ fontSize: '20px', textDecoration: 'none' }}>
+                                <Link to={others ? '#' : '/network'} className="linkStyle">{connection} connections</Link>
+                                <div style={{ fontSize: '12px' }}>See Your connections.</div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* Profile Card - About */}
-                    <div className="profile-card card">
-                        <div className="about-title section-title">
-                            <div style={{ fontSize: '22px', fontWeight: 'bold' }}>About</div>
-                            {!others &&
-                                <div>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle">
-                                        <span className="material-symbols-rounded about-edit">edit</span>
-                                    </a>
-                                </div>
-                            }
-                        </div>
-                        <div className="about-description" style={{ fontSize: '20px' }}>
-                            {aboutData !== '' ? aboutData : 'Add About so that people can know you better'}
-                        </div>
+                {/* Profile Card - About */}
+                <div className="profile-card card">
+                    <div className="about-title section-title">
+                        <div style={{ fontSize: '22px', fontWeight: 'bold' }}>About</div>
+                        {!others &&
+                            <div>
+                                <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle">
+                                    <span className="material-symbols-rounded about-edit">edit</span>
+                                </Link>
+                            </div>
+                        }
                     </div>
+                    <div className="about-description" style={{ fontSize: '20px' }}>
+                        {aboutData !== '' ? aboutData : 'Add About so that people can know you better'}
+                    </div>
+                </div>
 
                     {/* About Modal */}
                     <div className={`modal profileModal fade ${showAboutModal ? 'show' : ''}`} id="aboutModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true">
@@ -282,50 +292,50 @@ const ProfileComponent = ({
                             {/* Title Text */}
                             <div className="title-text" style={{ fontSize: '22px', fontWeight: 'bold' }}>Skills</div>
 
-                            {/* Button Container */}
-                            <div className="button-container" style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
-                                {!others && (
-                                    <div>
-                                        {/* Add Skill Button */}
-                                        <a data-bs-toggle="modal" data-bs-target="#skillModal">
-                                            <span className="material-symbols-rounded about-edit">add</span>
-                                        </a>
-                                    </div>
-                                )}
-                            </div>
+                        {/* Button Container */}
+                        <div className="button-container" style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                            {!others && (
+                                <div>
+                                    {/* Add Skill Button */}
+                                    <Link data-bs-toggle="modal" data-bs-target="#skillModal">
+                                        <span className="material-symbols-rounded about-edit">add</span>
+                                    </Link>
+                                </div>
+                            )}
                         </div>
+                    </div>
 
-                        {/* Skills Modal */}
-                        <div className={`modal profileModal fade ${showSkillModal ? 'show' : ''}`} id="skillModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Add a Skill</h5>
-                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        {/* Skill Form */}
-                                        <form onSubmit={(e) => {
-                                            e.preventDefault();
-                                            console.log(skills);
-                                            const skill = {
-                                                skill: newSkill
-                                            }
-                                            skills?.push(skill);
-                                        }}>
-                                            <div className="mb-3">
-                                                <label htmlFor="exampleInputEmail1" className="form-label">Skill</label>
-                                                <input type="text" onChange={(e) => { setNewSkill(e.target.value) }} className="form-control" name="skill" />
-                                            </div>
-                                            <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Add Skill</button>
-                                        </form>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
+                    {/* Skills Modal */}
+                    <div className={`modal profileModal fade ${showSkillModal ? 'show' : ''}`} id="skillModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">Add a Skill</h5>
+                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    {/* Skill Form */}
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        console.log(skills);
+                                        const skill = {
+                                            skill: newSkill
+                                        }
+                                        skills?.push(skill);
+                                    }}>
+                                        <div className="mb-3">
+                                            <label htmlFor="exampleInputEmail1" className="form-label">Skill</label>
+                                            <input type="text" onChange={(e) => { setNewSkill(e.target.value) }} className="form-control" name="skill" />
+                                        </div>
+                                        <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Add Skill</button>
+                                    </form>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
                         {/* Skills Container */}
                         <div className="skill-container">
@@ -343,20 +353,20 @@ const ProfileComponent = ({
                         </div>
                     </div>
 
-                    {/* Profile Card - Interests */}
-                    <div className="profile-card card">
-                        <div className="about-title section-title">
-                            <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Interests</div>
-                            <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
-                                {!others &&
-                                    <div>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#interestModal">
-                                            <span className="material-symbols-rounded about-edit">add</span>
-                                        </a>
-                                    </div>
-                                }
-                            </div>
+                {/* Profile Card - Interests */}
+                <div className="profile-card card">
+                    <div className="about-title section-title">
+                        <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Interests</div>
+                        <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                            {!others &&
+                                <div>
+                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#interestModal">
+                                        <span className="material-symbols-rounded about-edit">add</span>
+                                    </Link>
+                                </div>
+                            }
                         </div>
+                    </div>
 
                         {/* Interests Modal */}
                         <div className={`modal profileModal fade ${showInterestModal ? 'show' : ''}`} id="interestModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
@@ -409,7 +419,7 @@ const ProfileComponent = ({
                                 {users.map((reqUser, index) => (
                                     <form key={index} action="/api/connection/create" method="post">
                                         <div className="connectSuggestion">
-                                            <a href={`/profile/${requser?.user}`}>
+                                            <Link to={`/profile/${requser?.user}`}>
                                                 <div className="connectProfile">
                                                     <img src={requser?.imageUrl} alt="personImg" />
                                                     <div className="connectInfo">
@@ -417,7 +427,7 @@ const ProfileComponent = ({
                                                         <small>{requser?.bio}</small>
                                                     </div>
                                                 </div>
-                                            </a>
+                                            </Link>
                                             <input type="hidden" name="from" value={user?.user} />
                                             <input type="hidden" name="to" value={requser?.user} />
                                             <input type="hidden" name="type" value="MUTUAL" />
