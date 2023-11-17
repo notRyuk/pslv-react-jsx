@@ -38,7 +38,7 @@ export default function Details() {
     const phoneNumber = +data.get('phoneNumber');
     const userBio = data.get('userBio');
     const profileImageUrl = data.get('profileImageUrl');
-    const newUser = { ...user, detials: { firstName, lastName, dob, phoneNumber, userBio, profileImageUrl } }
+    const newUser = { ...user, details: { firstName, lastName, dob, phoneNumber, userBio, profileImageUrl } }
     dispatch(updateUserAsync(newUser))
     console.log(user);
   };

@@ -52,16 +52,16 @@
     },
     {
       "email": "tusharph1@gmail.com",
-      "password": "tushar786@",
+      "password": "123",
       "role": "student",
       "id": 4,
-      "detials": {
+      "details": {
         "firstName": "Tushar",
         "lastName": "Pathak",
         "dob": "2003-09-09T00:00:00.000Z",
         "phoneNumber": 7667448297,
         "userBio": "web Developer",
-        "profileImageUrl": "https://lh3.googleusercontent.com/ogw/AKPQZvxB1iPFhXtEu-HsnX7JphRai6AEdRXo2MFOAvUEeQ=s32-c-mo"
+        "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
       }
     }
   ]

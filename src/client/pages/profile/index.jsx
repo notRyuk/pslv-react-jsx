@@ -10,6 +10,7 @@
 
 import React from 'react'
 import ProfileComponent from '../../components/profile'
+import Protected from '../../components/auth/Protected';
 
 const Index = () => {
   // Mock data for demonstration purposes
@@ -59,7 +60,9 @@ const Index = () => {
 
   return (
     <>
-      <ProfileComponent {...mockProps} />
+      <Protected>
+        <ProfileComponent {...mockProps} />
+      </Protected>
     </>
   );
 };
