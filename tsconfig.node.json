@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@*": ["./src/*"]
+    },
+  },
+  "include": [
+    "vite.config.mts", 
+    "src/main/server.ts", 
+    "config.ts", 
+    "src", 
+    "test.ts",
+    "globals.d.ts"
+  ]
+}
