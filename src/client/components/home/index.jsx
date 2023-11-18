@@ -1,8 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './styles.scss';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectLoggedInUser } from '../auth/authSlice';
+import Footer from '../footer';
+import PostCard from '../cards/PostCard';
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
+    const tempUser = useSelector(selectLoggedInUser);
     return (
         <>
             {role === 'admin' ? (
@@ -16,11 +21,11 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                         <div className="card profileCard">
                             <div className="cover"></div>
                             <div className="profileInfo">
-                                <img src={user.imageUrl} alt="profileImg" className="profileImg" />
+                                <img src={tempUser.details.profileImageUrl} alt="profileImg" className="profileImg" />
                                 <strong className="userName">
-                                    {user.firstname} {user.lastname} <span style={{ textTransform: 'capitalize' }}>({role})</span>
+                                    {tempUser.details.firstName} {tempUser.details.lastName} <span style={{ textTransform: 'capitalize' }}>({tempUser.role})</span>
                                 </strong>
-                                <small className="userProfession">{user.bio}</small>
+                                <small className="userProfession">{tempUser.details.userBio}</small>
                                 <span>{user.institute}</span>
                             </div>
                             <div className="connection">
@@ -71,7 +76,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                         <div className="card">
                             <div className="postBox">
                                 <div className="profileImgPost">
-                                    <img src={user.imageUrl} alt="profileImg" />
+                                    <img src={tempUser.details.profileImageUrl} alt="profileImg" />
                                 </div>
                                 <input type="text" placeholder="Start a post" />
                             </div>
@@ -93,154 +98,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
 
                                                                                             {/* middle container posts */}
 
-                        {posts.length > 0 ? (
-                            posts.map(post => (
-                                <div className="card" key={post.postDetails._id}>
-                                    <div className="userProfile">
-                                        <div className="profileImgPost">
-                                            <img src={post.postDetails.user.imageUrl} alt="profileImg" />
-                                        </div>
-                                        <div className="userInfo">
-                                            <h5>{post.postDetails.user.firstname} {post.postDetails.user.lastname}</h5>
-                                            <p>{post.postDetails.user.bio}</p>
-                                        </div>
-                                    </div>
-                                    <div className="caption">
-                                        <p>{post.postDetails.caption}</p>
-                                    </div>
-                                    {post.postDetails.imageUrl && (
-                                        <div className="imagePost">
-                                            <img src={post.postDetails.imageUrl} alt="post" />
-                                        </div>
-                                    )}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-                                        <div className="specialLink">
-                                            <Link to="#" data-bs-toggle="modal" data-bs-target={`#likeModal${post.postDetails._id}`}>
-                                                {post.postDetails.postResponse.likes.numLikes} Likes
-                                            </Link>
-                                        </div>
-                                    </div>
-
-                                                                                            {/* code for the likeModal */}
-
-                                    <div className="modal fade mt-5" id={`likeModal${post.postDetails._id}`} tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">{post.postDetails.postResponse.likes.numLikes} Likes</h5>
-                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div className="modal-body">
-                                                    <div className="allLikes" style={{ display: 'flex', flexDirection: 'column' }}>
-                                                        {post.userDetails.length > 0 ? (
-                                                            post.userDetails.map(postUser => (
-                                                                <div className="userProfile" key={postUser._id}>
-                                                                    <div className="profileImgPost">
-                                                                        <img src={postUser.imageUrl} alt="profileImg" />
-                                                                    </div>
-                                                                    <div className="userInfo">
-                                                                        <h5>{postUser.firstname} {postUser.lastname}</h5>
-                                                                        <p>{postUser.bio}</p>
-                                                                    </div>
-                                                                </div>
-                                                            ))
-                                                        ) : (
-                                                            <h1>No Likes Yet</h1>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                          
-                                                                        
-                                    <div className="actionBar">
-                                        {/* =======================================================implement like api hit ==================================================*/}
-                                        <form action="/like" method="post">
-                                            <input type="hidden" name="targetPost" value={post.postDetails._id} />
-                                            <input type="hidden" name="postedby" value={post.postDetails.postedby} />
-                                            <button className="linkButton" type="submit">
-                                                <i className="fa-regular fa-thumbs-up"></i> Like
-                                            </button>
-                                        </form>
-                                        {/* =============================================================== end ============================================================ */}
-                                        <div className="specialLink">
-                                            <Link to="#" data-bs-toggle="modal" data-bs-target={`#commentModal${post.postDetails._id}`}>
-                                                <i className="fa-regular fa-comment"></i> Comment
-                                            </Link>
-                                        </div>
-
-                                                                                            {/* code for the commentModal */}
-
-                                        <div className="modal fade mt-5" id={`commentModal${post.postDetails._id}`} tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">Comments</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <div className="allLikes" style={{ display: 'flex', flexDirection: 'column' }}>
-                                                            <div className="postBox">
-                                                                <div className="profileImgPost">
-                                                                    <img src={user.imageUrl} alt="profileImg" />
-                                                                </div>
-
-                                                                {/* =======================================implement api for comment on post=========================================== */}
-
-                                                                <form action="/comment" method="post" style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', width: '100%' }}>
-                                                                    <input type="text" name="comment" placeholder="Add a comment" style={{ border: '1px solid black', width: '100%' }} />
-                                                                    <input type="hidden" name="targetPost" value={post.postDetails._id} />
-                                                                    <input type="hidden" name="postedby" value={post.postDetails.postedby} />
-                                                                    <button type="submit" className="submitButton" style={{ padding: '1rem', borderRadius: '50%' }}><i className="fa-sharp fa-solid fa-paper-plane"></i></button>
-                                                                </form>
-                                                                {/*===================================================== end ===========================================================*/}
-                                                            </div>
-                                                            {post.commentDetails.length > 0 ? (
-                                                                post.commentDetails.map(postUser => (
-                                                                    <div className="userProfile" key={postUser._id}>
-                                                                        <div className="profileImgPost">
-                                                                            <img src={postUser.commentUser.imageUrl} alt="profileImg" />
-                                                                        </div>
-                                                                        <div className="userInfo" style={{ borderRadius: '10px', backgroundColor: 'rgb(231, 231, 231)', padding: '0.25rem 0.5rem', width: '80%' }}>
-                                                                            <h6 style={{ color: 'rgb(129, 129, 129)', margin: '0' }}>{postUser.commentUser.firstname} {postUser.commentUser.lastname}</h6>
-                                                                            <p style={{ color: 'rgb(129, 129, 129)', fontSize: '0.75rem' }}>{postUser.commentUser.bio}</p>
-                                                                            <p style={{ marginTop: '1rem' }}>{postUser.comment}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                ))
-                                                            ) : (
-                                                                <h1>No Comments Yet</h1>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/*================================================ inka kya krna h =========================================*/}
-                                        <form>
-                                            <button className="linkButton" type="submit">
-                                                <i className="fa-sharp fa-solid fa-arrows-rotate"></i> Repost
-                                            </button>
-                                        </form>
-                                        <form>
-                                            <button className="linkButton" type="submit">
-                                                <i className="fa-sharp fa-solid fa-paper-plane"></i> Send
-                                            </button>
-                                        </form>
-                                        {/*===================================================== end ================================================*/}
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <h1 style={{ color: 'white' }}>No Posts Found!</h1>
-                        )}
+                        <PostCard></PostCard>
                     </div>
                     <div className="right-content content">
                         <div className="card">
@@ -264,6 +122,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                                 <Link to="#">Show More</Link>
                             </div>
                         </div>
+                        <Footer></Footer>
                         {/* photo modal */}
                         <div className="modal fade mt-5" id="photoModal" tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
                             <div className="modal-dialog">

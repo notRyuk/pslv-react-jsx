@@ -1,5 +1,6 @@
 import React from 'react';
 import HomeComponent from '../../components/home';
+import Protected from '../../components/auth/Protected'
 
 const IndexPage = () => {
   // Demo data (replace this with your actual data)
@@ -75,7 +76,8 @@ const IndexPage = () => {
   };
 
   return (
-    <HomeComponent
+    <Protected>
+      <HomeComponent
       role={demoData.role}
       user={demoData.user}
       connection={demoData.connection}
@@ -83,6 +85,7 @@ const IndexPage = () => {
       users={demoData.users}
       posts={demoData.posts}
     />
+    </Protected>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { selectLoggedInUser } from '../auth/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import "./style.scss";
 const ProfileComponent = ({
     user,
@@ -65,16 +66,6 @@ const ProfileComponent = ({
                                 {/* Personal Description */}
                                 <p className="personalDescription">{tempUser.details.userBio}</p>
 
-                                {/* Location Information */}
-                                <p className="location-info">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#addressModal" className="linkStyle">
-                                        Address
-                                    </a>
-                                    <span style={{ fontSize: '15px' }}>•</span>
-                                    <a href="#" className="linkStyle" data-bs-toggle="modal" data-bs-target="#contactModal">
-                                        Contact Info
-                                    </a>
-                                </p>
                             {/* Location Information */}
                             <p className="location-info">
                                 <Link to="#" data-bs-toggle="modal" data-bs-target="#addressModal" className="linkStyle">
