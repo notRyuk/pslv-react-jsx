@@ -8,7 +8,7 @@ export default interface IPost extends IMongoDocument {
     user: IMongoDocument["_id"]|IUser
     content: {
         text: string
-        media?: string[]
+        media?: string
     }
     createdAt: Time
     institute?: IMongoDocument["_id"]|IInstitute

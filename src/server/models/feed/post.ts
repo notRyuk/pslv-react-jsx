@@ -18,8 +18,8 @@ const postSchema = new Schema<IPost>({
                 required: handler.fieldRequired("content.text")
             },
             media: {
-                type: [String],
-                default: []
+                type: String,
+                default: ""
             }
         },
         required: handler.fieldRequired("content")

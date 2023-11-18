@@ -1,27 +1,42 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice'
 
 const PostCard = (props) => {
+    const userId = props.post.user;
+    const status = useSelector(selectUserInfoStatus)
+    const postUser = useSelector(selectUserInfo);
+    const dispatch = useDispatch()
+    useEffect(()=>{
+        dispatch(fetchUserByIdAsync(userId))
+        console.log(userId);
+    },[dispatch,userId]) 
+    if (status === 'loading') {
+        // Handle loading state, e.g., show a loading spinner
+        return <div>Loading...</div>;
+    }
     return (
-        <>
+        <> 
+            {console.log(props.post)}
             <div className="card">
                 <div className="userProfile">
                     <div className="profileImgPost">
                         <img src={''} alt="profileImg" />
                     </div>
                     <div className="userInfo">
-                        <h5>Tushar pathak</h5>
-                        <p>web developer</p>
+                        <h5>{props.post.content.text}</h5>
+                        <p>bio</p>
                     </div>
                 </div>
                 <div className="caption">
-                    <p>post caption</p>
+                    <p>{props.post.content.text}</p>
                 </div>
-                {/* {post.postDetails.imageUrl && ( */}
+                {props.post.content.media.length!==0 && (
                 <div className="imagePost">
-                    <img src={''} alt="post" />
+                    <img src={props.post.content.media} alt="post" />
                 </div>
-                {/* )} */}
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                     <div className="specialLink">
                         <Link to="#" data-bs-toggle="modal" data-bs-target={`#likeModal${'id'}`}>

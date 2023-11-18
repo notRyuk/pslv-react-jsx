@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './styles.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectLoggedInUser } from '../auth/authSlice';
 import Footer from '../footer';
-import PostCard from '../cards/PostCard';
+import PostCard from '../posts/PostCard';
+import PostOptions from '../posts/PostOptions';
+import { fetchAllPostsAsync, selectAllPosts, selectPostListStatus } from '../posts/postSlice';
+// import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
+    // const [tempPosts,setTempPosts] = useState([])
+    const dispatch = useDispatch()
     const tempUser = useSelector(selectLoggedInUser);
+    const tempPosts = useSelector(selectAllPosts);
+    const status = useSelector(selectPostListStatus);
+
+
+    useEffect(() => {
+        // console.log(tempPosts);
+        dispatch(fetchAllPostsAsync())
+    }, [dispatch])
+    if (status === 'loading') {
+        // Handle loading state, e.g., show a loading spinner
+        return <div>Loading...</div>;
+    }
     return (
         <>
             {role === 'admin' ? (
@@ -15,7 +32,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
             ) : (
                 <main className="mainContainer">
 
-                                                                                    {/* left profile container  */}
+                    {/* left profile container  */}
 
                     <div className="left-content content">
                         <div className="card profileCard">
@@ -37,13 +54,13 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                             </div>
                         </div>
 
-                                                                                    {/* left connect container */}
+                        {/* left connect container */}
 
                         <div className="card left-group">
                             <h5>Connect with more people.....</h5>
                             {users.map((reqUser) => (
 
-                                
+
                                 // ===================================================make the api hit for connecting with people========================================================
                                 <form action="/api/connection/create" method="post" key={reqUser.user}>
                                     <div className="connectSuggestion">
@@ -70,35 +87,17 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                         </div>
                     </div>
 
-                                                                                            {/* middle container header */}
+                    {/* middle container header */}
 
                     <div className="center-content content">
-                        <div className="card">
-                            <div className="postBox">
-                                <div className="profileImgPost">
-                                    <img src={tempUser.details.profileImageUrl} alt="profileImg" />
-                                </div>
-                                <input type="text" placeholder="Start a post" />
-                            </div>
-                            <div className="buttonBox">
-                                <div className="specialLink">
-                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#photoModal"><i className="fa-regular fa-image"></i> Photo</Link>
-                                </div>
-                                <div className="specialLink">
-                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i className="fa-brands fa-youtube"></i> Video</Link>
-                                </div>
-                                <div className="specialLink">
-                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i className="fa-regular fa-calendar-days"></i> Event</Link>
-                                </div>
-                                <div className="specialLink">
-                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#articleModal"><i className="fa-regular fa-newspaper"></i> Write an article</Link>
-                                </div>
-                            </div>
-                        </div>
-
-                                                                                            {/* middle container posts */}
-
-                        <PostCard></PostCard>
+                        <PostOptions></PostOptions>
+                        {tempPosts.map((eachPost) => 
+                            <PostCard
+                            key={eachPost.id}
+                            post={eachPost}
+                        />
+                        )}
+                        {console.log(tempPosts)}
                     </div>
                     <div className="right-content content">
                         <div className="card">
@@ -123,59 +122,6 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                             </div>
                         </div>
                         <Footer></Footer>
-                        {/* photo modal */}
-                        <div className="modal fade mt-5" id="photoModal" tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Add a Photo</h5>
-                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        {/*=========================================== photo post api ====================================================== */}
-                                        <form action="/post" method="post">
-                                            <div className="mb-3">
-                                                <label htmlFor="exampleInputEmail1" className="form-label">What's in your mind</label>
-                                                <input type="text" className="form-control" name="caption" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label htmlFor="exampleInputPassword1" className="form-label">Image URL</label>
-                                                <input type="text" className="form-control" name="imageUrl" />
-                                            </div>
-                                            <button type="submit" className="btn submitButton" style={{ width: '100%' }}>Post</button>
-                                        </form>
-                                        {/*================================================= end ==========================================================*/}
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="modal fade mt-5" id="articleModal" tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Write an Article</h5>
-                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        {/*========================================== article post api ========================================================*/}
-                                        <form action="/post" method="post">
-                                            <div className="mb-3">
-                                                <label htmlFor="exampleInputEmail1" className="form-label">What's in your mind</label>
-                                                <textarea className="form-control" name="caption" rows="3"></textarea>
-                                            </div>
-                                            <button type="submit" className="btn submitButton" style={{ width: '100%' }}>Post</button>
-                                        </form>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </main>
             )}
