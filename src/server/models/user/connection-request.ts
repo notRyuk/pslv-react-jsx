@@ -24,7 +24,8 @@ const connectionRequestSchema = new Schema<IConnectionRequest>({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    document: String
 })
 
 const ConnectionRequest = model(Models.connectionRequest, connectionRequestSchema)

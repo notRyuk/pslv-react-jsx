@@ -1,4 +1,3 @@
-alumni approval request me document add krna hai
 interaction me type add krna hai
 
 1) signup ke liye api
