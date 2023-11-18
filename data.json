@@ -13,6 +13,20 @@
         "userBio": "web Developer",
         "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
       }
+    },
+    {
+      "email": "test@gmail.com",
+      "password": "123",
+      "role": "alumni",
+      "id": 2,
+      "details": {
+        "firstName": "Test",
+        "lastName": "Alumni",
+        "dob": "2023-11-15T00:00:00.000Z",
+        "phoneNumber": 1234567890,
+        "userBio": "Tester",
+        "profileImageUrl": "https://img.freepik.com/premium-vector/people-saving-money_24908-51569.jpg"
+      }
     }
   ],
   "posts": [
