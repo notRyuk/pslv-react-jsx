@@ -12,7 +12,7 @@ const PostOptions = () => {
     const handleArticleSubmit = (e) => {
         e.preventDefault();
         const post = {
-            user: tempUser.id,
+            user: tempUser,
             content : {
                 text: postCaption,
                 media:""

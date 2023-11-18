@@ -17,7 +17,20 @@
   ],
   "posts": [
     {
-      "user": 1,
+      "user": {
+        "email": "tusharph1@gmail.com",
+        "password": "123",
+        "role": "student",
+        "id": 1,
+        "details": {
+          "firstName": "Tushar",
+          "lastName": "Pathak",
+          "dob": "2023-11-08T00:00:00.000Z",
+          "phoneNumber": 123456789,
+          "userBio": "web Developer",
+          "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
+        }
+      },
       "content": {
         "text": "Test",
         "media": ""
@@ -25,7 +38,20 @@
       "id": 1
     },
     {
-      "user": 1,
+      "user": {
+        "email": "tusharph1@gmail.com",
+        "password": "123",
+        "role": "student",
+        "id": 1,
+        "details": {
+          "firstName": "Tushar",
+          "lastName": "Pathak",
+          "dob": "2023-11-08T00:00:00.000Z",
+          "phoneNumber": 123456789,
+          "userBio": "web Developer",
+          "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
+        }
+      },
       "content": {
         "text": "Test",
         "media": ""
@@ -33,12 +59,46 @@
       "id": 2
     },
     {
-      "user": 1,
+      "user": {
+        "email": "tusharph1@gmail.com",
+        "password": "123",
+        "role": "student",
+        "id": 1,
+        "details": {
+          "firstName": "Tushar",
+          "lastName": "Pathak",
+          "dob": "2023-11-08T00:00:00.000Z",
+          "phoneNumber": 123456789,
+          "userBio": "web Developer",
+          "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
+        }
+      },
       "content": {
         "text": "Testing for image",
         "media": "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20221222184908/web-development1.png"
       },
       "id": 3
+    },
+    {
+      "user": {
+        "email": "tusharph1@gmail.com",
+        "password": "123",
+        "role": "student",
+        "id": 1,
+        "details": {
+          "firstName": "Tushar",
+          "lastName": "Pathak",
+          "dob": "2023-11-08T00:00:00.000Z",
+          "phoneNumber": 123456789,
+          "userBio": "web Developer",
+          "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
+        }
+      },
+      "content": {
+        "text": "Final test",
+        "media": ""
+      },
+      "id": 4
     }
   ]
 }

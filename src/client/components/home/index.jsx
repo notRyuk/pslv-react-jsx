@@ -97,7 +97,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                             post={eachPost}
                         />
                         )}
-                        {console.log(tempPosts)}
+                        {/* {console.log(tempPosts)} */}
                     </div>
                     <div className="right-content content">
                         <div className="card">
