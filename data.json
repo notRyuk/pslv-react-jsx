@@ -63,6 +63,20 @@
         "userBio": "web Developer",
         "profileImageUrl": "https://lh3.googleusercontent.com/ogw/AKPQZvxB1iPFhXtEu-HsnX7JphRai6AEdRXo2MFOAvUEeQ=s32-c-mo"
       }
+    },
+    {
+      "email": "lakshay@gmail.com",
+      "password": "123",
+      "role": "student",
+      "id": 5,
+      "detials": {
+        "firstName": "Lakshay",
+        "lastName": "Yadav",
+        "dob": "2023-11-08T00:00:00.000Z",
+        "phoneNumber": 1234567,
+        "userBio": "full stack developer",
+        "profileImageUrl": "asfdasd"
+      }
     }
   ]
 }
