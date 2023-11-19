@@ -7,6 +7,8 @@ import Footer from '../footer';
 import PostCard from '../posts/PostCard';
 import PostOptions from '../posts/PostOptions';
 import { fetchAllPostsAsync, selectAllPosts, selectPostListStatus } from '../posts/postSlice';
+import { fetchAllUsersAsync, selectAllUsers, selectUserInfoStatus } from '../auth/user/userSlice';
+import SuggestedUser from '../cards/SuggestedUser';
 // import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
@@ -15,13 +17,19 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
     const tempUser = useSelector(selectLoggedInUser);
     const tempPosts = useSelector(selectAllPosts);
     const status = useSelector(selectPostListStatus);
+    const userInfoStatus = useSelector(selectUserInfoStatus)
+    const allUsers = useSelector(selectAllUsers)
 
 
     useEffect(() => {
-        // console.log(tempPosts);
         dispatch(fetchAllPostsAsync())
     }, [dispatch])
-    if (status === 'loading') {
+
+    useEffect(() => {
+        dispatch(fetchAllUsersAsync())
+    }, [dispatch])
+
+    if (status === 'loading' || userInfoStatus === 'loading') {
         // Handle loading state, e.g., show a loading spinner
         return <div>Loading...</div>;
     }
@@ -38,11 +46,11 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                         <div className="card profileCard">
                             <div className="cover"></div>
                             <div className="profileInfo">
-                                <img src={tempUser.details.profileImageUrl} alt="profileImg" className="profileImg" />
+                                <img src={tempUser?.details.profileImageUrl} alt="profileImg" className="profileImg" />
                                 <strong className="userName">
-                                    {tempUser.details.firstName} {tempUser.details.lastName} <span style={{ textTransform: 'capitalize' }}>({tempUser.role})</span>
+                                    {tempUser?.details.firstName} {tempUser?.details.lastName} <span style={{ textTransform: 'capitalize' }}>({tempUser?.role})</span>
                                 </strong>
-                                <small className="userProfession">{tempUser.details.userBio}</small>
+                                <small className="userProfession">{tempUser?.details.userBio}</small>
                                 <span>{user.institute}</span>
                             </div>
                             <div className="connection">
@@ -50,7 +58,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                                 <small>Connections</small>
                             </div>
                             <div className="specialLink">
-                                <Link to="/profile">My Profile</Link>
+                                <Link to={`/profile/${tempUser?.id}`}>My Profile</Link>
                             </div>
                         </div>
 
@@ -58,29 +66,9 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
 
                         <div className="card left-group">
                             <h5>Connect with more people.....</h5>
-                            {users.map((reqUser) => (
-
-
-                                // ===================================================make the api hit for connecting with people========================================================
-                                <form action="/api/connection/create" method="post" key={reqUser.user}>
-                                    <div className="connectSuggestion">
-                                        <Link to={`/profile/${reqUser.user}`}>
-                                            <div className="connectProfile">
-                                                <img src={reqUser.imageUrl} alt="personImg" />
-                                                <div className="connectInfo">
-                                                    <strong>{reqUser.firstname} {reqUser.lastname}</strong>
-                                                    <small>{reqUser.bio}</small>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                        <input type="hidden" name="from" value={user.user} />
-                                        <input type="hidden" name="to" value={reqUser.user} />
-                                        <input type="hidden" name="type" value="MUTUAL" />
-                                        <button type="submit">Connect</button>
-                                    </div>
-                                </form>
-                                // ================================================================= end =================================================================================
-                            ))}
+                            {allUsers.map((user)=>
+                                    <SuggestedUser key={user.id} user={user}/>
+                                )}
                             <div className="specialLink">
                                 <Link to="/network">Show More</Link>
                             </div>

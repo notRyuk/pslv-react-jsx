@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { selectLoggedInUser } from '../auth/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { fetchUserByIdAsync,selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 import "./style.scss";
 const ProfileComponent = ({
     user,
@@ -28,14 +29,22 @@ const ProfileComponent = ({
     function addNewSkill()  {
         skills?.push()
     }
-    // useEffect(()=>{
-
-    // },[])
+    const params = useParams()
+    // const tempUser = useSelector(selectLoggedInUser)
+    const tempUser = useSelector(selectUserInfo)
+    const status = useSelector(selectUserInfoStatus)
     const dispatch = useDispatch();
-    const tempUser = useSelector(selectLoggedInUser)
+    useEffect(()=>{
+        dispatch(fetchUserByIdAsync(params.id))
+    },[dispatch,params.id])
+    if(status === 'loading'){
+        return <p>Loading....</p>
+    }
     return (
         <>
-            {console.log(tempUser)}
+            {/* {console.log(fetchedUser)} */}
+            {/* {console.log(status)} */}
+            {tempUser !== null && 
             <div className="profileContainer">
                 {/* Main Container */}
                 <div className="container-main">
@@ -51,7 +60,7 @@ const ProfileComponent = ({
                         <div className="profileInfo">
                             <img src={tempUser.details.profileImageUrl} alt="profileImg" className="profileImg" />
                         </div>
-
+                        {/* <p>{fetchedUser.email}</p> */}
                         {/* Profile Details */}
                         <div className="profileDetails w-100">
                             {/* Personal Information */}
@@ -432,6 +441,7 @@ const ProfileComponent = ({
                 </div>
             </div> */}
             </div>
+            }
         </>
     );
 };

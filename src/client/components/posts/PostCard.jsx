@@ -10,19 +10,19 @@ const PostCard = (props) => {
             <div className="card">
                 <div className="userProfile">
                     <div className="profileImgPost">
-                        <img src={props.post.user.details.profileImageUrl} alt="profileImg" />
+                        <img src={props.post?.user.details.profileImageUrl} alt="profileImg" />
                     </div>
                     <div className="userInfo">
-                        <h5>{props.post.user.details.firstName}</h5>
-                        <p>{props.post.user.details.userBio}</p>
+                        <h5>{props.post?.user.details.firstName}</h5>
+                        <p>{props.post?.user.details.userBio}</p>
                     </div>
                 </div>
                 <div className="caption">
-                    <p>{props.post.content.text}</p>
+                    <p>{props.post?.content.text}</p>
                 </div>
-                {props.post.content.media.length!==0 && (
+                {props.post?.content.media.length!==0 && (
                 <div className="imagePost">
-                    <img src={props.post.content.media} alt="post" />
+                    <img src={props.post?.content.media} alt="post" />
                 </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
