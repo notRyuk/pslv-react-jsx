@@ -12,4 +12,5 @@ export default interface IConnectionRequest extends IMongoDocument {
     to: IMongoDocument["_id"]|IUser
     type: ConnectionTypes|string
     createdAt: Time
+    document?: string
 }
