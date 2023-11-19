@@ -1,11 +1,12 @@
 import ResponseHandler from ".";
 
 export class ErrorHandler<T> extends ResponseHandler {
-    model: T
+    model: T|null
     modelName: string
     constructor(modelName: string) {
         super()
         this.modelName = modelName
+        this.model = null 
     }
 
     static fieldRequired = (field: string, model: string): [boolean, string] => [
