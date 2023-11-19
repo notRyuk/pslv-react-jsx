@@ -23,6 +23,9 @@ import WorkIcon from "@mui/icons-material/Work";
 
 import classes from "./styles.module.scss";
 import { Link } from "react-router-dom";
+import { selectLoggedInUser } from "../auth/authSlice";
+import { useSelector } from "react-redux";
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -63,12 +66,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const userNavigation = [
-  { name: 'My Profile', link: '/profile' },
-  { name: 'Sign out', link: '/logout' },
-];
-
 export default function PrimarySearchAppBar() {
+
+  const user = useSelector(selectLoggedInUser)
+  const userNavigation = [
+    { name: 'My Profile', link: `/profile/${user?.id}` },
+    { name: 'Sign out', link: '/logout' },
+  ];
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState(null);
