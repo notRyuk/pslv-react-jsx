@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import avatarImg from "../../assets/images/avatar-default.png"
 
 const NetworkComponent = ({ connectedUsers, requests, suggestions, user, csrfToken }) => {
   return (
@@ -95,7 +96,7 @@ const NetworkComponent = ({ connectedUsers, requests, suggestions, user, csrfTok
               <div className="userProfile networkUserProfile">
                 <div className="profileImgPost">
                   <img
-                    src={request.from.data.imageUrl || "/images/avatar-default.png"}
+                    src={request.from.data.imageUrl || avatarImg}
                     alt="profileImg"
                   />
                 </div>
