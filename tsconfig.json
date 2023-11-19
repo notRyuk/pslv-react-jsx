@@ -25,6 +25,6 @@
       "@*": ["./src/*"]
     },
   },
-  "include": ["src", "vite.config.mts", "test.ts", "globals.d.ts"],
+  "include": ["src", "vite.config.js", "test.ts", "globals.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
