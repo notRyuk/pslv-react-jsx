@@ -50,7 +50,7 @@ export default function SignIn() {
   };
   return (
     <>
-      {user && <Navigate to="/" replace={true}></Navigate>}
+      {user && <Navigate to="/home" replace={true}></Navigate>}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

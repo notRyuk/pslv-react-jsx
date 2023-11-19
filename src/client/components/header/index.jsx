@@ -235,9 +235,12 @@ export default function PrimarySearchAppBar() {
             sx={{ display: { xs: "none", md: "flex" } }}
             className={classes.iconContainer}
           >
-            <IconButton size="large" aria-label="show home" color="inherit">
-              <HomeIcon></HomeIcon>
-            </IconButton>
+            <Link to={'/home'}>
+              <IconButton size="large" aria-label="show home" color="inherit">
+                <HomeIcon></HomeIcon>
+              </IconButton>
+            </Link>
+            <Link to={'/network'}>
             <IconButton
               size="large"
               aria-label="show 4 new connection"
@@ -247,6 +250,8 @@ export default function PrimarySearchAppBar() {
                 <PeopleAltIcon />
               </Badge>
             </IconButton>
+            </Link>
+            <Link to={'/jobs'}>
             <IconButton
               size="large"
               aria-label="show 4 new Jobs"
@@ -256,6 +261,8 @@ export default function PrimarySearchAppBar() {
                 <WorkIcon />
               </Badge>
             </IconButton>
+            </Link>
+            <Link to={'/messages'}>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
@@ -265,6 +272,8 @@ export default function PrimarySearchAppBar() {
                 <MailIcon />
               </Badge>
             </IconButton>
+            </Link>
+            <Link to={'/notifications'}>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
@@ -274,6 +283,7 @@ export default function PrimarySearchAppBar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            </Link>
             <IconButton
               size="large"
               edge="end"

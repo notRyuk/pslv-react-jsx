@@ -1,82 +1,118 @@
 {
   "users": [
     {
-      "email": "test@gmail.com",
-      "password": "12345",
+      "email": "tusharph1@gmail.com",
+      "password": "123",
       "role": "student",
-      "addresses": [
-        {
-          "name": "Abhishek Rathore",
-          "email": "test@gmail.com",
-          "phone": "1234567788",
-          "street": "11th Main",
-          "city": "Banaglore",
-          "state": "Karnataka",
-          "pinCode": "560034"
-        },
-        {
-          "name": "Jack Morris",
-          "email": "jack@gmail.com",
-          "city": "Delhi",
-          "state": "Delhi",
-          "pinCode": "110006",
-          "phone": "12312331232",
-          "street": "12th cross"
+      "id": 1,
+      "details": {
+        "firstName": "Tushar",
+        "lastName": "Pathak",
+        "dob": "2023-11-08T00:00:00.000Z",
+        "phoneNumber": 123456789,
+        "userBio": "web Developer",
+        "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
+      }
+    },
+    {
+      "email": "test@gmail.com",
+      "password": "123",
+      "role": "alumni",
+      "id": 2,
+      "details": {
+        "firstName": "Test",
+        "lastName": "Alumni",
+        "dob": "2023-11-15T00:00:00.000Z",
+        "phoneNumber": 1234567890,
+        "userBio": "Tester",
+        "profileImageUrl": "https://img.freepik.com/premium-vector/people-saving-money_24908-51569.jpg"
+      }
+    }
+  ],
+  "posts": [
+    {
+      "user": {
+        "email": "tusharph1@gmail.com",
+        "password": "123",
+        "role": "student",
+        "id": 1,
+        "details": {
+          "firstName": "Tushar",
+          "lastName": "Pathak",
+          "dob": "2023-11-08T00:00:00.000Z",
+          "phoneNumber": 123456789,
+          "userBio": "web Developer",
+          "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
         }
-      ],
+      },
+      "content": {
+        "text": "Test",
+        "media": ""
+      },
       "id": 1
     },
     {
-      "email": "demo@gmail.com",
-      "password": "12345",
-      "role": "user",
-      "addresses": [
-        {
-          "name": "Demo user",
-          "email": "demo@gmail.com",
-          "phone": "1234567788",
-          "street": "11th Main",
-          "city": "Mumbai",
-          "state": "Maharastra",
-          "pinCode": "220001"
+      "user": {
+        "email": "tusharph1@gmail.com",
+        "password": "123",
+        "role": "student",
+        "id": 1,
+        "details": {
+          "firstName": "Tushar",
+          "lastName": "Pathak",
+          "dob": "2023-11-08T00:00:00.000Z",
+          "phoneNumber": 123456789,
+          "userBio": "web Developer",
+          "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
         }
-      ],
+      },
+      "content": {
+        "text": "Test",
+        "media": ""
+      },
       "id": 2
     },
     {
-      "email": "admin@gmail.com",
-      "password": "12345",
-      "addresses": [],
-      "role": "admin",
+      "user": {
+        "email": "tusharph1@gmail.com",
+        "password": "123",
+        "role": "student",
+        "id": 1,
+        "details": {
+          "firstName": "Tushar",
+          "lastName": "Pathak",
+          "dob": "2023-11-08T00:00:00.000Z",
+          "phoneNumber": 123456789,
+          "userBio": "web Developer",
+          "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
+        }
+      },
+      "content": {
+        "text": "Testing for image",
+        "media": "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20221222184908/web-development1.png"
+      },
       "id": 3
     },
     {
-      "email": "tusharph1@gmail.com",
-      "password": "tushar786@",
-      "role": "student",
-      "id": 4,
-      "detials": {
-        "firstName": "Tushar",
-        "lastName": "Pathak",
-        "dob": "2003-09-09T00:00:00.000Z",
-        "phoneNumber": 7667448297,
-        "userBio": "web Developer",
-        "profileImageUrl": "https://lh3.googleusercontent.com/ogw/AKPQZvxB1iPFhXtEu-HsnX7JphRai6AEdRXo2MFOAvUEeQ=s32-c-mo"
-      }
-    },
-    {
-      "email": "lakshay@gmail.com",
-      "password": "123",
-      "role": "student",
-      "id": 5,
-      "detials": {
-        "firstName": "Lakshay",
-        "lastName": "Yadav",
-        "dob": "2023-11-08T00:00:00.000Z",
-        "phoneNumber": 1234567,
-        "userBio": "full stack developer",
-        "profileImageUrl": "asfdasd"
-      }
+      "user": {
+        "email": "tusharph1@gmail.com",
+        "password": "123",
+        "role": "student",
+        "id": 1,
+        "details": {
+          "firstName": "Tushar",
+          "lastName": "Pathak",
+          "dob": "2023-11-08T00:00:00.000Z",
+          "phoneNumber": 123456789,
+          "userBio": "web Developer",
+          "profileImageUrl": "https://media.licdn.com/dms/image/C4E03AQFvrWS9EkYORA/profile-displayphoto-shrink_400_400/0/1637419784688?e=1705536000&v=beta&t=CptjLQqwtdlA1KRQE592l4pJdFMQo-RM4ZYUoBYBtuE"
+        }
+      },
+      "content": {
+        "text": "Final test",
+        "media": ""
+      },
+      "id": 4
     }
   ]
 }

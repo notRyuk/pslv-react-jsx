@@ -24,7 +24,7 @@ export default function Layout({ children, data }) {
             <main>
                 {children}
             </main>
-            {data.hasFooter && <Footer />}
+            {/* {data.hasFooter && <Footer />} */}
         </>
     )
 }

@@ -1,14 +1,15 @@
 import React from 'react'
-import { selectLoggedInUser } from '@client/components/auth/authSlice'
-import Protected from '@client/components/auth/Protected'
+import Landing from '@client/components/landingpage'
 
 const index = () => {
-  console.log(selectLoggedInUser)
   return (
-    <Protected>
-      <div>index</div>
-    </Protected>
+    <Landing></Landing>
   )
+}
+
+export const layout = {
+  hasFooter: false,
+  hasHeader: false
 }
 
 export default index

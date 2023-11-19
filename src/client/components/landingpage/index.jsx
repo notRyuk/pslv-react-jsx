@@ -76,7 +76,7 @@ const Landing = () => {
                   <i className="fa-solid fa-briefcase"></i> Jobs
                 </Link>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <Link to="/login">
+                  <Link to="/signin">
                     <button type="button" className="btn btn-info">
                       Login
                     </button>

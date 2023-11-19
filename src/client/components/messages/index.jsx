@@ -1,5 +1,6 @@
 import React from 'react';
 import './styles.scss'
+import Footer from '../footer';
 
 const ChatComponent = ({ connectedUsers, user }) => {
   return (
@@ -61,6 +62,9 @@ const ChatComponent = ({ connectedUsers, user }) => {
           </div>
         </div>
       </div>
+      <div className="rightChatContent">
+      <Footer></Footer>
+    </div>
     </main>
   );
 };
