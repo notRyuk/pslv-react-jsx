@@ -4,6 +4,7 @@ export enum Models {
     student = "student",
     alumni = "alumni",
     admin = "admin",
+    session = "session",
 
     institute = "institute",
     course = "institute-courses",

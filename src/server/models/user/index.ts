@@ -1,7 +1,7 @@
 import UserHandler from "@handlers/user"
 import IUser, { ProfileRoles } from "@types_/user"
 import { Models } from "@utils/models"
-import Validator from "@utils/validator"
+import Validator from "@types_/validator"
 import { model, Schema } from "mongoose"
 
 const handler = new UserHandler()

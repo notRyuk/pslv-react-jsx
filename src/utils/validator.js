@@ -1,5 +1,11 @@
 import validator from "validator"
 
+/**
+ * @typedef {Object} Validator
+ * @property {(string) => boolean} email
+ * @property {(string) => boolean} phone
+ * @property {(string) => boolean} username
+ */
 export default class Validator {
     /**
      * 
@@ -21,4 +27,12 @@ export default class Validator {
      * @returns boolean
      */
     static username = (username) => username.match(/^[a-zA-A][a-zA-Z0-9._]{2,}[a-zA-Z]$/)
+
+    /**
+     * 
+     * @param {string} password 
+     * @returns boolean
+     */
+    static password = (password) => password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+
 }

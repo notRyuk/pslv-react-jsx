@@ -1,10 +1,16 @@
 import { config as envConfig } from "dotenv"
 
-envConfig()
+envConfig({
+    path: "config.dev.env"
+})
 
 
-export const DB_URL = process.env.DB_URL
+const $DB_URL = process.env.DB_URL || ""
 
-if (!DB_URL) {
+if (!$DB_URL) {
     console.error("DB_URL not found in env. Please add it")
 }
+
+export const DB_URL = $DB_URL
+export const PORT = +(process.env.PORT || 6969)
+export const JWT_SECRET = process.env.JWT_SECRET || ""
