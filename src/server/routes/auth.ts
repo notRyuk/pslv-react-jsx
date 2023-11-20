@@ -7,6 +7,8 @@ import Hash from "@utils/hash";
 import { getKeys, getValue, getValues } from "@utils/object";
 import { Router } from "express";
 import Multer from "multer";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "@server/config";
 
 const app = Router()
 const multer = Multer()
@@ -56,10 +58,10 @@ app.post("/register", multer.single("profilePhoto"), async (req, res) => {
         }
     }
     user = await user.save()
-    const token = Hash.create(JSON.stringify({
+    const token = jwt.sign({
         user: user._id.toString(),
-        createAt: Date.now()
-    }))
+        createdAt: Date.now()
+    }, JWT_SECRET, {expiresIn: '1d'})
     const session = await Session.create({ user: user._id, token })
     session.user = user
     return res.status(200).send(handler.success(session))

@@ -12,5 +12,5 @@ if (!$DB_URL) {
 }
 
 export const DB_URL = $DB_URL
-
 export const PORT = +(process.env.PORT || 6969)
+export const JWT_SECRET = process.env.JWT_SECRET || ""
