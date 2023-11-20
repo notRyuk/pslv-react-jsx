@@ -23,3 +23,7 @@ export const getValues = (obj: AnyObject, current: string[] = []): any[] => {
     }
     return values
 }
+
+export const getValue = (keys: string[], values: any[], key: string): any => {
+    return values[keys.indexOf(key)]
+}
