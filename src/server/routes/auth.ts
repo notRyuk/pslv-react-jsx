@@ -9,6 +9,7 @@ import Hash from "@utils/hash";
 import { getValue } from "@utils/object";
 import { Router } from "express";
 import jwt from "jsonwebtoken";
+import { MongooseError } from "mongoose";
 import Multer from "multer";
 
 const app = Router()
@@ -41,6 +42,7 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
             bio: getValue(keys, values, "bio")
         })
     } as IUser)
+    await user.validate().catch((err: MongooseError) => console.log(err.message))
     if (req.file && ["image/png", "image/jpeg"].includes(req.file.mimetype)) {
         const file = req.file
         const profilePhoto = await downloadFile("profilePhoto." + file.originalname.split(".").pop(), user._id.toString(), file.buffer)

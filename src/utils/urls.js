@@ -4,7 +4,6 @@ export default {
     auth: {
         register: "/auth/register",
         login: "/auth/login",
-        verify: "/auth/verify",
-        verifyToken: "/auth/verifyToken"
+        verify: "/auth/verify"
     }
 }
