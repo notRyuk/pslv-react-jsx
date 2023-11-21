@@ -42,22 +42,27 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
             bio: getValue(keys, values, "bio")
         })
     } as IUser)
-    await user.validate().catch((err: MongooseError) => console.log(err.message))
-    if (req.file && ["image/png", "image/jpeg"].includes(req.file.mimetype)) {
-        const file = req.file
-        const profilePhoto = await downloadFile("profilePhoto." + file.originalname.split(".").pop(), user._id.toString(), file.buffer)
-        if (profilePhoto) {
-            user.profilePhoto = profilePhoto
+    try {
+        await user.validate()
+        if (req.file && ["image/png", "image/jpeg"].includes(req.file.mimetype)) {
+            const file = req.file
+            const profilePhoto = await downloadFile("profilePhoto." + file.originalname.split(".").pop(), user._id.toString(), file.buffer)
+            if (profilePhoto) {
+                user.profilePhoto = profilePhoto
+            }
         }
+        user = await user.save()
+        const token = jwt.sign({
+            user: user._id.toString(),
+            createdAt: Date.now()
+        }, JWT_SECRET, {expiresIn: JWT_SESSION_TIMEOUT})
+        const session = await Session.create({ user: user._id, token })
+        session.user = user
+        return res.status(200).send(handler.success(session))
     }
-    user = await user.save()
-    const token = jwt.sign({
-        user: user._id.toString(),
-        createdAt: Date.now()
-    }, JWT_SECRET, {expiresIn: JWT_SESSION_TIMEOUT})
-    const session = await Session.create({ user: user._id, token })
-    session.user = user
-    return res.status(200).send(handler.success(session))
+    catch(err: MongooseError|any) {
+        return res.send(handler.error(err.message))
+    }
 })
 
 app.post("/login", verifyBody(["email", "password"], handler), async (_, res) => {
@@ -67,7 +72,7 @@ app.post("/login", verifyBody(["email", "password"], handler), async (_, res) =>
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     if(!Hash.simpleCompare(getValue(keys, values, "password") as string, user.password)) {
-        return res.status(401).send(handler.error("Incorrect a password, try again."))
+        return res.status(401).send(handler.error("Incorrect password, try again."))
     }
     let session = await Session.findOneAndDelete({user: user._id})
     if(!session) {
