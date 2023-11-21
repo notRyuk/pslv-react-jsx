@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import connectedWorldImg from "../../assets/images/connected-world.png"
 
 export default function Footer() {
   return (
@@ -7,7 +8,7 @@ export default function Footer() {
       <div className="card">
         <div className="footer">
           <div className="cardImg">
-            <img src="/images/connected-world.png" alt="" />
+            <img src={connectedWorldImg} alt="" />
           </div>
           <div className="footerContainer">
             <Link to="/about">About</Link>

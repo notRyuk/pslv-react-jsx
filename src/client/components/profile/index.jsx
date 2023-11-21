@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { selectLoggedInUser } from '../auth/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
+import companyImg from "../../assets/images/company.png"
 import { fetchUserByIdAsync,selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 import "./style.scss";
 const ProfileComponent = ({
@@ -252,7 +253,7 @@ const ProfileComponent = ({
                             </div>
                             <div className="experience-container">
                                 <div className="experience-main">
-                                    <img src="/images/company.png" height="100px" width="100px" alt="company-logo" />
+                                    <img src={companyImg} height="100px" width="100px" alt="company-logo" />
                                     <div style={{ fontSize: '12px' }}>
                                         <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
                                             Working at {user?.workplace}

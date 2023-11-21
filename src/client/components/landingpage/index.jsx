@@ -1,6 +1,12 @@
 import React from "react";
 import "./style.scss";
 import { Link } from "react-router-dom";
+import logo from '../../assets/images/logo.png'
+import discussionImg from "../../assets/images/Discussion-amico.png"
+import metricsImg from "../../assets/images/Metrics-amico.png"
+import HelpingPartnerImg from "../../assets/images/Helping a partner-pana.png"
+import WorkingImg from "../../assets/images/Working-amico.png"
+import ProfileDataImg from "../../assets/images/Profile data-amico.png"
 
 const Landing = () => {
   return (
@@ -9,7 +15,7 @@ const Landing = () => {
         <div className="container custom-container">
           <div className="custom-brand">
             <Link to="#" className="navbar-brand">
-              <img src="/logo/logo.png" alt="mascot" className="logoImg" />
+              <img src={logo} alt="mascot" className="logoImg" />
             </Link>
             <form
               className="d-flex justify-content-center align-items-center form-inline my-2 my-lg-0 form-explore mr-auto"
@@ -132,7 +138,7 @@ const Landing = () => {
           </div>
           <div className="imgSide">
             <img
-              src="/images/Discussion-amico.png"
+              src={discussionImg}
               alt="randomImg"
               width="500px"
               height="500px"
@@ -186,7 +192,7 @@ const Landing = () => {
           </div>
           <div className="imgSide">
             <img
-              src="/images/Metrics-amico.png"
+              src={metricsImg}
               alt="randomImg"
               width="300px"
               height="300px"
@@ -197,7 +203,7 @@ const Landing = () => {
           <div className="landHelp card">
             <div className="imgCol">
               <img
-                src="/images/Helping a partner-pana.png"
+                src={HelpingPartnerImg}
                 alt="randomImg"
                 style={{ width: "100%" }}
               />
@@ -208,7 +214,7 @@ const Landing = () => {
           <div className="landHelp card">
             <div className="imgCol">
               <img
-                src="/images/Working-amico.png"
+                src={WorkingImg}
                 alt="randomImg"
                 style={{ width: "100%" }}
               />
@@ -243,7 +249,7 @@ const Landing = () => {
             </div>
           </div>
           <div className="imgSide">
-            <img src="/images/Profile data-amico.png" alt="randomImg" />
+            <img src={ProfileDataImg} alt="randomImg" />
           </div>
         </div>
       </main>

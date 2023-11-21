@@ -1,4 +1,6 @@
 import React from "react";
+import companyImg from "../../assets/images/company.png"
+import jobHuntImg from "../../assets/images/job-hunt.svg"
 
 const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
   return (
@@ -145,7 +147,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
               <div className="job-card" key={job.id}>
                 <div className="company-image">
                   <img
-                    src="/images/company.png"
+                    src={companyImg}
                     height="50px"
                     width="50px"
                     alt="company-img"
@@ -237,7 +239,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
             }}
           >
             <img
-              src="/images/job-hunt.svg"
+              src={jobHuntImg}
               width="80%"
               alt="job-hunt"
               style={{ paddingLeft: "10%" }}
