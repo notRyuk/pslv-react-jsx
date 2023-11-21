@@ -40,4 +40,8 @@ export class ErrorHandler<T> extends ResponseHandler {
         field: string, 
         arg?: string
     ) => `The ${field} of the ${this.modelName} is invalid. `+arg
+
+    readonly STATUS_404 = "Bad Request! Not found"
+    readonly STATUS_408 = "Request Timeout. Please try again"
+    readonly MISSING_AUTH_HEADER = "Authorization header missing! Please make sure to provide the Authorization Header"
 }

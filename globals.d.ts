@@ -5,5 +5,12 @@ declare global {
         interface Request {
             user?: ISession
         }
+        interface Response {
+            local: {
+                keys?: string[],
+                values?: any[],
+                [key: string]: any
+            }
+        }
     }
 }
