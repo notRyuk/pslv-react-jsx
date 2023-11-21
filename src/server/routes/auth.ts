@@ -61,7 +61,7 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
         return res.status(200).send(handler.success(session))
     }
     catch(err: MongooseError|any) {
-        return res.send(handler.error(err.message))
+        return res.status(401).send(handler.error(err.message))
     }
 })
 
