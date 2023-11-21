@@ -81,7 +81,7 @@ app.post("/login", verifyBody(["email", "password"], handler), async (_, res) =>
 })
 
 app.post("/verify", verifyToken(handler), (_, res) => {
-    return res.status(200).send(handler.success("Successfully verified the session!"))
+    return res.status(200).send(handler.success(res.locals.session))
 })
 
 export default app

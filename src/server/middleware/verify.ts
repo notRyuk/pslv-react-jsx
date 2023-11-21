@@ -44,6 +44,7 @@ export const verifyToken = (
     try {
         const decoded = jwt.verify(authHeader[1], JWT_SECRET) as Payload
         if(decoded.user === (session.user as IUser)._id.toString()) {
+            res.locals.session = session
             next()
         }
         else {
