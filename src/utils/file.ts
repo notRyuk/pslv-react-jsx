@@ -4,7 +4,6 @@ import { join as joinPath } from "node:path"
 export const downloadFile = async (filename: string, root: string, content: Buffer): Promise<string|null> => {
     const baseDir = joinPath(__dirname, "..", "..", "public")
     if(root.length) {
-        console.log(filename)
         if(!(await readDir(baseDir)).includes(root)) {
             await mkdir(joinPath(__dirname, "..", "..", "public", root))
         }
