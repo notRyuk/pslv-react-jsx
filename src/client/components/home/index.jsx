@@ -66,9 +66,12 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
 
                         <div className="card left-group">
                             <h5>Connect with more people.....</h5>
-                            {allUsers.map((user)=>
-                                    <SuggestedUser key={user.id} user={user}/>
-                                )}
+                            {allUsers.map((user) => {
+                                if (user.id !== tempUser.id) {
+                                    return <SuggestedUser key={user.id} user={user} />
+                                }
+                            }
+                            )}
                             <div className="specialLink">
                                 <Link to="/network">Show More</Link>
                             </div>
@@ -79,11 +82,11 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
 
                     <div className="center-content content">
                         <PostOptions></PostOptions>
-                        {tempPosts.map((eachPost) => 
+                        {tempPosts.map((eachPost) =>
                             <PostCard
-                            key={eachPost.id}
-                            post={eachPost}
-                        />
+                                key={eachPost.id}
+                                post={eachPost}
+                            />
                         )}
                         {/* {console.log(tempPosts)} */}
                     </div>

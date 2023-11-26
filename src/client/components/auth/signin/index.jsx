@@ -21,6 +21,8 @@ import { checkUserAsync } from '../authSlice';
 import { Navigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
+import Hash from '@utils/hashClient';
+
 // function Copyright(props: any) {
 //   return (
 //     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -39,11 +41,13 @@ export default function SignIn() {
   const error = useSelector(selectError);
   const user = useSelector(selectLoggedInUser);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email')
     const password = data.get('password')
+    const hashed = await Hash.create(password)
+    console.log(hashed);
     dispatch(
       checkUserAsync({ email, password })
     );

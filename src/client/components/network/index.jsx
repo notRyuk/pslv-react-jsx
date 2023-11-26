@@ -1,8 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import avatarImg from "../../assets/images/avatar-default.png"
+import { selectLoggedInUser } from '../auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import SuggestedUserCard from '../cards/SuggestedUserCard';
+import RequestedUser from '../cards/RequestedUser';
+import ConnectedUser from '../cards/ConnectedUser';
 
 const NetworkComponent = ({ connectedUsers, requests, suggestions, user, csrfToken }) => {
+  const tempUser = useSelector(selectLoggedInUser)
   return (
     <main className="networkContainer">
       <div className="leftNetworkContent content">
@@ -89,91 +95,28 @@ const NetworkComponent = ({ connectedUsers, requests, suggestions, user, csrfTok
       <div className="centerNetworkContainer content">
         <div className="card">
           <div className="networkHead">
-            <p>Connection Requests</p>
+            <h5>Connection Requests</h5>
           </div>
-          {requests.map((request) => (
-            <div className="invitation" key={request.from._id}>
-              <div className="userProfile networkUserProfile">
-                <div className="profileImgPost">
-                  <img
-                    src={request.from.data.imageUrl || avatarImg}
-                    alt="profileImg"
-                  />
-                </div>
-                <div className="userInfo">
-                  <h5>{request.from.data.firstname} {request.from.data.lastname}</h5>
-                  <p>{request.from.data.bio}</p>
-                </div>
-              </div>
-              <div className="networkOption">
-                <form action="/api/connection/rejectRequest" method="post">
-                  <input type="hidden" name="_csrf" value={csrfToken} />
-                  <input style={{ display: 'none' }} name="from" value={request.from._id} />
-                  <input style={{ display: 'none' }} name="to" value={`${request.to._id}`} />
-                  <input style={{ display: 'none' }} name="type" value="MUTUAL" />
-                  <button className="noborderButton">Ignore</button>
-                </form>
-                <form action="/api/connection/acceptRequest" method="post">
-                  <input type="hidden" name="_csrf" value={csrfToken} />
-                  <input style={{ display: 'none' }} name="from" value={request.from._id} />
-                  <input style={{ display: 'none' }} name="to" value={request.to._id} />
-                  <input style={{ display: 'none' }} name="type" value="MUTUAL" />
-                  <button className="text-button">Accept</button>
-                </form>
-              </div>
-            </div>
-          ))}
+          <RequestedUser user={tempUser}></RequestedUser>
+          <RequestedUser user={tempUser}></RequestedUser>
         </div>
         <div className="card">
-          <h5>Suggestions for you</h5>
+          <div className="networkHead">
+            <h5>Suggestions for you</h5>
+          </div>
           <div className="suggestedConnection">
-            {suggestions.map((suggestion) => (
-              <div className="card profileCard suggestedCard" key={suggestion.user}>
-                <div className="cover"></div>
-                <div className="profileInfo">
-                  <img
-                    src={suggestion.imageUrl}
-                    alt="profileImg"
-                    className="profileImg"
-                  />
-                  <strong className="userName">{suggestion.firstname} {suggestion.lastname}</strong>
-                  <small className="userProfession">{suggestion.bio}</small>
-                  <span>{suggestion.institute}</span>
-                </div>
-                <div>
-                  <form action="/api/connection/create" method="post">
-                    <input type="hidden" name="_csrf" value={csrfToken} />
-                    <input style={{ display: 'none' }} name="from" value={user.user} />
-                    <input style={{ display: 'none' }} name="to" value={suggestion.user} />
-                    <input style={{ display: 'none' }} name="type" value="MUTUAL" />
-                    <button className="text-button">
-                      <i className="fa-solid fa-user-plus"></i> Connect
-                    </button>
-                  </form>
-                </div>
-              </div>
-            ))}
+            <SuggestedUserCard user={tempUser}></SuggestedUserCard>
+            <SuggestedUserCard user={tempUser}></SuggestedUserCard>
           </div>
         </div>
       </div>
       <div className="rightNetworkContainer content">
         <div className="card left-group">
           <div className="networkHead">
-            <p>Your connections</p>
+            <h5>Your connections</h5>
           </div>
-          {connectedUsers.map((reqUser) => (
-            <Link to={`/profile/${reqUser.user}`} key={reqUser.user}>
-              <div className="connectSuggestion">
-                <div className="connectProfile">
-                  <img src={reqUser.imageUrl} alt="personImg" />
-                  <div className="connectInfo">
-                    <strong>{reqUser.firstname} {reqUser.lastname}</strong>
-                    <small>{reqUser.bio}</small>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
+          <ConnectedUser user={tempUser}></ConnectedUser>
+          <ConnectedUser user={tempUser}></ConnectedUser>
         </div>
       </div>
     </main>
