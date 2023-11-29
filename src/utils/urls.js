@@ -1,4 +1,6 @@
-export const basePath = "https://localhost:6969"
+
+export const serverPath = "http://localhost:6969"
+export const basePath = serverPath+"/api"
 
 export default {
     auth: {
