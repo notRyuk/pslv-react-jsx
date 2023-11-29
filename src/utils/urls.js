@@ -5,5 +5,13 @@ export default {
         register: "/auth/register",
         login: "/auth/login",
         verify: "/auth/verify"
+    },
+    user: {
+        profile: {
+            create: "/user/profile/create",
+            delete: "/user/profile/delete",
+            update: "/user/profile/update",
+            get: "/user/profile"
+        }
     }
 }
