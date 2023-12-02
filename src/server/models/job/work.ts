@@ -19,7 +19,11 @@ const workSchema = new Schema<IWork>({
         type: Boolean,
         required: handler.fieldRequired("isCurrent")
     },
-    to: Date
+    to: Date,
+    name: {
+        type: String,
+        required: handler.fieldRequired("name")
+    }
 })
 
 const Work = model(Models.work, workSchema)

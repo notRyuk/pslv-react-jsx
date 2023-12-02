@@ -10,10 +10,17 @@ export default {
     },
     user: {
         profile: {
-            create: "/user/profile/create",
-            delete: "/user/profile/delete",
-            update: "/user/profile/update",
-            get: "/user/profile"
+            create: "profile/create",
+            delete: "profile/:id",
+            update: "/profile/update",
+            get: "/profile/:id"
         }
+    },
+    skills: "/skills",
+    skill: {
+        create: "/skill/create"
+    },
+    work: {
+        create: "/work/create"
     }
 }
