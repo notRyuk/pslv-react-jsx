@@ -26,6 +26,10 @@ const addressSchema = new Schema<IAddress>({
         type: String,
         required: handler.fieldRequired("state")
     },
+    country: {
+        type: String,
+        required: handler.fieldRequired("country")
+    },
     pinCode: {
         type: Number,
         required: handler.fieldRequired("pinCode")
