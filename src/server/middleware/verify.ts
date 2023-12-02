@@ -15,11 +15,13 @@ export const verifyBody = (
     const keys = getKeys(body)
     const values = getValues(body)
     for (const req of required) {
-        if (
-            !keys.includes(req) ||
-            (typeof getValue(keys, values, req) === "string" && !(getValue(keys, values, req) as string).length)
-        ) {
+        if (!keys.includes(req)) {
             return res.status(422).send(handler.error(handler.fieldRequired(req)))
+        }
+        else if(getValue(keys, values, req) instanceof String) {
+            if(!(getValue(keys, values, req) as string).length) {
+                return res.status(422).send(handler.error(handler.fieldRequired(req)))
+            }
         }
     }
     res.locals.keys = keys
@@ -59,4 +61,26 @@ export const verifyToken = (
             return res.status(422).send(handler.error("Session not found! Please try to login again."))
         }
     }
+}
+
+export const verifyParams = (
+    required: string[],
+    handler: ErrorHandler<any> = new ErrorHandler<any>("request")
+) => (req: Request, res: Response, next: NextFunction) => {
+    const body = req.params
+    const keys = getKeys(body)
+    const values = getValues(body)
+    for (const req of required) {
+        if (!keys.includes(req)) {
+            return res.status(422).send(handler.error(handler.fieldRequired(req)))
+        }
+        else if(getValue(keys, values, req) instanceof String) {
+            if(!(getValue(keys, values, req) as string).length) {
+                return res.status(422).send(handler.error(handler.fieldRequired(req)))
+            }
+        }
+    }
+    res.locals.keys = keys
+    res.locals.values = values
+    next()
 }

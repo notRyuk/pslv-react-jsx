@@ -10,7 +10,7 @@ import { Router } from "express";
 const app = Router()
 const handler = new UserHandler()
 
-app.post("/create", verifyToken(), verifyBody(["address", "role"], handler), async (_, res) => {
+app.post("/create", verifyToken(), verifyBody(["address", "role"]), async (_, res) => {
     const keys: string[] = res.locals.keys
     const values: any[] = res.locals.values
     const user = (res.locals.session as ISession).user as IUser
@@ -25,6 +25,9 @@ app.post("/create", verifyToken(), verifyBody(["address", "role"], handler), asy
             address: address._id
         })
     }
+    profile = await profile.save()
+    console.log(profile)
+    return res.sendStatus(200)
 })
 
 app.get("/:role", verifyToken(), async (req, res) => {
