@@ -6,6 +6,7 @@ import IAchievement from "@types_/achievement"
 
 
 export default interface IInstitute extends IMongoDocument {
+    name: string
     contact: {
         emails: string[]
         phone: string[]

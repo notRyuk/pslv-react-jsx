@@ -14,4 +14,5 @@ export function usePoster(url, config) {
 
 export function useAuthGetter(url, config) {
     // create the function after creating redux store
+    return useSWR<ApiResponse, ApiResponse, string>(url, async (url) => await axios.get(url, config))
 }
