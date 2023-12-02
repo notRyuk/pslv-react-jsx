@@ -8,6 +8,7 @@ import Footer from '../footer';
 import PostOptions from '../posts/PostOptions';
 import { fetchAllPostsAsync, selectAllPosts, selectPostListStatus } from '../posts/postSlice';
 import './styles.scss';
+import { serverPath } from "../../../utils/urls";
 // import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
@@ -19,8 +20,6 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
     const status = useSelector(selectPostListStatus);
     const userInfoStatus = useSelector(selectUserInfoStatus)
     const allUsers = useSelector(selectAllUsers)
-    console.log(session.token)
-    console.log(localStorage.getItem("token"))
 
 
     useEffect(() => {
@@ -48,7 +47,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                         <div className="card profileCard">
                             <div className="cover"></div>
                             <div className="profileInfo">
-                                <img src={tempUser?.profilePhoto ? "http://localhost:6969" + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
+                                <img src={tempUser?.profilePhoto ? serverPath + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
                                 <strong className="userName">
                                     {tempUser?.name.first} {tempUser?.name.last} <span style={{ textTransform: 'capitalize' }}>({tempUser?.role})</span>
                                 </strong>
