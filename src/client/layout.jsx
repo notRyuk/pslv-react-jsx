@@ -8,7 +8,7 @@ import Header from "./components/header";
 export default function Layout({ children, data }) {
     const navigate = useNavigate()
     const session = useSelector(selectSession)
-    console.log("session", session)
+    // console.log("session", session)
     const loc = useLocation()
     const freePaths = [
         "/",

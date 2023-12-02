@@ -4,7 +4,7 @@ import { selectLoggedInUser } from '../auth/authSlice';
 import { Link } from 'react-router-dom';
 import { createPostAsync } from './postSlice';
 import profile from "@client/assets/images/profile.png"
-
+import { serverPath } from '../../../utils/urls';
 
 const PostOptions = () => {
     const tempUser = useSelector(selectLoggedInUser);
@@ -45,7 +45,7 @@ const PostOptions = () => {
             <div className="card">
                 <div className="postBox">
                     <div className="profileImgPost">
-                        <img src={tempUser?.profilePhoto ? "http://localhost:6969" + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
+                        <img src={tempUser?.profilePhoto ? serverPath + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
                     </div>
                     <input type="text" placeholder="Start a post" />
                 </div>
