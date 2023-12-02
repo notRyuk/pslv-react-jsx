@@ -1,165 +1,167 @@
-import * as React from 'react';
-import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
+import { useState } from 'react';
 // import Link from '@mui/material/Link';
-import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { createTheme, makeStyles, ThemeProvider } from '@mui/material/styles';
-import logo from "@client/assets/images/banner.png";
+import Grid from '@mui/material/Grid';
 import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormGroup from '@mui/material/FormGroup';
+import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
 import classes from "./styles.module.scss";
+  
+import Hash from '@utils/hashClient';
 
-import { selectCreatedUser, createUserAsync } from '../authSlice';
-import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import Details from '../../details';
+import { selectCreatedUser } from '../authSlice';
 
 export default function SignUp() {
+  const [credential, setCredential] = useState({})
+  const [credentialAdded, setCredentialAdded] = useState(false)
 
   const dispatch = useDispatch();
   const user = useSelector(selectCreatedUser);
   const [selectedValue, setSelectedValue] = useState('student');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    //   role : selectedValue,
-    // })
-    dispatch(
-      createUserAsync({
-        email: data.get('email'),
-        password: data.get('password'),
-        role : selectedValue,
-      })
-    );
+    const email = data.get('email')
+    const password = data.get('password')
+    const hashed = await Hash.create(password)
+    setCredential({
+      email,
+      password: hashed,
+      role: selectedValue,
+    })
+    setCredentialAdded(true)
   };
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
   return (
-      <>
-        {user && <Navigate to={`/details`} replace={true}></Navigate>}
+    <>
+      {credentialAdded && <Details credential={credential}></Details>}
+      {!credentialAdded &&
         <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          className = {classes.box}
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, color: 'white' }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
+          <CssBaseline />
+          <Box
+            className={classes.box}
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            <FormControlLabel
-        control={<Radio />}
-        label="Student"
-        value="student"
-        checked={selectedValue === 'student'}
-        onChange={handleChange}
-      />
-      <FormControlLabel
-        control={<Radio />}
-        label="Alumni"
-        value="alumni"
-        checked={selectedValue === 'alumni'}
-        onChange={handleChange}
-      />
-      {/* <FormControlLabel
-        control={<Radio />}
-        label="Admin"
-        value="admin"
-        checked={selectedValue === 'admin'}
-        onChange={handleChange}
-      /> */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, "&.MuiButton-root:hover": {
-                borderColor: '#1565c0',
-                bgcolor: '#1565c0',
-              },}}
-            >
-              Sign Up
-            </Button>
-            <Grid container>
-              <Grid item>
-                <Link to="/signin" >
-                  {"Already have an account? Login here"}
-                </Link>
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, color: 'white' }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "white"
+                  },
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                    color: "white"
+                  },
+                  "& .MuiInputLabel-outlined.Mui-focused": {
+                    color: "white"
+                  },
+                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "white"
+                  },
+                }}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "white"
+                  },
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                    color: "white"
+                  },
+                  "& .MuiInputLabel-outlined.Mui-focused": {
+                    color: "white"
+                  },
+                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "white"
+                  },
+                }}
+              />
+              <FormControlLabel
+                control={<Radio />}
+                label="Student"
+                value="student"
+                checked={selectedValue === 'student'}
+                onChange={handleChange}
+              />
+              <FormControlLabel
+                control={<Radio />}
+                label="Alumni"
+                value="alumni"
+                checked={selectedValue === 'alumni'}
+                onChange={handleChange}
+              />
+              {/* <FormControlLabel
+          control={<Radio />}
+          label="Admin"
+          value="admin"
+          checked={selectedValue === 'admin'}
+          onChange={handleChange}
+        /> */}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3, mb: 2, "&.MuiButton-root:hover": {
+                    borderColor: '#1565c0',
+                    bgcolor: '#1565c0',
+                  },
+                }}
+              >
+                Sign Up
+              </Button>
+              <Grid container>
+                <Grid item>
+                  <Link to="/signin" >
+                    {"Already have an account? Login here"}
+                  </Link>
+                </Grid>
               </Grid>
-            </Grid>
+            </Box>
           </Box>
-        </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
-      </Container>
-      </>
+          {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
+        </Container>
+      }
+    </>
   );
 }

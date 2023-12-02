@@ -1,15 +1,15 @@
+import urls, { basePath } from "@utils/urls";
+import axios from "axios";
+
 
 export async function createUser(userData) {
   return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:8080/users', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-      headers: { 'content-type': 'application/json' },
-    });
-
-    const data = await response.json();
-    // TODO: on the server, it will only return some info of the user (not the password)
-    resolve({ data });
+    const res = await axios.post(basePath + urls.auth.register, userData, {
+      headers: {
+        "Content-Type": "multiipart/form-data"
+      }
+    }).then(res => res.data).catch(err => err.response?.data || err.request)
+    return (res?.status == "success" ? resolve(res) : reject(res))
   });
 }
 
@@ -17,29 +17,15 @@ export async function createUser(userData) {
 
 
 export async function checkUser(loginInfo) {
-  return new Promise (async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const email = loginInfo.email;
     const password = loginInfo.password;
 
-    try {
-      const response = await fetch(`http://localhost:8080/users?email=${email}`);
-      const data = await response.json();
-
-      // console.log({ data });
-
-      if (data.length) {
-        if (password === data[0].password) {
-          // Omit password from the returned user data
-          resolve({ data: data[0] });
-        } else {
-          reject({ message: 'wrong credentials' });
-        }
-      } else {
-        reject({ message: 'user not found' });
-      }
-    } catch (error) {
-      reject({ message: 'error fetching user data' });
-    }
+    const res = await axios.post(basePath + urls.auth.login, {
+      email,
+      password
+    }).then(res => res.data).catch(err => err.response?.data || err.request)
+    return (res?.status == "success" ? resolve(res) : reject(res))
   });
 }
 

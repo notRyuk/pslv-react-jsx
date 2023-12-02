@@ -1,18 +1,27 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
+import { useSelector } from "react-redux";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import ApiResponse from "@types_/response";
+import { selectSession } from "../components/auth/authSlice";
 
+function createRequest() {
+    const session = useSelector(selectSession)
+    if(!session) {
+        return axios.create()
+    }
+    return axios.create({
+        headers: {
+            Authorization: `Bearer ${session.token}`
+        }
+    })
+}
 
 export function useGetter(url, config) {
-    return useSWR<ApiResponse, ApiResponse, string>(url, async (url) => await axios.get(url, config))
+    const request = createRequest()
+    return useSWR(url, async (url) => await request.get(url, config))
 }
 
 export function usePoster(url, config) {
-    return useSWRMutation<ApiResponse, ApiResponse, string>(url, async (url, data) => await axios.post(url, data, config))
-}
-
-export function useAuthGetter(url, config) {
-    // create the function after creating redux store
-    return useSWR<ApiResponse, ApiResponse, string>(url, async (url) => await axios.get(url, config))
+    const request = createRequest()
+    return useSWRMutation(url, async (url, data) => await request.post(url, data, config))
 }

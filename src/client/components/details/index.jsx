@@ -1,52 +1,37 @@
-import * as React from 'react';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Stack } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, makeStyles, ThemeProvider } from '@mui/material/styles';
-import logo from "@client/assets/images/banner.png";
-import classes from "./styles.module.scss";
-import { Stack } from '@mui/material';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import { createUserAsync, selectUserCreated } from '../auth/authSlice';
+import classes from "./styles.module.scss";
 
-import { useSelector, useDispatch } from 'react-redux';
-import { updateUserAsync, selectCreatedUser, selectDetailsAdded  } from '../auth/authSlice';
 
-
-export default function Details() {
-  const user = useSelector(selectCreatedUser);
-  const isDetailsAdded = useSelector(selectDetailsAdded)
+export default function Details(props) {
+  // const user = useSelector(selectCreatedUser);
+  const isUserCreated = useSelector(selectUserCreated)
   const dispatch = useDispatch();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const firstName = data.get('firstName');
-    const lastName = data.get('lastName');
-    const dob = new Date(data.get('dob'));
-    const phoneNumber = +data.get('phoneNumber');
-    const userBio = data.get('userBio');
-    const profileImageUrl = data.get('profileImageUrl');
-    const newUser = { ...user, details: { firstName, lastName, dob, phoneNumber, userBio, profileImageUrl } }
-    dispatch(updateUserAsync(newUser))
-    console.log(user);
+    data.append("email", props.credential.email)
+    data.append("password", props.credential.password)
+    data.append("role", props.credential.role)
+    console.log(data)
+    dispatch(createUserAsync(data))
   };
 
   return (
     <>
-      {isDetailsAdded && <Navigate to="/signin" replace={true}></Navigate>}
-      {console.log(`${'details' in user}`)}
+      {isUserCreated && <Navigate to="/signin" replace={true}></Navigate>}
+      {/* {console.log(`${'details' in user}`)} */}
       <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
@@ -78,7 +63,7 @@ export default function Details() {
                       fullWidth
                       id="firstName"
                       label="First Name"
-                      name="firstName"
+                      name="name.first"
                       autoComplete="firstName"
                       autoFocus
                       sx={{
@@ -100,7 +85,7 @@ export default function Details() {
                       margin="normal"
                       required
                       fullWidth
-                      name="lastName"
+                      name="name.last"
                       label="Last Name"
                       id="lastName"
                       autoComplete="lastName"
@@ -150,7 +135,7 @@ export default function Details() {
                       margin="normal"
                       required
                       fullWidth
-                      name="phoneNumber"
+                      name="phone"
                       label="Phone Number"
                       id="phoneNumber"
                       autoComplete="phoneNumber"
@@ -176,7 +161,7 @@ export default function Details() {
                       margin="normal"
                       required
                       fullWidth
-                      name="userBio"
+                      name="bio"
                       label="Write a brief about your bio"
                       id="userBio"
                       autoComplete="userBio"
@@ -198,11 +183,12 @@ export default function Details() {
                   </Stack>
                   <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
                     <TextField
+                      type='file'
                       margin="normal"
                       required
                       fullWidth
-                      name="profileImageUrl"
-                      label="Profile Image Url"
+                      name="profilePhoto"
+                      // label="Profile Image Url"
                       id="profileImageUrl"
                       autoComplete="profileImageUrl"
                       sx={{
@@ -223,132 +209,6 @@ export default function Details() {
                   </Stack>
                 </Stack>
               </Box>
-              {/* <Box sx={{bgcolor: 'primary.dark', padding: '1rem', borderRadius:'10px', boxShadow: '-4px 4px 5px 1px black'}}>
-            <Stack direction={'column'}>
-            <Typography component="h1" variant="h5">
-            Address and Bio
-          </Typography>
-            <Stack sx={{mt:2}} direction={'row'} spacing={2}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="addressLine1"
-              label="Address Line 1"
-              name="addressLine1"
-              autoComplete="addressLine1"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            </Stack>
-            <Stack sx={{mt: 2}} direction={'row'} spacing={2}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="country"
-              label="Country"
-              name="country"
-              autoComplete="country"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="pinCode"
-              label="Pin Code"
-              id="pinCode"
-              autoComplete="pinCode"
-              type="number"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            </Stack>
-            <Stack sx={{mt: 2}} direction={'row'} spacing={2}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="userBio"
-              label="Write a brief about your bio"
-              id="userBio"
-              autoComplete="userBio"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            </Stack>
-            <Stack sx={{mt: 2}} direction={'row'} spacing={2}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="profileImageUrl"
-              label="Profile Image Url"
-              id="profileImageUrl"
-              autoComplete="profileImageUrl"
-              sx={{"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-                color: "white"
-              },
-              "& .MuiInputLabel-outlined.Mui-focused": {
-                color: "white"
-              },
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white"
-              },
-            }}
-            />
-            </Stack>
-            </Stack>
-            </Box>   */}
             </Stack>
             <Button
               type="submit"
@@ -365,7 +225,6 @@ export default function Details() {
             </Button>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </>
   );

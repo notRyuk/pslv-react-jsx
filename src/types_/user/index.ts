@@ -1,8 +1,8 @@
 import { Time } from "@types_";
-import IMongoDocument from "@types_/mongo";
-import IProfile from "./profile";
-import IAdmin from "./admin";
 import IFaculty from "@types_/institute/faculty";
+import IMongoDocument from "@types_/mongo";
+import IAdmin from "./admin";
+import IProfile from "./profile";
 
 export enum ProfileRoles {
     student = "student",
@@ -17,17 +17,17 @@ export default interface IUser extends IMongoDocument {
         last: string
     }
     dob: Time
-    
+
     email: string
     phone: string
     password: string
-    
+
     bio?: string
     profilePhoto?: string
-    role: ProfileRoles|string
+    role: ProfileRoles | string
 
-    student?: IMongoDocument["_id"]|IProfile
-    alumni?: IMongoDocument["_id"]|IProfile
-    admin?: IMongoDocument["_id"]|IAdmin
-    faculty?: IMongoDocument["_id"]|IFaculty
+    student?: IMongoDocument["_id"] | IProfile
+    alumni?: IMongoDocument["_id"] | IProfile
+    admin?: IMongoDocument["_id"] | IAdmin
+    faculty?: IMongoDocument["_id"] | IFaculty
 }

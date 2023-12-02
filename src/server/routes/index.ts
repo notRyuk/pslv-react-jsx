@@ -8,4 +8,8 @@ const app = Router()
 app.use("/auth", authRouter)
 app.use("/profile", profileRouter)
 
+app.get("/test", (req, res) => {
+    return res.send(req.headers.authorization)
+})
+
 export default app
