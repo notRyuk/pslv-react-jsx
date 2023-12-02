@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import profile from "@client/assets/images/profile.png";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import './styles.scss';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectLoggedInUser } from '../auth/authSlice';
+import { selectLoggedInUser, selectSession } from '../auth/authSlice';
+import { fetchAllUsersAsync, selectAllUsers, selectUserInfoStatus } from '../auth/user/userSlice';
 import Footer from '../footer';
-import PostCard from '../posts/PostCard';
 import PostOptions from '../posts/PostOptions';
 import { fetchAllPostsAsync, selectAllPosts, selectPostListStatus } from '../posts/postSlice';
-import { fetchAllUsersAsync, selectAllUsers, selectUserInfoStatus } from '../auth/user/userSlice';
-import SuggestedUser from '../cards/SuggestedUser';
+import './styles.scss';
 // import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
     // const [tempPosts,setTempPosts] = useState([])
     const dispatch = useDispatch()
     const tempUser = useSelector(selectLoggedInUser);
+    const session = useSelector(selectSession);
     const tempPosts = useSelector(selectAllPosts);
     const status = useSelector(selectPostListStatus);
     const userInfoStatus = useSelector(selectUserInfoStatus)
     const allUsers = useSelector(selectAllUsers)
+    console.log(session.token)
+    console.log(localStorage.getItem("token"))
 
 
     useEffect(() => {
@@ -46,11 +48,11 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                         <div className="card profileCard">
                             <div className="cover"></div>
                             <div className="profileInfo">
-                                <img src={tempUser?.details.profileImageUrl} alt="profileImg" className="profileImg" />
+                                <img src={tempUser?.profilePhoto ? "http://localhost:6969" + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
                                 <strong className="userName">
-                                    {tempUser?.details.firstName} {tempUser?.details.lastName} <span style={{ textTransform: 'capitalize' }}>({tempUser?.role})</span>
+                                    {tempUser?.name.first} {tempUser?.name.last} <span style={{ textTransform: 'capitalize' }}>({tempUser?.role})</span>
                                 </strong>
-                                <small className="userProfession">{tempUser?.details.userBio}</small>
+                                <small className="userProfession">{tempUser?.bio || ""}</small>
                                 <span>{user.institute}</span>
                             </div>
                             <div className="connection">
@@ -58,37 +60,37 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                                 <small>Connections</small>
                             </div>
                             <div className="specialLink">
-                                <Link to={`/profile/${tempUser?.id}`}>My Profile</Link>
+                                <Link to={`/profile/${tempUser?._id}`}>My Profile</Link>
                             </div>
                         </div>
 
                         {/* left connect container */}
 
-                        <div className="card left-group">
+                        {/* <div className="card left-group">
                             <h5>Connect with more people.....</h5>
                             {allUsers.map((user) => {
-                                if (user.id !== tempUser.id) {
-                                    return <SuggestedUser key={user.id} user={user} />
+                                if (user._id !== tempUser._id) {
+                                    return <SuggestedUser key={user._id} user={user} />
                                 }
                             }
                             )}
                             <div className="specialLink">
                                 <Link to="/network">Show More</Link>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* middle container header */}
 
                     <div className="center-content content">
                         <PostOptions></PostOptions>
-                        {tempPosts.map((eachPost) =>
+                        {/* {tempPosts.map((eachPost) =>
                             <PostCard
                                 key={eachPost.id}
                                 post={eachPost}
                             />
                         )}
-                        {/* {console.log(tempPosts)} */}
+                        {console.log(tempPosts)} */}
                     </div>
                     <div className="right-content content">
                         <div className="card">
