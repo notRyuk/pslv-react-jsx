@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import companyImg from "../../assets/images/company.png";
-import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 import axios from 'axios';
-import urls,{ serverPath, basePath } from '@utils/urls';
+import urls, { serverPath, basePath } from '@utils/urls';
 import { selectSession } from '../auth/authSlice';
+import Loading from '../loading';
 const ProfileComponent = ({
     user,
     usermain,
@@ -28,38 +28,39 @@ const ProfileComponent = ({
     const [showInterestModal, setShowInterestModal] = useState(false);
     const [newSkill, setNewSkill] = useState("");
 
+    const [tempUser, setTempUser] = useState({})
+    const [isLoading, setIsLoading] = useState(true);
+
     function addNewSkill() {
         skills?.push()
     }
     const params = useParams()
-    const profileUrl = basePath + urls.user.profile.get.replace(':id',params.id)
+    const profileUrl = basePath + urls.user.profile.get.replace(':id', params.id)
     // const tempUser = useSelector(selectLoggedInUser)
     const session = useSelector(selectSession)
     useEffect(() => {
-        (async () => {
-            const res = await axios.get(profileUrl, {
-                headers: {
-                    authorization: `Bearer ${session.token}`
-                },
-            })
-            console.log(res.data.data);
-        })()
-    }, [])
-    const tempUser = useSelector(selectUserInfo)
-    const status = useSelector(selectUserInfoStatus)
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(fetchUserByIdAsync(params.id))
-    }, [dispatch, params.id])
-    if (status === 'loading') {
-        return <p>Loading....</p>
-    }
+        const fetchProfileData = async () => {
+            try {
+                const res = await axios.get(profileUrl, {
+                    headers: {
+                        authorization: `Bearer ${session.token}`
+                    },
+                });
+                setTempUser(res.data.data);
+            } catch (error) {
+                console.error("Error while fetching profile data:", error);
+            } finally {
+                // Set loading to false regardless of success or failure
+                setIsLoading(false);
+            }
+        };
+
+        fetchProfileData();
+    }, [session.token]);
+
     return (
         <>
-            {/* {console.log(fetchedUser)} */}
-            {/* {console.log(status)} */}
-            {JSON.stringify({tempUser})}
-            {tempUser !== null &&
+            {isLoading ? <Loading></Loading> :
                 <div className="profileContainer">
                     {/* Main Container */}
                     <div className="container-main">
@@ -67,13 +68,17 @@ const ProfileComponent = ({
                         <div className="card profileCard-profile">
                             {/* Cover and Edit Button */}
                             <div className="cover"></div>
-                            <Link to="/edit-details">
-                                <span className="material-symbols-rounded cover-edit">edit</span>
-                            </Link>
+                            {
+                                tempUser?._id === session.user._id && (
+                                    <Link to="/edit-details">
+                                        <span className="material-symbols-rounded cover-edit">edit</span>
+                                    </Link> 
+                                )
+                            }
 
                             {/* Profile Information */}
                             <div className="profileInfo">
-                                <img src={"http://localhost:6969" + tempUser?.profilePhoto} alt="profileImg" className="profileImg" />
+                                <img src={serverPath + tempUser?.profilePhoto} alt="profileImg" className="profileImg" />
                             </div>
                             {/* <p>{fetchedUser.email}</p> */}
                             {/* Profile Details */}
@@ -88,7 +93,7 @@ const ProfileComponent = ({
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
-                                    <p className="personalDescription">{tempUser.bio || ""}</p>
+                                    <p className="personalDescription">{tempUser?.bio || ""}</p>
 
                                     {/* Location Information */}
                                     <p className="location-info">
@@ -158,14 +163,14 @@ const ProfileComponent = ({
                                     <p className="connection-info">{connection} connections</p>
 
                                     {/* Additional Info for Alumni */}
-                                    {usermain?.role === 'alumni' && (
+                                    {tempUser?.role === 'alumni' && (
                                         <p className="connection-info">
                                             {job} Jobs posted
                                         </p>
                                     )}
                                 </div>
                                 {/* Apply for Alumni Form (conditionally rendered) */}
-                                {usermain?.role === 'student' && !others && (
+                                {tempUser?.role === 'student' && tempUser?._id === session.user._id && (
                                     <form className='alumni-submit ms-auto' action="/apply-for-alumni" method="post">
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </form>

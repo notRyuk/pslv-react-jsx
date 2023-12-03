@@ -1,60 +1,50 @@
 import profile from "@client/assets/images/profile.png";
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { selectLoggedInUser, selectSession } from '../auth/authSlice';
-import { fetchAllUsersAsync, selectAllUsers, selectUserInfoStatus } from '../auth/user/userSlice';
-import Footer from '../footer';
-import PostOptions from '../posts/PostOptions';
-import { fetchAllPostsAsync, selectAllPosts, selectPostListStatus } from '../posts/postSlice';
-import './styles.scss';
-import { serverPath } from "../../../utils/urls";
-import axios from "axios";
 import urls, { basePath } from "@utils/urls";
+import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { serverPath } from "../../../utils/urls";
+import { selectLoggedInUser, selectSession } from '../auth/authSlice';
+import Footer from '../footer';
+import Loading from "../loading";
 import PostCard from "../posts/PostCard";
+import PostOptions from '../posts/PostOptions';
+import './styles.scss';
 // import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
-    const [tempPosts,setTempPosts] = useState([])
+    const [tempPosts, setTempPosts] = useState([])
     const [isPostChanged, setIsPostChanged] = useState(false)
-    const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = useState(true);
     const tempUser = useSelector(selectLoggedInUser);
     const session = useSelector(selectSession);
-    // const tempPosts = useSelector(selectAllPosts);
-    const status = useSelector(selectPostListStatus);
-    const userInfoStatus = useSelector(selectUserInfoStatus)
-    const allUsers = useSelector(selectAllUsers)
-
 
     useEffect(() => {
-        dispatch(fetchAllPostsAsync())
-    }, [dispatch])
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(basePath + urls.posts.all, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        authorization: `Bearer ${session.token}`
+                    },
+                });
+                setTempPosts(res.data.data);
+            } catch (error) {
+                console.error("Error while fetching data:", error);
+            } finally {
+                // Set loading to false regardless of success or failure
+                setIsLoading(false);
+            }
+        };
 
-    useEffect(() => {
-        dispatch(fetchAllUsersAsync())
-    }, [dispatch])
+        fetchData();
+    }, [isPostChanged, session.token]);
 
-    useEffect(()=>{
-       (async () => {
-            const res = await axios.get(basePath + urls.posts.all, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    authorization: `Bearer ${session.token}`
-                },
-            })
-            setTempPosts(res.data.data)
-            // console.log(res);
-        })()
-    }, [isPostChanged])
-
-    if (status === 'loading' || userInfoStatus === 'loading') {
-        // Handle loading state, e.g., show a loading spinner
-        return <div>Loading...</div>;
-    }
     return (
         <>
-            {role === 'admin' ? (
-                <h1>ADMIN</h1>
+            {isLoading ? (
+                <Loading></Loading>
             ) : (
                 <main className="mainContainer">
 

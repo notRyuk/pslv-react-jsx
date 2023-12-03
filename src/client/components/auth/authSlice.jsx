@@ -68,6 +68,7 @@ export const authSlice = createSlice({
       })
       .addCase(checkUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
+        state.error = null
         localStorage.removeItem("session")
         localStorage.setItem("session", JSON.stringify(action.payload))
         state.loggedInUser = action.payload;
