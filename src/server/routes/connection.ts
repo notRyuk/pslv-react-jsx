@@ -6,7 +6,7 @@ import { Router } from "express";
 const app = Router();
 const handler = new ConnectionHandler();
 
-// Create Connection
+
 app.post("/create", verifyToken(), async (req, res) => {
     const { userIds } = req.body;
     const connection = await Connection.create({
@@ -18,13 +18,11 @@ app.post("/create", verifyToken(), async (req, res) => {
     return res.status(200).send(handler.success(connection));
 });
 
-// Retrieve All Connections
-app.get("/", async (req, res) => {
+app.get("/", async (_, res) => {
     const connections = await Connection.find();
     return res.status(200).send(handler.success(connections));
 });
 
-// Retrieve Connection by ID
 app.get("/:id", async (req, res) => {
     const connectionId = req.params.id;
     const connection = await Connection.findById(connectionId);
@@ -34,7 +32,6 @@ app.get("/:id", async (req, res) => {
     return res.status(200).send(handler.success(connection));
 });
 
-// Delete Connection by ID
 app.delete("/:id", verifyToken(), async (req, res) => {
     const connectionId = req.params.id;
     const connection = await Connection.findByIdAndDelete(connectionId);

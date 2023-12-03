@@ -32,5 +32,12 @@ export default {
     posts: {
         get: "/posts/:id",
         all: "/posts"
+    },
+    request: {
+        create: "/connection-request/create",
+        acceptMutual: "/connection-request/:request/mutual/accept"
+    },
+    connections: {
+        getByUser: "/connections/:user"
     }
 }

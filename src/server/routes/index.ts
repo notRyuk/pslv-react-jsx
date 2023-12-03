@@ -7,6 +7,9 @@ import skillRouter from "./skill"
 import skillsRouter from "./skills"
 import postRouter from "./post"
 import postsRouter from "./posts"
+import connectionRequestRouter from "./connection-request"
+import connectionRouter from "./connection"
+import connectionsRouter from "./connections"
 
 const app = Router()
 
@@ -17,6 +20,9 @@ app.use("/skill", skillRouter)
 app.use("/skills", skillsRouter)
 app.use("/post", postRouter)
 app.use("/posts", postsRouter)
+app.use("/connection-request", connectionRequestRouter)
+app.use("/connection", connectionRouter)
+app.use("/connections", connectionsRouter)
 
 app.get("/test", (req, res) => {
     return res.send(req.headers.authorization)
