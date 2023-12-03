@@ -1,45 +1,68 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { selectLoggedInUser } from '../auth/authSlice';
+import { selectLoggedInUser, selectSession } from '../auth/authSlice';
 import { Link } from 'react-router-dom';
 import { createPostAsync } from './postSlice';
 import profile from "@client/assets/images/profile.png"
 import { serverPath } from '../../../utils/urls';
+import { usePoster } from '@client/hooks/fetcher';
+import urls, { basePath } from '@utils/urls';
+import axios from 'axios';
+import { TextField } from '@mui/material';
 
 const PostOptions = () => {
     const tempUser = useSelector(selectLoggedInUser);
-    const [postCaption, setPostCaption] = useState("");
-    const [postImage, setPostImage] = useState("");
+    const session = useSelector(selectSession)
+    const [postCaption, setPostCaption] = useState('');
+    const [postImages, setPostImages] = useState([]);
     const dispatch = useDispatch();
-    const handleArticleSubmit = (e) => {
+    const { trigger: postPhoto, data: postedPhoto } = usePoster(basePath + urls.post.create)
+
+    const handleImageChange = (e) => {
+        const files = e.target.files;
+        setPostImages([...postImages, ...files]);
+    };
+
+    const handlePhotoSubmit = async (e) => {
         e.preventDefault();
-        const post = {
-            user: tempUser,
-            content: {
-                text: postCaption,
-                media: ""
-            }
-        }
-        dispatch(createPostAsync(post))
-        console.log(postCaption);
-        setPostCaption("")
+        const data = new FormData(e.currentTarget);
+        const res = await axios.post(basePath + urls.post.create, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                authorization: `Bearer ${session.token}`
+            },
+        });
+        setPostCaption('');
+        setPostImages([]);
+    };
+
+    const handleArticleSubmit = async(e) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        const res = await axios.post(basePath + urls.post.create, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                authorization: `Bearer ${session.token}`
+            },
+        });
+        setPostCaption('');
     }
 
-    const handlePhotoSubmit = (e) => {
-        e.preventDefault();
-        const post = {
-            user: tempUser.id,
-            content: {
-                text: postCaption,
-                media: postImage,
-            }
-        }
-        dispatch(createPostAsync(post))
-        console.log(postCaption);
-        console.log(postImage);
-        setPostCaption("")
-        setPostImage("")
-    }
+    // const handlePhotoSubmit = (e) => {
+    //     e.preventDefault();
+    //     const post = {
+    //         user: tempUser.id,
+    //         content: {
+    //             text: postCaption,
+    //             media: postImage,
+    //         }
+    //     }
+    //     dispatch(createPostAsync(post))
+    //     console.log(postCaption);
+    //     console.log(postImage);
+    //     setPostCaption("")
+    //     setPostImage("")
+    // }
     return (
         <>
             <div className="card">
@@ -74,7 +97,40 @@ const PostOptions = () => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            {/*=========================================== photo post api ====================================================== */}
+                            <form onSubmit={handlePhotoSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="exampleInputEmail1" className="form-label">What's in your mind</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="content.text"
+                                        value={postCaption}
+                                        onChange={(e) => setPostCaption(e.target.value)}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="exampleInputPassword1" className="form-label">Image Files</label>
+                                    <input type="file" className="form-control" name="content.media"
+                                        autoComplete='off'
+                                        onChange={handleImageChange} multiple />
+                                </div>
+                                <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Post</button>
+                            </form>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* <div className="modal fade mt-5" id="photoModal" tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Add a Photo</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
                             <form onSubmit={handlePhotoSubmit}>
                                 <div className="mb-3">
                                     <label htmlFor="exampleInputEmail1" className="form-label">What's in your mind</label>
@@ -86,14 +142,13 @@ const PostOptions = () => {
                                 </div>
                                 <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Post</button>
                             </form>
-                            {/*================================================= end ==========================================================*/}
                         </div>
                         <div className="modal-footer">
                             <button type="submit" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="modal fade mt-5" id="articleModal" tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
@@ -107,7 +162,7 @@ const PostOptions = () => {
                             <form onSubmit={handleArticleSubmit}>
                                 <div className="mb-3">
                                     <label htmlFor="exampleInputEmail1" className="form-label">What's in your mind</label>
-                                    <textarea className="form-control" name="caption" rows="3" value={postCaption} onChange={(e) => setPostCaption(e.target.value)}></textarea>
+                                    <textarea className="form-control" name="content.text" rows="3" value={postCaption} onChange={(e) => setPostCaption(e.target.value)}></textarea>
                                 </div>
                                 <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Post</button>
                             </form>

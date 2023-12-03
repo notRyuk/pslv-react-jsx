@@ -1,73 +1,94 @@
-import React,{useEffect,useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice'
+import urls, { basePath, serverPath } from '@utils/urls'
+import PostCarousel from './carousel'
+import { useSelector } from "react-redux";
+import { selectSession, selectLoggedInUser } from "@client/components/auth/authSlice";
+import axios from "axios";
 
 const PostCard = (props) => {
+    const [likeInteract, setLikeIneract] = useState([])
+    const [commentInteract, setCommentIneract] = useState([])
+    const likeInteractionsUrl = basePath + urls.post.interactions.replace(':post', props.post._id).replace(':type', "like")
+    const commentInteractionsUrl = basePath + urls.post.interactions.replace(':post', props.post._id).replace(':type', "comment")
+    const session = useSelector(selectSession)
+    const loggedInUser = useSelector(selectLoggedInUser)
+    useEffect(() => {
+        (async () => {
+            const res = await axios.get(likeInteractionsUrl, {
+                headers: {
+                    authorization: `Bearer ${session.token}`
+                },
+            })
+            // console.log(res.data);   
+            setLikeIneract(res.data)
+        })()
+    }, [likeInteract])
+    useEffect(() => {
+        (async () => {
+            const res = await axios.get(commentInteractionsUrl, {
+                headers: {
+                    authorization: `Bearer ${session.token}`
+                },
+            })
+            // console.log(res.data);   
+            setCommentIneract(res.data)
+        })()
+    }, [commentInteract])
     return (
-        <> 
+        <>
             {/* {console.log(props.post)} */}
             <div className="card">
                 <div className="userProfile">
                     <div className="profileImgPost">
-                        <img src={props.post?.user.details.profileImageUrl} alt="profileImg" />
+                        <img src={serverPath + props.post?.user.profilePhoto} alt="profileImg" />
                     </div>
                     <div className="userInfo">
-                        <h5>{props.post?.user.details.firstName}</h5>
-                        <p>{props.post?.user.details.userBio}</p>
+                        <h5>{props.post?.user.name.first} {props.post?.user.name.last}</h5>
+                        <p>{props.post?.user.bio}</p>
                     </div>
                 </div>
                 <div className="caption">
                     <p>{props.post?.content.text}</p>
                 </div>
-                {props.post?.content.media.length!==0 && (
-                <div className="imagePost">
-                    <img src={props.post?.content.media} alt="post" />
-                </div>
+                {props.post?.content.media.length !== 0 && (
+                    <PostCarousel images={props.post?.content.media} />
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                     <div className="specialLink">
-                        <Link to="#" data-bs-toggle="modal" data-bs-target={`#likeModal${'id'}`}>
-                            4 Likes
+                        <Link to="#" data-bs-toggle="modal" data-bs-target={`#likeModal${props.post?._id}`}>
+                            {likeInteract.length} Likes
                         </Link>
                     </div>
                 </div>
 
                 {/* code for the likeModal */}
 
-                <div className="modal fade mt-5" id={`likeModal${'id'}`} tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
+                <div className="modal fade mt-5" id={`likeModal${props.post?._id}`} tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Number of Likes</h5>
+                                <h5 className="modal-title" id="exampleModalLabel">{likeInteract.length} Likes</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
                                 <div className="allLikes" style={{ display: 'flex', flexDirection: 'column' }}>
-                                    {/* {post.userDetails.length > 0 ? (
-                                        post.userDetails.map(postUser => (
-                                            <div className="userProfile" key={postUser._id}>
-                                                <div className="profileImgPost">
-                                                    <img src={postUser.imageUrl} alt="profileImg" />
+                                    {
+                                        likeInteract.length > 0 ?
+                                            likeInteract?.map((like) =>
+                                                <div className="userProfile" key={like?.user._id}>
+                                                    <div className="profileImgPost">
+                                                        <img src={serverPath + like?.user.profilePhoto} alt="profileImg" />
+                                                    </div>
+                                                    <div className="userInfo">
+                                                        <h5>{like?.user.name.first} {like?.user.name.last}</h5>
+                                                        <p>{like?.user.bio}</p>
+                                                    </div>
                                                 </div>
-                                                <div className="userInfo">
-                                                    <h5>{postUser.firstname} {postUser.lastname}</h5>
-                                                    <p>{postUser.bio}</p>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <h1>No Likes Yet</h1>
-                                    )} */}
-                                    <div className="userProfile" key={1}>
-                                        <div className="profileImgPost">
-                                            <img src={''} alt="profileImg" />
-                                        </div>
-                                        <div className="userInfo">
-                                            <h5>user who liked name</h5>
-                                            <p>user who liked bio</p>
-                                        </div>
-                                    </div>
+                                            ) : (
+                                                <h1>No Likes Yet</h1>
+                                            )
+                                    }
                                 </div>
                             </div>
                             <div className="modal-footer">
@@ -85,14 +106,14 @@ const PostCard = (props) => {
                     </button>
                     {/* =============================================================== end ============================================================ */}
                     <div className="specialLink">
-                        <Link to="#" data-bs-toggle="modal" data-bs-target={`#commentModal${'id'}`}>
+                        <Link to="#" data-bs-toggle="modal" data-bs-target={`#commentModal${props.post?._id}`}>
                             <i className="fa-regular fa-comment"></i> Comment
                         </Link>
                     </div>
 
                     {/* code for the commentModal */}
 
-                    <div className="modal fade mt-5" id={`commentModal${'id'}`} tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
+                    <div className="modal fade mt-5" id={`commentModal${props.post?._id}`} tabIndex="-1" aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
                         <div className="modal-dialog">
                             <div className="modal-content">
                                 <div className="modal-header">
@@ -103,7 +124,7 @@ const PostCard = (props) => {
                                     <div className="allLikes" style={{ display: 'flex', flexDirection: 'column' }}>
                                         <div className="postBox">
                                             <div className="profileImgPost">
-                                                <img src={''} alt="profileImg" />
+                                                <img src={serverPath + loggedInUser?.profilePhoto} alt="profileImg" />
                                             </div>
 
                                             {/* =======================================implement api for comment on post=========================================== */}
@@ -130,16 +151,22 @@ const PostCard = (props) => {
                                         ) : (
                                             <h1>No Comments Yet</h1>
                                         )} */}
-                                        <div className="userProfile" key={1}>
-                                            <div className="profileImgPost">
-                                                <img src={''} alt="profileImg" />
-                                            </div>
-                                            <div className="userInfo" style={{ borderRadius: '10px', backgroundColor: 'rgb(231, 231, 231)', padding: '0.25rem 0.5rem', width: '80%' }}>
-                                                <h6 style={{ color: 'rgb(129, 129, 129)', margin: '0' }}>commented user name</h6>
-                                                <p style={{ color: 'rgb(129, 129, 129)', fontSize: '0.75rem' }}>commented users bio</p>
-                                                <p style={{ marginTop: '1rem' }}>commented users comment</p>
-                                            </div>
-                                        </div>
+                                        {
+                                            commentInteract.length > 0 ? (
+                                                commentInteract.map((comment, index) => (
+                                                    <div className="userProfile" key={index}>
+                                                        <div className="profileImgPost">
+                                                            <img src={serverPath + comment?.user.profilePhoto} alt="profileImg" />
+                                                        </div>
+                                                        <div className="userInfo" style={{ borderRadius: '10px', backgroundColor: 'rgb(231, 231, 231)', padding: '0.25rem 0.5rem', width: '80%' }}>
+                                                            <h6 style={{ color: 'rgb(129, 129, 129)', margin: '0' }}>{comment?.user.name.first} {comment?.user.name.last}</h6>
+                                                            <p style={{ color: 'rgb(129, 129, 129)', fontSize: '0.75rem' }}>{comment?.user.bio}</p>
+                                                            <p style={{ marginTop: '1rem' }}>{comment?.comment}</p>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (<h1>No Comments Yet</h1>)
+                                        }
                                     </div>
                                 </div>
                                 <div className="modal-footer">
