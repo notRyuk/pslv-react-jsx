@@ -1,22 +1,21 @@
-body{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    // background: #05141c;
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  // background: #05141c;
 }
 .mainChild{
     margin-top: 3rem;
 }
 
-
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "bootstrap/dist/css/bootstrap.min.css";
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700;800&family=Roboto&display=swap");
 .profileDetails{
   display: flex;
   justify-content: space-between;
 }
 
-.alumni-submit{
+.alumni-submit {
   width: fit-content;
 }
 
@@ -132,7 +131,7 @@ a:hover {
   width: 80px;
 }
 
-.allLikes{
+.allLikes {
   height: 40vh;
   overflow-y: scroll;
 }
@@ -188,7 +187,7 @@ a:hover {
   color: #59758c;
 }
 
-.profileModal{
+.profileModal {
   // position: absolute;
   top: 75px;
 }
@@ -236,7 +235,6 @@ a:hover {
 .linkButton:hover {
   color: white;
 }
-
 
 .left-group {
   display: flex;
@@ -480,7 +478,7 @@ a:hover {
 
 .networkContainer {
   display: grid;
-  grid-template-columns: .8fr 2fr .8fr;
+  grid-template-columns: 0.8fr 2fr 0.8fr;
   width: 90%;
   margin: 0 auto;
   margin-top: 5rem;
@@ -1147,7 +1145,7 @@ a:hover {
 }
 
 /* login/signup */
-.user-message{
+.user-message {
   margin: auto;
   width: 100%;
   padding: 0.5rem;
@@ -1574,7 +1572,7 @@ a:hover {
   box-sizing: border-box;
 }
 
-.jobForm{
+.jobForm {
   margin: 0.5rem;
   border: 1px solid #ccc;
   padding: 10px;
@@ -1596,7 +1594,7 @@ a:hover {
 
 /* Admin */
 
-.admin-nav{
+.admin-nav {
   display: flex;
   justify-content: center;
   margin-top: 1.6rem;
@@ -1612,13 +1610,13 @@ a:hover {
   height: 5rem;
 }
 
-.admin-h1{
+.admin-h1 {
   font-size: 5rem;
   font-weight: 500;
   padding-left: 1rem;
 }
 
-.main-container{
+.main-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   column-gap: 2rem;
@@ -1638,49 +1636,47 @@ a:hover {
   padding: 0rem 0rem 1.2rem;
 }
 
-.container-left textarea{
+.container-left textarea {
   border-radius: 10px;
 }
 
-.container-left button{
+.container-left button {
   color: #fff;
   border: solid 2px;
   margin-top: 1.2rem;
 }
 
-.container-middle{
+.container-middle {
   color: #fff;
 }
 
-.admin-middle-h1{
+.admin-middle-h1 {
   font-size: 2.7rem;
 }
 
-.email-to{
+.email-to {
   font-size: 1.2rem;
   padding-top: 1.5rem;
 }
 
-#email-to{
+#email-to {
   margin-bottom: 0.4rem;
   border-radius: 3px;
 }
 
-#email-subject{
+#email-subject {
   border-radius: 3px;
 }
 
-#emailText{
+#emailText {
   border-radius: 10px;
 }
 
-.container-middle button{
+.container-middle button {
   color: #fff;
   border: solid 2px;
   margin-top: 1rem;
 }
-
-
 
 /*animation index ejs*/
 
@@ -1710,6 +1706,6 @@ div.container--main--index>h1#heading-text:after {
 
 @keyframes blink {
   to {
-      visibility: hidden;
-  } 
+    visibility: hidden;
+  }
 }
