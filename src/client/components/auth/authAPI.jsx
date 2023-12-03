@@ -13,21 +13,43 @@ export async function createUser(userData) {
   });
 }
 
-
-
-
 export async function checkUser(loginInfo) {
   return new Promise(async (resolve, reject) => {
     const email = loginInfo.email;
     const password = loginInfo.password;
 
-    const res = await axios.post(basePath + urls.auth.login, {
-      email,
-      password
-    }).then(res => res.data).catch(err => err.response?.data || err.request)
-    return (res?.status == "success" ? resolve(res) : reject(res))
+    try {
+      const res = await axios.post(basePath + urls.auth.login, {
+        email,
+        password
+      }).then(res => res.data).catch(err => err.response?.data || err.request);
+
+      if (res?.status === "success") {
+        resolve(res);
+      } else {
+        const errorMessage = res?.message || "Wrong Credentials";
+        reject(new Error(errorMessage));
+      }
+    } catch (error) {
+      reject(new Error("An unexpected error occurred"));
+    }
   });
 }
+
+
+
+// export async function checkUser(loginInfo) {
+//   return new Promise(async (resolve, reject) => {
+//     const email = loginInfo.email;
+//     const password = loginInfo.password;
+
+//     const res = await axios.post(basePath + urls.auth.login, {
+//       email,
+//       password
+//     }).then(res => res.data).catch(err => err.response?.data || err.request)
+//     return (res?.status == "success" ? resolve(res) : reject(res))
+//   });
+// }
 
 
 export function signOut(userId) {

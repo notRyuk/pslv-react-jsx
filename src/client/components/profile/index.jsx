@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import companyImg from "../../assets/images/company.png";
-import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 import axios from 'axios';
-import urls,{ serverPath, basePath } from '@utils/urls';
+import urls, { serverPath, basePath } from '@utils/urls';
 import { selectSession } from '../auth/authSlice';
 const ProfileComponent = () => {
     const contact = null;
@@ -24,6 +23,9 @@ const ProfileComponent = () => {
     const [showSkillModal, setShowSkillModal] = useState(false);
     const [showInterestModal, setShowInterestModal] = useState(false);
     const [newSkill, setNewSkill] = useState("");
+
+    const [tempUser, setTempUser] = useState({})
+    const [isLoading, setIsLoading] = useState(true);
 
     function addNewSkill() {
         skills?.push()
@@ -64,9 +66,13 @@ const ProfileComponent = () => {
                         <div className="card profileCard-profile">
                             {/* Cover and Edit Button */}
                             <div className="cover"></div>
-                            <Link to="/edit-details">
-                                <span className="material-symbols-rounded cover-edit">edit</span>
-                            </Link>
+                            {
+                                tempUser?._id === session.user._id && (
+                                    <Link to="/edit-details">
+                                        <span className="material-symbols-rounded cover-edit">edit</span>
+                                    </Link> 
+                                )
+                            }
 
                             {/* Profile Information */}
                             <div className="profileInfo">
@@ -155,14 +161,14 @@ const ProfileComponent = () => {
                                     <p className="connection-info">{connection} connections</p>
 
                                     {/* Additional Info for Alumni */}
-                                    {usermain?.role === 'alumni' && (
+                                    {tempUser?.role === 'alumni' && (
                                         <p className="connection-info">
                                             {job} Jobs posted
                                         </p>
                                     )}
                                 </div>
                                 {/* Apply for Alumni Form (conditionally rendered) */}
-                                {usermain?.role === 'student' && !others && (
+                                {tempUser?.role === 'student' && tempUser?._id === session.user._id && (
                                     <form className='alumni-submit ms-auto' action="/apply-for-alumni" method="post">
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </form>

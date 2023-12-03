@@ -20,19 +20,6 @@ import { checkUserAsync, selectError, selectLoggedInUser, selectLoginStatus } fr
 import Hash from '@utils/hashClient';
 import Loading from '../../loading';
 
-// function Copyright(props: any) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
-
 export default function SignIn() {
   const dispatch = useDispatch();
   const error = useSelector(selectError);
@@ -49,11 +36,12 @@ export default function SignIn() {
     dispatch(
       checkUserAsync({ email, password: hashed })
     );
+    // console.log(error);
   };
   return (
     <>
       {status === "loading" && <Loading></Loading>}
-      {user && <Navigate to="/home" replace={true}></Navigate>}
+      {!error && user && <Navigate to="/home" replace={true}></Navigate>}
       {status === "idle" && !user && <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -120,6 +108,9 @@ export default function SignIn() {
                 },
               }}
             />
+            <Typography variant="body2" color="error">
+              {error && error.message}
+            </Typography>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
