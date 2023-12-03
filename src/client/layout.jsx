@@ -19,7 +19,7 @@ export default function Layout({ children, data }) {
         if (!freePaths.includes(loc.pathname) && session === null) {
             navigate("/signin")
         }
-        if (loc.pathname === "/" && session !== null) {
+        if (freePaths.includes(loc.pathname) && session !== null) {
             navigate("/home")
         }
     }, [session, loc.pathname])

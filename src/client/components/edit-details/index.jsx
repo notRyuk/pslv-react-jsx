@@ -67,7 +67,7 @@ const GetUserDetails = ({ role, user, dob }) => {
                   <h2>Personal Details</h2>
                   <div className="twoInput mt-1">
                     <div className="">
-                      {/* <label htmlFor="">First Name</label> */}
+                      <label htmlFor="">First Name</label>
                       <input
                         type="text"
                         className="firstName mt-1"
@@ -80,7 +80,7 @@ const GetUserDetails = ({ role, user, dob }) => {
                       />
                     </div>
                     <div className="">
-                      {/* <label htmlFor="">Last Name</label> */}
+                      <label htmlFor="">Last Name</label>
                       <input
                         type="text"
                         className="lastName mt-1"
@@ -93,9 +93,9 @@ const GetUserDetails = ({ role, user, dob }) => {
                       />
                     </div>
                   </div>
-                  <div className="oneInput mt-1">
+                  <div className="twoInput mt-1">
                     <div className="">
-                      {/* <label htmlFor="">Date of Birth</label> */}
+                      <label htmlFor="">Date of Birth</label>
                       <input
                         type="date"
                         className="dob mt-1"
@@ -104,22 +104,20 @@ const GetUserDetails = ({ role, user, dob }) => {
                         onChange={handleInputChange}
                       />
                     </div>
-                  </div>
-                  <div className="oneInput mt-2">
                     <div className="">
-                      {/* <label htmlFor="">Profile Photo</label> */}
+                      <label htmlFor="">Profile Photo</label>
                       <input
-                        type="text"
+                        type="file"
                         className="profileImage mt-1"
                         name="profileImage"
-                        placeholder="Profile Image URL"
-                        value={formData.profileImage}
+                        placeholder="Profile Image"
+                        // value={formData.profileImage}
                         onChange={handleInputChange}
                       />
                     </div>
                   </div>
                   <div className="oneInput mt-2">
-                    {/* <label htmlFor="">Bio</label> */}
+                    <label htmlFor="">Bio</label>
                     <textarea id="bio" name="bio" rows="4" cols="50"></textarea>
                   </div>
                 </>

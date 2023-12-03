@@ -89,7 +89,7 @@ export const authSlice = createSlice({
       .addCase(signOutAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         localStorage.removeItem("session")
-        state.loggedInUser = initialState.loggedInUser;
+        state.loggedInUser = null;
       })
   },
 });
@@ -99,6 +99,8 @@ export const selectSession = (state) => state.auth.loggedInUser;
 export const selectCreatedUser = (state) => state.auth.createdUser;
 export const selectError = (state) => state.auth.error;
 export const selectUserCreated = (state) => state.auth.isUserCreated;
+
+export const selectLoginStatus = (state) => state.auth.status;
 
 // export const { } = authSlice.actions;
 
