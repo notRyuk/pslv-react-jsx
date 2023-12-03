@@ -10,11 +10,12 @@ import urls, { basePath } from '@utils/urls';
 import axios from 'axios';
 import { TextField } from '@mui/material';
 
-const PostOptions = () => {
+const PostOptions = ({isPostChanged, setIsPostChanged}) => {
     const tempUser = useSelector(selectLoggedInUser);
     const session = useSelector(selectSession)
     const [postCaption, setPostCaption] = useState('');
     const [postImages, setPostImages] = useState([]);
+    // const [isPostChanged, setIsPostChanged] = useState(false);
     const dispatch = useDispatch();
     const { trigger: postPhoto, data: postedPhoto } = usePoster(basePath + urls.post.create)
 
@@ -34,6 +35,7 @@ const PostOptions = () => {
         });
         setPostCaption('');
         setPostImages([]);
+        setIsPostChanged(!isPostChanged);
     };
 
     const handleArticleSubmit = async(e) => {
@@ -46,23 +48,8 @@ const PostOptions = () => {
             },
         });
         setPostCaption('');
+        setIsPostChanged(!isPostChanged);
     }
-
-    // const handlePhotoSubmit = (e) => {
-    //     e.preventDefault();
-    //     const post = {
-    //         user: tempUser.id,
-    //         content: {
-    //             text: postCaption,
-    //             media: postImage,
-    //         }
-    //     }
-    //     dispatch(createPostAsync(post))
-    //     console.log(postCaption);
-    //     console.log(postImage);
-    //     setPostCaption("")
-    //     setPostImage("")
-    // }
     return (
         <>
             <div className="card">
@@ -70,7 +57,7 @@ const PostOptions = () => {
                     <div className="profileImgPost">
                         <img src={tempUser?.profilePhoto ? serverPath + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
                     </div>
-                    <input type="text" placeholder="Start a post" />
+                    <input type="text" disabled placeholder="Start a post" style={{backgroundColor:'white'}}/>
                 </div>
                 <div className="buttonBox">
                     <div className="specialLink">

@@ -8,6 +8,8 @@ import axios from "axios";
 
 const PostCard = (props) => {
     const [likeInteract, setLikeIneract] = useState([])
+    const [isLikeChanged, setIsLikeChanged] = useState(false)
+    const [isCommentChanged, setIsCommentChanged] = useState(false)
     const [commentInteract, setCommentIneract] = useState([])
     const [comment, setComment] = useState("")
     const likeInteractionsUrl = basePath + urls.post.interactions.replace(':post', props.post._id).replace(':type', "like")
@@ -16,17 +18,6 @@ const PostCard = (props) => {
     const commentInteractUrl = basePath + urls.post.interact.replace(':post', props.post._id).replace(':type', "comment")
     const session = useSelector(selectSession)
     const loggedInUser = useSelector(selectLoggedInUser)
-    useEffect(() => {
-        (async () => {
-            const res = await axios.get(likeInteractionsUrl, {
-                headers: {
-                    authorization: `Bearer ${session.token}`
-                },
-            })
-            // console.log(res.data);   
-            setLikeIneract(res.data)
-        })()
-    }, [likeInteract])
     const likeHandler = async () => {
         const res = await axios.put(likeInteractUrl, {}, {
             headers: {
@@ -34,6 +25,7 @@ const PostCard = (props) => {
             },
         })
         // console.log(res);
+        setIsLikeChanged(!isLikeChanged)
     }
 
     const commentHandler = async (e) => {
@@ -51,6 +43,7 @@ const PostCard = (props) => {
             console.error("Error while sending comment:", error);
         }
         setComment("")
+        setIsCommentChanged(!isCommentChanged)
     };
 
     useEffect(() => {
@@ -63,7 +56,7 @@ const PostCard = (props) => {
             // console.log(res.data);   
             setLikeIneract(res.data)
         })()
-    }, [likeInteract])
+    }, [isLikeChanged])
     useEffect(() => {
         (async () => {
             const res = await axios.get(commentInteractionsUrl, {
@@ -74,7 +67,7 @@ const PostCard = (props) => {
             // console.log(res.data);   
             setCommentIneract(res.data)
         })()
-    }, [commentInteract])
+    }, [isCommentChanged])
     return (
         <>
             {/* {console.log(props.post)} */}

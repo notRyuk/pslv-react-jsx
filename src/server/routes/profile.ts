@@ -13,7 +13,6 @@ const handler = new UserHandler()
 app.post("/create", verifyToken(), verifyBody(["address", "role"]), async (_, res) => {
     const { keys, values, session } = res.locals
     const user = (session as ISession).user as IUser
-
     const address = await Address.findById(getValue(keys, values, "address"))
     if(!address) {
         return res.status(404).send(handler.STATUS_404)
@@ -43,7 +42,7 @@ app.post("/create", verifyToken(), verifyBody(["address", "role"]), async (_, re
     return res.status(200).send(handler.success(profile))
 })
 
-app.put("/;id", verifyToken(), verifyBody(["address", "role"]), async (req, res) => {
+app.put("/:id", verifyToken(), verifyBody(["address", "role"]), async (req, res) => {
     let profile = await Profile.findById(req.params.id)
     if(!profile) {
         return res.status(400).send(handler.error(handler.STATUS_404))

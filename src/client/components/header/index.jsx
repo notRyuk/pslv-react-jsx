@@ -70,7 +70,7 @@ export default function PrimarySearchAppBar() {
 
   const user = useSelector(selectLoggedInUser)
   const userNavigation = [
-    { name: 'My Profile', link: `/profile/${user?.id}` },
+    { name: 'My Profile', link: `/profile/${user?._id}` },
     { name: 'Sign out', link: '/logout' },
   ];
 

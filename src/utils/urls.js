@@ -13,7 +13,7 @@ export default {
             create: "profile/create",
             delete: "profile/:id",
             update: "/profile/update",
-            get: "/profile/:id"
+            get: "/user/details/:id"
         }
     },
     skills: "/skills",
