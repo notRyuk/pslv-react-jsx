@@ -1,6 +1,5 @@
 import React from 'react';
 import GetUserDetails from '../../components/edit-details';
-import Protected from '../../components/auth/Protected'
 
 const Index = () => {
   // Mock data for demonstration
@@ -16,11 +15,14 @@ const Index = () => {
 
   return (
     <div>
-      <Protected>
-      <GetUserDetails role="student" user={mockUser} dob={mockDob}/>
-      </Protected>
+      <GetUserDetails role="student" user={mockUser} dob={mockDob} />
     </div>
   );
 };
+
+export const layout = {
+  hasFooter: false,
+  hasHeader: false
+}
 
 export default Index;

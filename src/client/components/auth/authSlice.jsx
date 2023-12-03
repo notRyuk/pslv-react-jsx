@@ -88,8 +88,8 @@ export const authSlice = createSlice({
       })
       .addCase(signOutAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.loggedInUser = initialState.loggedInUser;
         localStorage.removeItem("session")
+        state.loggedInUser = initialState.loggedInUser;
       })
   },
 });
