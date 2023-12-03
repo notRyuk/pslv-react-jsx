@@ -1,16 +1,5 @@
-// import React from 'react'
-// import ProfileComponent from '../../components/profile'
-// const index = () => {
-//   return (
-//       <ProfileComponent />
-//   )
-// }
-
-// export default index
-
-import React from 'react'
-import ProfileComponent from '../../components/profile'
-import Protected from '../../components/auth/Protected';
+import React from 'react';
+import ProfileComponent from '../../components/profile';
 
 const Index = () => {
   // Mock data for demonstration purposes
@@ -60,9 +49,7 @@ const Index = () => {
 
   return (
     <>
-      <Protected>
-        <ProfileComponent {...mockProps} />
-      </Protected>
+      <ProfileComponent {...mockProps} />
     </>
   );
 };

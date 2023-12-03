@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import companyImg from "../../assets/images/company.png";
 import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
-import "./style.scss";
 const ProfileComponent = ({
     user,
     usermain,
