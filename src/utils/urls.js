@@ -22,5 +22,12 @@ export default {
     },
     work: {
         create: "/work/create"
+    },
+    post: {
+        create: "/post/create",
+        delete: "/post/:id"
+    },
+    posts: {
+        get: "/posts/:id"
     }
 }
