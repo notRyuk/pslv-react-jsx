@@ -9,10 +9,50 @@ import axios from "axios";
 const PostCard = (props) => {
     const [likeInteract, setLikeIneract] = useState([])
     const [commentInteract, setCommentIneract] = useState([])
+    const [comment, setComment] = useState("")
     const likeInteractionsUrl = basePath + urls.post.interactions.replace(':post', props.post._id).replace(':type', "like")
+    const likeInteractUrl = basePath + urls.post.interact.replace(':post', props.post._id).replace(':type', "like")
     const commentInteractionsUrl = basePath + urls.post.interactions.replace(':post', props.post._id).replace(':type', "comment")
+    const commentInteractUrl = basePath + urls.post.interact.replace(':post', props.post._id).replace(':type', "comment")
     const session = useSelector(selectSession)
     const loggedInUser = useSelector(selectLoggedInUser)
+    useEffect(() => {
+        (async () => {
+            const res = await axios.get(likeInteractionsUrl, {
+                headers: {
+                    authorization: `Bearer ${session.token}`
+                },
+            })
+            // console.log(res.data);   
+            setLikeIneract(res.data)
+        })()
+    }, [likeInteract])
+    const likeHandler = async () => {
+        const res = await axios.put(likeInteractUrl, {}, {
+            headers: {
+                authorization: `Bearer ${session.token}`,
+            },
+        })
+        // console.log(res);
+    }
+
+    const commentHandler = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.put(commentInteractUrl, {
+                "comment": comment,
+            }, {
+                headers: {
+                    authorization: `Bearer ${session.token}`,
+                },
+            });
+            console.log(res);
+        } catch (error) {
+            console.error("Error while sending comment:", error);
+        }
+        setComment("")
+    };
+
     useEffect(() => {
         (async () => {
             const res = await axios.get(likeInteractionsUrl, {
@@ -101,8 +141,8 @@ const PostCard = (props) => {
 
                 <div className="actionBar">
                     {/* =======================================================implement like api hit ==================================================*/}
-                    <button className="linkButton" type="submit">
-                        <i className="fa-regular fa-thumbs-up"></i> Like
+                    <button className="linkButton" onClick={likeHandler}>
+                        <i className={`fa-${likeInteract.map(like => like?.user._id).includes(session?.user._id)?"solid":"regular"} fa-thumbs-up`}></i> Like
                     </button>
                     {/* =============================================================== end ============================================================ */}
                     <div className="specialLink">
@@ -127,30 +167,12 @@ const PostCard = (props) => {
                                                 <img src={serverPath + loggedInUser?.profilePhoto} alt="profileImg" />
                                             </div>
 
-                                            {/* =======================================implement api for comment on post=========================================== */}
-
-                                            <form style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', width: '100%' }}>
-                                                <input type="text" name="comment" placeholder="Add a comment" style={{ border: '1px solid black', width: '100%' }} />
+                                            <form style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', width: '100%' }} onSubmit={commentHandler}>
+                                                <input type="text" name="comment" placeholder="Add a comment" style={{ border: '1px solid black', width: '100%' }} value={comment} onChange={(e) => setComment(e.target.value)} />
                                                 <button type="submit" className="submitButton" style={{ padding: '1rem', borderRadius: '50%' }}><i className="fa-sharp fa-solid fa-paper-plane"></i></button>
                                             </form>
                                             {/*===================================================== end ===========================================================*/}
                                         </div>
-                                        {/* {post.commentDetails.length > 0 ? (
-                                            post.commentDetails.map(postUser => (
-                                                <div className="userProfile" key={postUser._id}>
-                                                    <div className="profileImgPost">
-                                                        <img src={postUser.commentUser.imageUrl} alt="profileImg" />
-                                                    </div>
-                                                    <div className="userInfo" style={{ borderRadius: '10px', backgroundColor: 'rgb(231, 231, 231)', padding: '0.25rem 0.5rem', width: '80%' }}>
-                                                        <h6 style={{ color: 'rgb(129, 129, 129)', margin: '0' }}>{postUser.commentUser.firstname} {postUser.commentUser.lastname}</h6>
-                                                        <p style={{ color: 'rgb(129, 129, 129)', fontSize: '0.75rem' }}>{postUser.commentUser.bio}</p>
-                                                        <p style={{ marginTop: '1rem' }}>{postUser.comment}</p>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <h1>No Comments Yet</h1>
-                                        )} */}
                                         {
                                             commentInteract.length > 0 ? (
                                                 commentInteract.map((comment, index) => (
