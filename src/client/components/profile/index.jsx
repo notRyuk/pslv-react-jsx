@@ -6,21 +6,18 @@ import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../aut
 import axios from 'axios';
 import urls,{ serverPath, basePath } from '@utils/urls';
 import { selectSession } from '../auth/authSlice';
-const ProfileComponent = ({
-    user,
-    usermain,
-    contact,
-    address,
-    connection,
-    job,
-    others,
-    post,
-    postImpression,
-    aboutData,
-    skills,
-    interests,
-    users,
-}) => {
+const ProfileComponent = () => {
+    const contact = null;
+    const address = null;
+    const connection  = null;
+    const usermain   = null;
+    const others    = null;
+    const post     = null;
+    const postImpression      = null;
+    const aboutData       = null;
+    const skills        = null;
+    const interests        = null;
+    // const aboutData       = null;
     const [showContactModal, setShowContactModal] = useState(false);
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [showAboutModal, setShowAboutModal] = useState(false);
@@ -33,8 +30,9 @@ const ProfileComponent = ({
     }
     const params = useParams()
     const profileUrl = basePath + urls.user.profile.get.replace(':id',params.id)
-    // const tempUser = useSelector(selectLoggedInUser)
+    // const user = useSelector(selectLoggedInUser)
     const session = useSelector(selectSession)
+    const [user, setUser] = useState({});
     useEffect(() => {
         (async () => {
             const res = await axios.get(profileUrl, {
@@ -42,10 +40,11 @@ const ProfileComponent = ({
                     authorization: `Bearer ${session.token}`
                 },
             })
+            setUser(res.data.data);
             console.log(res.data.data);
         })()
     }, [])
-    const tempUser = useSelector(selectUserInfo)
+    // const user = useSelector(selectUserInfo)
     const status = useSelector(selectUserInfoStatus)
     const dispatch = useDispatch();
     useEffect(() => {
@@ -56,10 +55,8 @@ const ProfileComponent = ({
     }
     return (
         <>
-            {/* {console.log(fetchedUser)} */}
-            {/* {console.log(status)} */}
-            {JSON.stringify({tempUser})}
-            {tempUser !== null &&
+            {JSON.stringify({user})}
+            {user !== null &&
                 <div className="profileContainer">
                     {/* Main Container */}
                     <div className="container-main">
@@ -73,7 +70,7 @@ const ProfileComponent = ({
 
                             {/* Profile Information */}
                             <div className="profileInfo">
-                                <img src={"http://localhost:6969" + tempUser?.profilePhoto} alt="profileImg" className="profileImg" />
+                                <img src={"http://localhost:6969" + user?.profilePhoto} alt="profileImg" className="profileImg" />
                             </div>
                             {/* <p>{fetchedUser.email}</p> */}
                             {/* Profile Details */}
@@ -83,12 +80,12 @@ const ProfileComponent = ({
                                     {/* Edit Title */}
                                     <div className="edit-title">
                                         <h3>
-                                            {tempUser?.name?.first} {tempUser?.name?.last} (
-                                            <span style={{ textTransform: 'capitalize' }}>{tempUser?.role}</span>)
+                                            {user?.name?.first} {user?.name?.last} (
+                                            <span style={{ textTransform: 'capitalize' }}>{user?.role}</span>)
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
-                                    <p className="personalDescription">{tempUser.bio || ""}</p>
+                                    <p className="personalDescription">{user.bio || ""}</p>
 
                                     {/* Location Information */}
                                     <p className="location-info">
