@@ -4,16 +4,13 @@ body {
   box-sizing: border-box;
   // background: #05141c;
 }
-
-.mainChild {
-  margin-top: 3rem;
+.mainChild{
+    margin-top: 3rem;
 }
 
-
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "bootstrap/dist/css/bootstrap.min.css";
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700;800&family=Roboto&display=swap");
-
-.profileDetails {
+.profileDetails{
   display: flex;
   justify-content: space-between;
 }
@@ -226,8 +223,7 @@ a:hover {
 .specialLink a:hover {
   color: white;
 }
-
-.linkButton {
+.linkButton{
   border: none;
   outline: node;
   color: #3297d1;
@@ -239,7 +235,6 @@ a:hover {
 .linkButton:hover {
   color: white;
 }
-
 
 .left-group {
   display: flex;
@@ -483,7 +478,7 @@ a:hover {
 
 .networkContainer {
   display: grid;
-  grid-template-columns: .8fr 2fr .8fr;
+  grid-template-columns: 0.8fr 2fr 0.8fr;
   width: 90%;
   margin: 0 auto;
   margin-top: 5rem;
@@ -1092,8 +1087,7 @@ a:hover {
 .formImgContainer img {
   width: 100%;
 }
-
-.formContainer {
+.formContainer{
   width: 50%;
 }
 
@@ -1161,8 +1155,7 @@ a:hover {
   text-align: center;
   margin-bottom: 0.5rem;
 }
-
-.user-message--error {
+.user-message--error{
   border-color: red;
   background: rgb(255, 176, 176);
   color: red;
@@ -1504,20 +1497,17 @@ a:hover {
   align-items: center;
   gap: 4rem;
 }
-
-.imgSide {
+.imgSide{
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: white;
   width: 50%;
 }
-
-.imgSide img {
+.imgSide img{
   width: 100%;
 }
-
-.imgCol {
+.imgCol{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1557,26 +1547,23 @@ a:hover {
   font-size: 1.5rem;
 }
 
-.FAQ-ques {
-
+.FAQ-ques{
+     
   font-size: 1.2rem;
   color: #fff;
 }
-
-.jobForm {
+.jobForm{
   margin: 0.5rem;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 4px 4px 5px 1px lightgray;
 }
-
-.jobLabel {
+.jobLabel{
   display: block;
   margin-bottom: 5px;
 }
-
-.jobInput {
+.jobInput{
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -1592,13 +1579,11 @@ a:hover {
   border-radius: 5px;
   box-shadow: 4px 4px 5px 1px lightgray;
 }
-
-.jobLabel {
+.jobLabel{
   display: block;
   margin-bottom: 5px;
 }
-
-.jobInput {
+.jobInput{
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -1645,7 +1630,7 @@ a:hover {
 }
 
 
-.container-left h1 {
+.container-left h1{
   color: #fff;
   font-size: 2.7rem;
   padding: 0rem 0rem 1.2rem;
@@ -1693,8 +1678,6 @@ a:hover {
   margin-top: 1rem;
 }
 
-
-
 /*animation index ejs*/
 
 /* div.container--main--index {
@@ -1705,8 +1688,8 @@ a:hover {
 	min-width: 100vw;
 } */
 
-div.container--main--index>h1#heading-text {
-  position: relative;
+div.container--main--index > h1#heading-text {
+	position: relative;
 }
 
 /*Setup the blinking sidebar*/
