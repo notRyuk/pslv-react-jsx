@@ -16,7 +16,7 @@ app.get("/details/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
         { path: "alumni", strictPopulate: false },
         { path: "admin", strictPopulate: false },
         { path: "faculty", strictPopulate: false },
-    ]).exec()
+    ]).select("-password").exec()
     if(!user) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }

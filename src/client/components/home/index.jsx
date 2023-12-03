@@ -16,6 +16,7 @@ import PostCard from "../posts/PostCard";
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
     const [tempPosts,setTempPosts] = useState([])
+    const [isPostChanged, setIsPostChanged] = useState(false)
     const dispatch = useDispatch()
     const tempUser = useSelector(selectLoggedInUser);
     const session = useSelector(selectSession);
@@ -44,7 +45,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
             setTempPosts(res.data.data)
             // console.log(res);
         })()
-    }, [tempPosts])
+    }, [isPostChanged])
 
     if (status === 'loading' || userInfoStatus === 'loading') {
         // Handle loading state, e.g., show a loading spinner
@@ -98,7 +99,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                     {/* middle container header */}
 
                     <div className="center-content content">
-                        <PostOptions></PostOptions>
+                        <PostOptions isPostChanged={isPostChanged} setIsPostChanged={setIsPostChanged}></PostOptions>
                         {tempPosts.reverse().map((eachPost) =>
                             <PostCard
                                 key={eachPost._id}

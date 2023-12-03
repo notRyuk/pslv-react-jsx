@@ -27,7 +27,7 @@ app.post("/create", verifyToken(), verifyBody(["address", "role"]), async (_, re
     }
     profile = await profile.save()
     console.log(profile)
-    return res.sendStatus(200)
+    return res.sendStatus(200).send(handler.success(profile))
 })
 
 app.get("/:role", verifyToken(), async (req, res) => {

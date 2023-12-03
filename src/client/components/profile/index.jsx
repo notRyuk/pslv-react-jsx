@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import companyImg from "../../assets/images/company.png";
 import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
+import axios from 'axios';
+import urls,{ serverPath, basePath } from '@utils/urls';
+import { selectSession } from '../auth/authSlice';
 const ProfileComponent = ({
     user,
     usermain,
@@ -29,7 +32,19 @@ const ProfileComponent = ({
         skills?.push()
     }
     const params = useParams()
+    const profileUrl = basePath + urls.user.profile.get.replace(':id',params.id)
     // const tempUser = useSelector(selectLoggedInUser)
+    const session = useSelector(selectSession)
+    useEffect(() => {
+        (async () => {
+            const res = await axios.get(profileUrl, {
+                headers: {
+                    authorization: `Bearer ${session.token}`
+                },
+            })
+            console.log(res.data.data);
+        })()
+    }, [])
     const tempUser = useSelector(selectUserInfo)
     const status = useSelector(selectUserInfoStatus)
     const dispatch = useDispatch();
@@ -43,6 +58,7 @@ const ProfileComponent = ({
         <>
             {/* {console.log(fetchedUser)} */}
             {/* {console.log(status)} */}
+            {JSON.stringify({tempUser})}
             {tempUser !== null &&
                 <div className="profileContainer">
                     {/* Main Container */}
@@ -67,8 +83,8 @@ const ProfileComponent = ({
                                     {/* Edit Title */}
                                     <div className="edit-title">
                                         <h3>
-                                            {tempUser.name.first} {tempUser.name.last} (
-                                            <span style={{ textTransform: 'capitalize' }}>{tempUser.role}</span>)
+                                            {tempUser?.name?.first} {tempUser?.name?.last} (
+                                            <span style={{ textTransform: 'capitalize' }}>{tempUser?.role}</span>)
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
