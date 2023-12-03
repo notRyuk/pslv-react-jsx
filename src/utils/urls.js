@@ -25,7 +25,9 @@ export default {
     },
     post: {
         create: "/post/create",
-        delete: "/post/:id"
+        delete: "/post/:id",
+        interact: "/post/:post/interact/:type", // type = like or comment
+        interactions: "/post/:post/interactions/:type"
     },
     posts: {
         get: "/posts/:id"

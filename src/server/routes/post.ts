@@ -1,10 +1,12 @@
 import PostHandler from "@handlers/feed/post";
 import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify"
+import Interaction from "@server/models/feed/interaction";
 import Post from "@server/models/feed/post";
+import { InteractionType } from "@types_/feed/interaction";
 import IUser from "@types_/user";
 import { downloadFile } from "@utils/file";
 import Hash from "@utils/hash";
-import { getValue } from "@utils/object";
+import { getKeys, getValue, getValues } from "@utils/object";
 import { Router } from "express"
 import Multer from "multer";
 
@@ -38,6 +40,47 @@ app.post("/create", verifyToken(), multer.array("content.media"), verifyBody(req
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     res.status(200).send(handler.success(post))
+})
+
+app.put("/:post/interact/:type", verifyToken(), verifyParams(["post", "type"]), async (req, res) => {
+    const { keys, values, session } = res.locals
+    if(!Object.values(InteractionType).includes(getValue(keys, values, "type"))) {
+        return res.status(422).send(handler.error("Invalid interaction type."))
+    }
+    const body = req.body
+    const bodyKeys = getKeys(body)
+    const bodyValues = getValues(body)
+    if(
+        getValue(keys, values, "type") === InteractionType.comment && 
+        (!bodyKeys.includes("comment") ||
+        !getValue(bodyKeys, bodyValues, "comment") ||
+        !(getValue(bodyKeys, bodyValues, "comment") as string).length)
+    ) {
+        return res.status(422).send(handler.error(handler.fieldRequired("comment")))
+    }
+    const interaction = await Interaction.create({
+        post: getValue(keys, values, "post"),
+        user: (session.user as IUser)._id,
+        type: getValue(keys, values, "type"),
+        ...(getValue(keys, values, "type") === InteractionType.comment && {
+            comment: getValue(bodyKeys, bodyValues, "comment")
+        })
+    })
+    if(!interaction) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    res.status(200).send(handler.success(interaction))
+})
+
+app.get("/:post/interactions/:type", verifyToken(), verifyParams(["post"]), async (_, res) => {
+    const { keys, values } = res.locals
+    const interactions = await Interaction.find({
+        post: getValue(keys, values, "post"),
+        ...(keys.includes("type") && Object.values(InteractionType).includes(getValue(keys, values, "type")) && {
+            type: getValue(keys, values, "type")
+        })
+    }).populate({ path: "user", select: "-password" }).exec()
+    return res.status(200).send(interactions || [])
 })
 
 app.delete("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
