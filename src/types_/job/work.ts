@@ -7,4 +7,5 @@ export default interface IWork extends IMongoDocument {
     from: Time
     isCurrent: boolean
     to?: Time
+    name: string
 }

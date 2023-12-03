@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectLoggedInUser } from '../auth/authSlice';
 import { Link } from 'react-router-dom';
 import { createPostAsync } from './postSlice';
+import profile from "@client/assets/images/profile.png"
+import { serverPath } from '../../../utils/urls';
 
 const PostOptions = () => {
     const tempUser = useSelector(selectLoggedInUser);
@@ -13,9 +15,9 @@ const PostOptions = () => {
         e.preventDefault();
         const post = {
             user: tempUser,
-            content : {
+            content: {
                 text: postCaption,
-                media:""
+                media: ""
             }
         }
         dispatch(createPostAsync(post))
@@ -27,7 +29,7 @@ const PostOptions = () => {
         e.preventDefault();
         const post = {
             user: tempUser.id,
-            content : {
+            content: {
                 text: postCaption,
                 media: postImage,
             }
@@ -43,7 +45,7 @@ const PostOptions = () => {
             <div className="card">
                 <div className="postBox">
                     <div className="profileImgPost">
-                        <img src={tempUser.details.profileImageUrl} alt="profileImg" />
+                        <img src={tempUser?.profilePhoto ? serverPath + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
                     </div>
                     <input type="text" placeholder="Start a post" />
                 </div>

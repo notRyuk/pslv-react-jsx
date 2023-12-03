@@ -11,7 +11,7 @@ export enum EducationTypes {
 }
 
 export default interface IEducation extends IMongoDocument {
-    id: IMongoDocument["_id"]|IInstitute
+    institute: IMongoDocument["_id"]|IInstitute
     type: EducationTypes|string
     joined: Time
     completion: {

@@ -9,5 +9,6 @@ export default interface IAddress extends IMongoDocument {
     landmark?: string
     city: string // city or village
     state: string
+    country: string
     pinCode: number
 }

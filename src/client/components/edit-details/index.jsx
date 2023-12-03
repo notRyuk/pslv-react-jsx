@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { useTheme } from '@mui/material/styles';
-import MobileStepper from '@mui/material/MobileStepper';
-import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import { EducationTypes } from '/src/types_/user/education';
-import ConnectedWorld from '../../assets/images/connected-world.png'
+import Button from '@mui/material/Button';
+import MobileStepper from '@mui/material/MobileStepper';
+import { useTheme } from '@mui/material/styles';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserAsync, selectLoggedInUser } from '../auth/authSlice';
+import ConnectedWorld from '../../assets/images/connected-world.png';
+import { selectLoggedInUser, updateUserAsync } from '../auth/authSlice';
 
 
 const GetUserDetails = ({ role, user, dob }) => {
@@ -55,9 +54,9 @@ const GetUserDetails = ({ role, user, dob }) => {
   };
   return (
     <main className="mainFormContainer">
-      <h1 style={{fontSize:"4rem", fontWeight:"600"}}>Complete Your Profile</h1>
+      <h1 style={{ fontSize: "3rem", fontWeight: "600" }}>Complete Your Profile</h1>
       <section className="formSection">
-        <div className="formImgContainer" style={{maxWidth:"500px", maxHeight:"506px"}}>
+        <div className="formImgContainer" style={{ maxWidth: "500px", maxHeight: "425px" }}>
           <img src={ConnectedWorld} alt="connected-world" />
         </div>
         <div className="formContainer card">
@@ -65,7 +64,7 @@ const GetUserDetails = ({ role, user, dob }) => {
             <form id="detailForm">
               {activeStep === 0 ? (
                 <>
-                  <h1>Personal Details</h1>
+                  <h2>Personal Details</h2>
                   <div className="twoInput mt-1">
                     <div className="">
                       <label htmlFor="">First Name</label>
@@ -94,7 +93,7 @@ const GetUserDetails = ({ role, user, dob }) => {
                       />
                     </div>
                   </div>
-                  <div className="oneInput mt-1">
+                  <div className="twoInput mt-1">
                     <div className="">
                       <label htmlFor="">Date of Birth</label>
                       <input
@@ -105,16 +104,14 @@ const GetUserDetails = ({ role, user, dob }) => {
                         onChange={handleInputChange}
                       />
                     </div>
-                  </div>
-                  <div className="oneInput mt-2">
                     <div className="">
                       <label htmlFor="">Profile Photo</label>
                       <input
-                        type="text"
+                        type="file"
                         className="profileImage mt-1"
                         name="profileImage"
-                        placeholder="Profile Image URL"
-                        value={formData.profileImage}
+                        placeholder="Profile Image"
+                        // value={formData.profileImage}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -128,32 +125,48 @@ const GetUserDetails = ({ role, user, dob }) => {
 
               {activeStep === 1 ? (
                 <>
-                  <h1>Address Details</h1>
-                  <div className="oneInput">
-                    <label htmlFor="">Adress Line 1</label>
-                    <input type="text" name="line1" placeholder='Flat no. / House no.' id='line1' />
-                  </div>
-                  <div className="oneInput">
-                    <label htmlFor="">Adress Line 2</label>
-                    <input type="text" name="line2" placeholder='Landmark' id='line' />
-                  </div>
-                  <div className="oneInput">
-                    <label htmlFor="">Street</label>
-                    <input type="text" name="street" placeholder='Street name' id='street' />
-                  </div>
-                  <div className="oneInput">
-                    <label htmlFor="city">City</label>
-                    <input type="text" name='city' placeholder='city' id='city' />
-                  </div>
+                  <h2>Address Details</h2>
                   <div className="twoInput">
                     <div className="div">
-                      <label htmlFor="state">State</label>
-                      <input type="text" name="state" placeholder='state' id="state" />
+                      {/* <label htmlFor="name">Name</label> */}
+                      <input type="text" name="name" placeholder='Name' id="name" />
                     </div>
                     <div className="div">
 
-                      <label htmlFor="pinCode">Pin Code</label>
-                      <input type="text" name="pinCode" placeholder='Pin Code' id="pinCode" />
+                      {/* <label htmlFor="buildingName">Building Name</label> */}
+                      <input type="text" name="buildingName" placeholder='Building Name' id="buildingName" />
+                    </div>
+                  </div>
+                  <div className="oneInput">
+                    {/* <label htmlFor="">Adress Line 1</label> */}
+                    <input type="text" name="line1" placeholder='Address Line 1' id='line1' />
+                  </div>
+                  <div className="oneInput">
+                    {/* <label htmlFor="">Adress Line 2</label> */}
+                    <input type="text" name="line2" placeholder='Adress Line 2' id='line' />
+                  </div>
+                  <div className="oneInput">
+                    {/* <label htmlFor="">Street</label> */}
+                    <input type="text" name="street" placeholder='Street name' id='street' />
+                  </div>
+                  <div className="twoInput">
+                    <div className="div">
+                      <input type="text" name='city' placeholder='city' id='city' />
+                    </div>
+                    <div className="div">
+                      <input type="text" name="state" placeholder='State' id="state" />
+                    </div>
+                    
+                  </div>
+                  <div className="twoInput">
+                    <div className="div">
+                      {/* <label htmlFor="state">State</label> */}
+                      <input type="text" name="country" placeholder='country' id="country" />
+                    </div>
+                    <div className="div">
+
+                      {/* <label htmlFor="pinCode">Pin Code</label> */}
+                      <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" />
                     </div>
                   </div>
                   <button type='button' onClick={clickHandler} className="submitButton mt-2" id="detailButton">

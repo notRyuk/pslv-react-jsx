@@ -5,6 +5,8 @@ export enum Models {
     alumni = "alumni",
     admin = "admin",
     session = "session",
+    education = "education",
+    profile = "profile",
 
     institute = "institute",
     course = "institute-courses",
@@ -27,5 +29,6 @@ export enum Models {
     // job
     jobApplication = "job-application",
     company = "company",
-    job = "job"
+    job = "job",
+    work = "work"
 }

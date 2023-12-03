@@ -8,24 +8,25 @@ import Head from "./head";
 export default function Router() {
     const slots = import.meta.glob("@client/pages/**/*.jsx", { eager: true })
     const pages = []
-    for(const page in slots) {
+    for (const page in slots) {
         const slot = slots[page]
         const location = getLocation(page)
-        if(!location) {
+        if (!location) {
             continue
         }
+        // if (freePaths.includes(loc.pathname) || session.token) {
         pages.push((
-            <Route 
+            <Route
                 key={location}
                 path={location}
                 element={(
                     <Suspense fallback={<Loading />}>
                         {slot?.head && <Head head={slot?.head} key={location} />}
-                        {slot?.layout?(
+                        {slot?.layout ? (
                             <Layout data={slot?.layout}>
                                 <slot.default />
                             </Layout>
-                        ):(
+                        ) : (
                             <Layout>
                                 <slot.default />
                             </Layout>
@@ -34,6 +35,7 @@ export default function Router() {
                 )}
             />
         ))
+        // }
     }
     return (
         <Routes>

@@ -1,27 +1,24 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
 // import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { createTheme, makeStyles, ThemeProvider } from '@mui/material/styles';
-import logo from "@client/assets/images/banner.png";
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import classes from "./styles.module.scss";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLoggedInUser, selectError } from '../authSlice';
-import { checkUserAsync } from '../authSlice';
-import { Navigate, Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { Link, Navigate } from 'react-router-dom';
+import { checkUserAsync, selectError, selectLoggedInUser, selectLoginStatus } from '../authSlice';
 
 import Hash from '@utils/hashClient';
+import Loading from '../../loading';
 
 // function Copyright(props: any) {
 //   return (
@@ -40,22 +37,24 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const error = useSelector(selectError);
   const user = useSelector(selectLoggedInUser);
+  const status = useSelector(selectLoginStatus)
 
-  const handleSubmit = async(event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email')
     const password = data.get('password')
     const hashed = await Hash.create(password)
-    console.log(hashed);
     dispatch(
-      checkUserAsync({ email, password })
+      checkUserAsync({ email, password: hashed })
     );
   };
   return (
     <>
+      {status === "loading" && <Loading></Loading>}
       {user && <Navigate to="/home" replace={true}></Navigate>}
-      <Container component="main" maxWidth="xs">
+      {status === "idle" && !user && <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           className={classes.box}
@@ -153,7 +152,7 @@ export default function SignIn() {
           </Box>
         </Box>
         {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
-      </Container>
+      </Container>}
     </>
   );
 }
