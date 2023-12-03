@@ -14,6 +14,9 @@ export default {
             delete: "profile/:id",
             update: "/profile/update",
             get: "/user/details/:id"
+        },
+        address:{
+            create: "address/create"
         }
     },
     skills: "/skills",
@@ -35,7 +38,8 @@ export default {
     },
     request: {
         create: "/connection-request/create",
-        acceptMutual: "/connection-request/:request/mutual/accept"
+        acceptMutual: "/connection-request/:request/mutual/accept",
+        getByUser: "/connection-request/:user"
     },
     connections: {
         getByUser: "/connections/:user"

@@ -10,6 +10,7 @@ import postsRouter from "./posts"
 import connectionRequestRouter from "./connection-request"
 import connectionRouter from "./connection"
 import connectionsRouter from "./connections"
+import addressRouter from "./address"
 
 const app = Router()
 
@@ -23,6 +24,7 @@ app.use("/posts", postsRouter)
 app.use("/connection-request", connectionRequestRouter)
 app.use("/connection", connectionRouter)
 app.use("/connections", connectionsRouter)
+app.use("/address", addressRouter)
 
 app.get("/test", (req, res) => {
     return res.send(req.headers.authorization)

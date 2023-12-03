@@ -1,23 +1,17 @@
-import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { selectLoggedInUser, selectSession } from '../auth/authSlice';
-import { Link } from 'react-router-dom';
-import { createPostAsync } from './postSlice';
-import profile from "@client/assets/images/profile.png"
-import { serverPath } from '../../../utils/urls';
-import { usePoster } from '@client/hooks/fetcher';
+import profile from "@client/assets/images/profile.png";
 import urls, { basePath } from '@utils/urls';
 import axios from 'axios';
-import { TextField } from '@mui/material';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { serverPath } from '../../../utils/urls';
+import { selectLoggedInUser, selectSession } from '../auth/authSlice';
 
-const PostOptions = ({isPostChanged, setIsPostChanged}) => {
+const PostOptions = ({ isPostChanged, setIsPostChanged }) => {
     const tempUser = useSelector(selectLoggedInUser);
     const session = useSelector(selectSession)
     const [postCaption, setPostCaption] = useState('');
     const [postImages, setPostImages] = useState([]);
-    // const [isPostChanged, setIsPostChanged] = useState(false);
-    const dispatch = useDispatch();
-    const { trigger: postPhoto, data: postedPhoto } = usePoster(basePath + urls.post.create)
 
     const handleImageChange = (e) => {
         const files = e.target.files;
@@ -38,7 +32,7 @@ const PostOptions = ({isPostChanged, setIsPostChanged}) => {
         setIsPostChanged(!isPostChanged);
     };
 
-    const handleArticleSubmit = async(e) => {
+    const handleArticleSubmit = async (e) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         const res = await axios.post(basePath + urls.post.create, data, {
@@ -57,7 +51,7 @@ const PostOptions = ({isPostChanged, setIsPostChanged}) => {
                     <div className="profileImgPost">
                         <img src={tempUser?.profilePhoto ? serverPath + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
                     </div>
-                    <input type="text" disabled placeholder="Start a post" style={{backgroundColor:'white'}}/>
+                    <input type="text" disabled placeholder="Start a post" style={{ backgroundColor: 'white' }} />
                 </div>
                 <div className="buttonBox">
                     <div className="specialLink">
