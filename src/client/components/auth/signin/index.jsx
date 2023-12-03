@@ -15,9 +15,10 @@ import classes from "./styles.module.scss";
 
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
-import { checkUserAsync, selectError, selectLoggedInUser } from '../authSlice';
+import { checkUserAsync, selectError, selectLoggedInUser, selectLoginStatus } from '../authSlice';
 
 import Hash from '@utils/hashClient';
+import Loading from '../../loading';
 
 // function Copyright(props: any) {
 //   return (
@@ -36,6 +37,7 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const error = useSelector(selectError);
   const user = useSelector(selectLoggedInUser);
+  const status = useSelector(selectLoginStatus)
 
 
   const handleSubmit = async (event) => {
@@ -50,8 +52,9 @@ export default function SignIn() {
   };
   return (
     <>
+      {status === "loading" && <Loading></Loading>}
       {user && <Navigate to="/home" replace={true}></Navigate>}
-      <Container component="main" maxWidth="xs">
+      {status === "idle" && !user && <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           className={classes.box}
@@ -149,7 +152,7 @@ export default function SignIn() {
           </Box>
         </Box>
         {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
-      </Container>
+      </Container>}
     </>
   );
 }

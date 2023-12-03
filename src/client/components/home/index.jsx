@@ -1,5 +1,5 @@
 import profile from "@client/assets/images/profile.png";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectLoggedInUser, selectSession } from '../auth/authSlice';
@@ -9,14 +9,17 @@ import PostOptions from '../posts/PostOptions';
 import { fetchAllPostsAsync, selectAllPosts, selectPostListStatus } from '../posts/postSlice';
 import './styles.scss';
 import { serverPath } from "../../../utils/urls";
+import axios from "axios";
+import urls, { basePath } from "@utils/urls";
+import PostCard from "../posts/PostCard";
 // import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
-    // const [tempPosts,setTempPosts] = useState([])
+    const [tempPosts,setTempPosts] = useState([])
     const dispatch = useDispatch()
     const tempUser = useSelector(selectLoggedInUser);
     const session = useSelector(selectSession);
-    const tempPosts = useSelector(selectAllPosts);
+    // const tempPosts = useSelector(selectAllPosts);
     const status = useSelector(selectPostListStatus);
     const userInfoStatus = useSelector(selectUserInfoStatus)
     const allUsers = useSelector(selectAllUsers)
@@ -29,6 +32,19 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
     useEffect(() => {
         dispatch(fetchAllUsersAsync())
     }, [dispatch])
+
+    useEffect(()=>{
+       (async () => {
+            const res = await axios.get(basePath + urls.posts.all, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    authorization: `Bearer ${session.token}`
+                },
+            })
+            setTempPosts(res.data.data)
+            // console.log(res);
+        })()
+    }, [tempPosts])
 
     if (status === 'loading' || userInfoStatus === 'loading') {
         // Handle loading state, e.g., show a loading spinner
@@ -83,13 +99,12 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
 
                     <div className="center-content content">
                         <PostOptions></PostOptions>
-                        {/* {tempPosts.map((eachPost) =>
+                        {tempPosts.reverse().map((eachPost) =>
                             <PostCard
-                                key={eachPost.id}
+                                key={eachPost._id}
                                 post={eachPost}
                             />
                         )}
-                        {console.log(tempPosts)} */}
                     </div>
                     <div className="right-content content">
                         <div className="card">

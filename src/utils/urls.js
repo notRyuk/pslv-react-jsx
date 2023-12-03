@@ -30,6 +30,7 @@ export default {
         interactions: "/post/:post/interactions/:type"
     },
     posts: {
-        get: "/posts/:id"
+        get: "/posts/:id",
+        all: "/posts"
     }
 }

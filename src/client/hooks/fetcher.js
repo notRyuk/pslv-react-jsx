@@ -11,7 +11,7 @@ function createRequest() {
     }
     return axios.create({
         headers: {
-            Authorization: `Bearer ${session.token}`
+            authorization: `Bearer ${session.token}`
         }
     })
 }
@@ -24,4 +24,9 @@ export function useGetter(url, config) {
 export function usePoster(url, config) {
     const request = createRequest()
     return useSWRMutation(url, async (url, data) => await request.post(url, data, config))
+}
+
+export function usePutter(url, config) {
+    const request = createRequest()
+    return useSWRMutation(url, async (url, data) => await request.put(url, data, config))
 }
