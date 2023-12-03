@@ -50,6 +50,18 @@ app.put("/:post/interact/:type", verifyToken(), verifyParams(["post", "type"]), 
     const body = req.body
     const bodyKeys = getKeys(body)
     const bodyValues = getValues(body)
+    const alreadyLiked = await Interaction.findOne({
+        user: (session.user as IUser)._id,
+        post: getValue(keys, values, "post"),
+        type: getValue(keys, values, "type")
+    })
+    if(getValue(keys, values, "type") === InteractionType.like && alreadyLiked) {
+        const deleted = await Interaction.findByIdAndDelete(alreadyLiked._id)
+        if (!deleted) {
+            return res.status(404).send(handler.error(handler.STATUS_404))
+        }
+        return res.status(200).send(handler.success(deleted))
+    } 
     if(
         getValue(keys, values, "type") === InteractionType.comment && 
         (!bodyKeys.includes("comment") ||
