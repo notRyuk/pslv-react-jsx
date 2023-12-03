@@ -5,6 +5,7 @@ import companyImg from "../../assets/images/company.png";
 import axios from 'axios';
 import urls, { serverPath, basePath } from '@utils/urls';
 import { selectSession } from '../auth/authSlice';
+import Loading from '../loading';
 const ProfileComponent = ({
     user,
     usermain,
@@ -34,34 +35,32 @@ const ProfileComponent = ({
         skills?.push()
     }
     const params = useParams()
-    const profileUrl = basePath + urls.user.profile.get.replace(':id',params.id)
+    const profileUrl = basePath + urls.user.profile.get.replace(':id', params.id)
     // const tempUser = useSelector(selectLoggedInUser)
     const session = useSelector(selectSession)
     useEffect(() => {
-        (async () => {
-            const res = await axios.get(profileUrl, {
-                headers: {
-                    authorization: `Bearer ${session.token}`
-                },
-            })
-            console.log(res.data.data);
-        })()
-    }, [])
-    const tempUser = useSelector(selectUserInfo)
-    const status = useSelector(selectUserInfoStatus)
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(fetchUserByIdAsync(params.id))
-    }, [dispatch, params.id])
-    if (status === 'loading') {
-        return <p>Loading....</p>
-    }
+        const fetchProfileData = async () => {
+            try {
+                const res = await axios.get(profileUrl, {
+                    headers: {
+                        authorization: `Bearer ${session.token}`
+                    },
+                });
+                setTempUser(res.data.data);
+            } catch (error) {
+                console.error("Error while fetching profile data:", error);
+            } finally {
+                // Set loading to false regardless of success or failure
+                setIsLoading(false);
+            }
+        };
+
+        fetchProfileData();
+    }, [session.token]);
+
     return (
         <>
-            {/* {console.log(fetchedUser)} */}
-            {/* {console.log(status)} */}
-            {JSON.stringify({tempUser})}
-            {tempUser !== null &&
+            {isLoading ? <Loading></Loading> :
                 <div className="profileContainer">
                     {/* Main Container */}
                     <div className="container-main">
@@ -79,7 +78,7 @@ const ProfileComponent = ({
 
                             {/* Profile Information */}
                             <div className="profileInfo">
-                                <img src={"http://localhost:6969" + tempUser?.profilePhoto} alt="profileImg" className="profileImg" />
+                                <img src={serverPath + tempUser?.profilePhoto} alt="profileImg" className="profileImg" />
                             </div>
                             {/* <p>{fetchedUser.email}</p> */}
                             {/* Profile Details */}
@@ -94,7 +93,7 @@ const ProfileComponent = ({
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
-                                    <p className="personalDescription">{tempUser.bio || ""}</p>
+                                    <p className="personalDescription">{tempUser?.bio || ""}</p>
 
                                     {/* Location Information */}
                                     <p className="location-info">
