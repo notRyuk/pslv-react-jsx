@@ -1,28 +1,34 @@
 // useGetter.js
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { selectSession } from "../components/auth/authSlice";
 
-export const useGetter = (url, config = {}, depend = []) => {
+const buildConfig = (config) => {
+    const session = useSelector(selectSession)
+    return {
+        headers: {
+            authorization: `Bearer ${session.token}`
+        },
+        ...config
+    }
+}
+
+export const useGetter = (url, config = {}) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(url, config);
-                setData(response.data);
-            } catch (error) {
-                setError(error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchData();
-    }, depend);
-
-    return { data, error, isLoading };
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(url, buildConfig(config));
+            setData(response.data);
+        } catch (error) {
+            setError(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    return { data, error, isLoading, refetch: fetchData };
 };
 
 export const usePoster = (url, config = {}) => {
@@ -32,9 +38,8 @@ export const usePoster = (url, config = {}) => {
 
     const postRequest = async (dataToPost) => {
         setIsLoading(true);
-
         try {
-            const response = await axios.post(url, dataToPost, config);
+            const response = await axios.post(url, dataToPost, buildConfig(config));
             setData(response.data);
         } catch (error) {
             setError(error);
@@ -53,9 +58,8 @@ export const usePutter = (url, config = {}) => {
 
     const putRequest = async (dataToPut) => {
         setIsLoading(true);
-
         try {
-            const response = await axios.put(url, dataToPut, config);
+            const response = await axios.put(url, dataToPut, buildConfig(config));
             setData(response.data);
         } catch (error) {
             setError(error);

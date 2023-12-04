@@ -15,13 +15,17 @@ const handler = new ConnectionHandler()
 
 app.get("/:user", verifyToken(), verifyParams(["user"]), async (_, res) => {
     const { keys, values } = res.locals;
-    const connections = await Connection.find({ users: getValue(keys, values, "user") })
-        .populate({
-            path: 'users',
-            match: { _id: { $ne: getValue(keys, values, "user") } } // Exclude the user in params
-        })
-        .exec();
+    const connections = await Connection.find({ users: getValue(keys, values, "user") }).populate({
+        path: 'users',
+        match: { 
+            _id: { 
+                $ne: getValue(keys, values, "user") 
+            } 
+        }, // Exclude the user in params,
+        select: "-password"
+    }).exec();
     return res.status(200).send(handler.success(connections));
 });
+
 
 export default app

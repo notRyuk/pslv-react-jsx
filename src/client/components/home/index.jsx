@@ -11,15 +11,18 @@ import Loading from "../loading";
 import PostCard from "../posts/PostCard";
 import PostOptions from '../posts/PostOptions';
 import './styles.scss';
-// import { fetchUserByIdAsync, selectUserInfo, selectUserInfoStatus } from '../auth/user/userSlice';
+import { useGetter } from "../../hooks/fetcher";
+import SuggestedUser from "../cards/SuggestedUser";
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
+    const suggestUrl = basePath + urls.user.suggestedUser.get
     const [tempPosts, setTempPosts] = useState([])
     const [isPostChanged, setIsPostChanged] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
     const tempUser = useSelector(selectLoggedInUser);
     const session = useSelector(selectSession);
 
+    const { data: suggestedUser, mutate: suggestMutate, isLoading: suggestIsLoading } = useGetter(suggestUrl)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -72,18 +75,23 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
 
                         {/* left connect container */}
 
-                        {/* <div className="card left-group">
+                        <div className="card left-group">
                             <h5>Connect with more people.....</h5>
-                            {allUsers.map((user) => {
-                                if (user._id !== tempUser._id) {
-                                    return <SuggestedUser key={user._id} user={user} />
-                                }
-                            }
+                            {suggestIsLoading && <Loading style={{ padding: "1rem", height: "none" }} />}
+                            {!suggestIsLoading && suggestedUser?.data?.length > 0 ? (
+                                <>
+                                    {suggestedUser.data.map(eachUser => (
+                                        <SuggestedUser user={eachUser} key={eachUser._id} suggestMutate={suggestMutate} />
+                                    ))}
+                                    <div className="specialLink">
+                                        <Link to="/network">Show More</Link>
+                                    </div>
+                                </>
+                            ) : (
+                                <h5>No Suggestions</h5>
                             )}
-                            <div className="specialLink">
-                                <Link to="/network">Show More</Link>
-                            </div>
-                        </div> */}
+
+                        </div>
                     </div>
 
                     {/* middle container header */}

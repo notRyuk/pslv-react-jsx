@@ -18,7 +18,7 @@ function createRequest() {
 
 export function useGetter(url, config) {
     const request = createRequest()
-    return useSWR(url, async (url) => await request.get(url, config))
+    return useSWR(url, async (url) => await request.get(url, config).then(res => res.data).catch(err => err.response || err))
 }
 
 export function usePoster(url, config) {

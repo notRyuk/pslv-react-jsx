@@ -1,8 +1,6 @@
 import ConnectionHandler from "@handlers/user/connection";
-import { verifyToken, verifyParams } from "@server/middleware/verify";
+import { verifyToken } from "@server/middleware/verify";
 import Connection from "@server/models/user/connection";
-import ConnectionRequest from "@server/models/user/connection-request";
-import { getValue } from "@utils/object";
 import { Router } from "express";
 
 const app = Router();
@@ -20,20 +18,21 @@ app.post("/create", verifyToken(), async (req, res) => {
     return res.status(200).send(handler.success(connection));
 });
 
-app.get("/:user", verifyToken(), verifyParams(["user"]), async (_, res) => {
-    const { keys, values } = res.locals;
-    const connectionRequests = await ConnectionRequest.find({ to: getValue(keys, values, "user") })
-        .populate({
-            path: 'from',
-            match: { _id: { $ne: getValue(keys, values, "user") } } // Exclude the user in params
-        })
-        .exec();
+// app.get("/:user", verifyToken(), verifyParams(["user"]), async (_, res) => {
+//     const { keys, values } = res.locals;
+//     const connectionRequests = await ConnectionRequest.find({ to: getValue(keys, values, "user") })
+//         .populate({
+//             path: 'from',
+//             match: { _id: { $ne: getValue(keys, values, "user") } } // Exclude the user in params
+//         })
+//         .exec();
 
-    if (!connectionRequests) {
-        return res.status(404).send(handler.error(handler.STATUS_404));
-    }
-    return res.status(200).send(handler.success(connectionRequests));
-});
+//     if (!connectionRequests) {
+//         return res.status(404).send(handler.error(handler.STATUS_404));
+//     }
+//     return res.status(200).send(handler.success(connectionRequests));
+// });
+
 
 app.get("/", async (_, res) => {
     const connections = await Connection.find();

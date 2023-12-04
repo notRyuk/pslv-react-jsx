@@ -17,6 +17,9 @@ export default {
         },
         address:{
             create: "address/create"
+        },
+        suggestedUser:{
+            get: "/user/all-users"
         }
     },
     skills: "/skills",
@@ -39,7 +42,8 @@ export default {
     request: {
         create: "/connection-request/create",
         acceptMutual: "/connection-request/:request/mutual/accept",
-        getByUser: "/connection-request/:user"
+        from: "/connection-request/from",
+        ignore:"/connection-request/:request/ignore"
     },
     connections: {
         getByUser: "/connections/:user"

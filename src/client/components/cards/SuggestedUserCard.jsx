@@ -1,8 +1,27 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { basePath, serverPath } from '@utils/urls'
+import urls,{ basePath, serverPath } from '@utils/urls'
+import { useSelector } from 'react-redux'
+import { selectSession } from '../auth/authSlice'
+import axios from 'axios'
 
 const SuggestedUserCard = (props) => {
+    const sendRequestUrl = basePath + urls.request.create
+    const session = useSelector(selectSession)
+    const clickHandler = async()=>{
+        const data = new FormData()
+        data.append("to", props.user?._id)
+        data.append("type", "Mutual")
+        const res = await axios.post(sendRequestUrl, data, {
+            headers:{
+                authorization: `Bearer ${session.token}`,
+                "Content-Type": 'multipart/form-data',
+            }
+        })
+        props.suggestMutate()
+        props.requestMutate()
+        console.log(res);
+    }
     return (
         <>
                 <div className="card profileCard suggestedCard" key={props.user?._id}>
@@ -20,7 +39,7 @@ const SuggestedUserCard = (props) => {
                         </div>
                     </Link>
                     <div>
-                        <button className="text-button">
+                        <button className="text-button" type='button' onClick={clickHandler}>
                             <i className="fa-solid fa-user-plus"></i> Connect
                         </button>
                     </div>
