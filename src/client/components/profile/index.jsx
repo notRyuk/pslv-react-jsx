@@ -96,7 +96,7 @@ const ProfileComponent = ({
                                 tempUser?._id === session.user._id && (
                                     <Link to="/edit-details">
                                         <span className="material-symbols-rounded cover-edit">edit</span>
-                                    </Link>
+                                    </Link> 
                                 )
                             }
 

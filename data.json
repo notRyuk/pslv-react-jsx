@@ -4,7 +4,7 @@
       "email": "tusharph1@gmail.com",
       "password": "123",
       "role": "student",
-      "id": 1,
+      "_id": 1,
       "details": {
         "firstName": "Tushar",
         "lastName": "Pathak",
@@ -18,7 +18,7 @@
       "email": "test@gmail.com",
       "password": "123",
       "role": "alumni",
-      "id": 2,
+      "_id": 2,
       "details": {
         "firstName": "Test",
         "lastName": "Alumni",
@@ -35,7 +35,7 @@
         "email": "tusharph1@gmail.com",
         "password": "123",
         "role": "student",
-        "id": 1,
+        "_id": 1,
         "details": {
           "firstName": "Tushar",
           "lastName": "Pathak",
@@ -49,14 +49,14 @@
         "text": "Test",
         "media": ""
       },
-      "id": 1
+      "_id": 1
     },
     {
       "user": {
         "email": "tusharph1@gmail.com",
         "password": "123",
         "role": "student",
-        "id": 1,
+        "_id": 1,
         "details": {
           "firstName": "Tushar",
           "lastName": "Pathak",
@@ -70,14 +70,14 @@
         "text": "Test",
         "media": ""
       },
-      "id": 2
+      "_id": 2
     },
     {
       "user": {
         "email": "tusharph1@gmail.com",
         "password": "123",
         "role": "student",
-        "id": 1,
+        "_id": 1,
         "details": {
           "firstName": "Tushar",
           "lastName": "Pathak",
@@ -91,14 +91,14 @@
         "text": "Testing for image",
         "media": "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20221222184908/web-development1.png"
       },
-      "id": 3
+      "_id": 3
     },
     {
       "user": {
         "email": "tusharph1@gmail.com",
         "password": "123",
         "role": "student",
-        "id": 1,
+        "_id": 1,
         "details": {
           "firstName": "Tushar",
           "lastName": "Pathak",
@@ -112,7 +112,7 @@
         "text": "Final test",
         "media": ""
       },
-      "id": 4
+      "_id": 4
     }
   ]
 }
