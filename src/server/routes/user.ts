@@ -59,8 +59,6 @@ app.get("/details/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     const user = await User.findById(getValue(keys, values, "id")).populate([
         { path: "profile", strictPopulate: false },
         { path: "profile.address", strictPopulate: false },
-        { path: "student", strictPopulate: false },
-        { path: "alumni", strictPopulate: false },
         { path: "admin", strictPopulate: false },
         { path: "faculty", strictPopulate: false },
     ]).select("-password").exec()

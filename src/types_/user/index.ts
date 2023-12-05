@@ -26,8 +26,7 @@ export default interface IUser extends IMongoDocument {
     profilePhoto?: string
     role: ProfileRoles | string
 
-    student?: IMongoDocument["_id"] | IProfile
-    alumni?: IMongoDocument["_id"] | IProfile
+    profile?: IMongoDocument["_id"] | IProfile
     admin?: IMongoDocument["_id"] | IAdmin
     faculty?: IMongoDocument["_id"] | IFaculty
 }

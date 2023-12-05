@@ -30,7 +30,6 @@ app.put("/coonection-request/:request/:status", // status = accept / reject
             return res.status(404).send(handler.error(handler.STATUS_404))
         }
         user.role = ProfileRoles.alumni
-        user.alumni = user.student
         const updatedUser = await user.save()
         if(!updatedUser) {
             return res.status(404).send(handler.error(handler.STATUS_404))

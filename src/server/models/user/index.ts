@@ -53,13 +53,9 @@ const userSchema = new Schema<IUser>({
         default: ProfileRoles.student
     },
 
-    student: {
+    profile: {
         type: Schema.Types.ObjectId,
         ref: Models.student
-    },
-    alumni: {
-        type: Schema.Types.ObjectId,
-        ref: Models.alumni
     },
     admin: {
         type: Schema.Types.ObjectId,
