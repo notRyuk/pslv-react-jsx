@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 export async function createUser(userData) {
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve, reject) => {
     const res = await axios.post(basePath + urls.auth.register, userData, {
       headers: {
         "Content-Type": "multiipart/form-data"

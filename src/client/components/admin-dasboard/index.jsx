@@ -7,27 +7,14 @@ import { fetchAllUsersAsync, selectAllUsers, selectUserInfoStatus } from '../aut
 import RequestedUser from '../cards/RequestedUser';
 import NewsCard from '../cards/newsCard';
 import "./styles.scss";
+import AluminiRequestCard from '../cards/AluminiRequestCard';
 
 const AdminDashboard = ({ role, user, connection, users, posts }) => {
-    const dispatch = useDispatch()
-    const tempUser = useSelector(selectLoggedInUser);
-    const tempPosts = useSelector(selectAllPosts);
-    const status = useSelector(selectPostListStatus);
-    const userInfoStatus = useSelector(selectUserInfoStatus)
-    const allUsers = useSelector(selectAllUsers)
 
-
-    useEffect(() => {
-        dispatch(fetchAllPostsAsync())
-    }, [dispatch])
-
-    useEffect(() => {
-        dispatch(fetchAllUsersAsync())
-    }, [dispatch])
-
-    if (status === 'loading' || userInfoStatus === 'loading') {
-        return <div>Loading...</div>;
-    }
+    const tempUser = useSelector(selectLoggedInUser)
+    console.log(tempUser);
+    const status = "idle"
+    const userInfoStatus = "idle"
     return (
         <>
             {role === 'admin' ? (
@@ -46,10 +33,11 @@ const AdminDashboard = ({ role, user, connection, users, posts }) => {
 
                     {/* middle container header */}
 
-                    <div className="center-content content" id='center-content'>
-                    <RequestedUser user={tempUser}></RequestedUser>
-                    <RequestedUser user={tempUser}></RequestedUser>
-                    <RequestedUser user={tempUser}></RequestedUser>
+                    <div className="card center-content content" id='center-content'>
+                    <h2 className='pb-2' style={{fontWeight:"600", borderBottom:"1px solid white"}}>Student to Alumini Requests</h2>
+                    <AluminiRequestCard user={tempUser}></AluminiRequestCard>
+                    <AluminiRequestCard user={tempUser}></AluminiRequestCard>
+                    <AluminiRequestCard user={tempUser}></AluminiRequestCard>
                     </div>
                     <div className="right-content content" id='right-content'>
                         <div className="card">

@@ -53,25 +53,25 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
     return res.status(200).send(handler.success(connectionRequest))
 });
 
-app.get("/", async (_, res) => {
-    const connectionRequests = await ConnectionRequest.find()
-    return res.status(200).send(handler.success(connectionRequests))
-})
+// app.get("/", async (_, res) => {
+//     const connectionRequests = await ConnectionRequest.find()
+//     return res.status(200).send(handler.success(connectionRequests))
+// })
 
 
-app.get("/:id", async (req, res) => {
-    const connectionRequestId = req.params.id;
-    const connectionRequest = await ConnectionRequest.findById(connectionRequestId)
-    if (!connectionRequest) {
-        return res.status(404).send(handler.error(handler.STATUS_404))
-    }
-    return res.status(200).send(handler.success(connectionRequest))
-})
+// app.get("/:id", async (req, res) => {
+//     const connectionRequestId = req.params.id;
+//     const connectionRequest = await ConnectionRequest.findById(connectionRequestId)
+//     if (!connectionRequest) {
+//         return res.status(404).send(handler.error(handler.STATUS_404))
+//     }
+//     return res.status(200).send(handler.success(connectionRequest))
+// })
 
 
-app.delete("/:id", verifyToken(), async (req, res) => {
-    const connectionRequestId = req.params.id;
-    const connectionRequest = await ConnectionRequest.findByIdAndDelete(connectionRequestId)
+app.delete("/:request/ignore", verifyToken(),verifyParams(["request"]), async (_, res) => {
+    const { keys, values } = res.locals
+    const connectionRequest = await ConnectionRequest.findByIdAndDelete(getValue(keys, values, "request"))
     if (!connectionRequest) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
@@ -106,6 +106,18 @@ app.put("/:request/mutual/accept", verifyToken(), verifyParams(["request"]), asy
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     return res.status(200).send(handler.success(connection))
+})
+
+app.get("/from", verifyToken(), async (_, res) => {
+    const { session } = res.locals
+    const connectionRequests = await ConnectionRequest.find({ to: (session.user as IUser)._id}).populate({
+        path: "from",
+        select: "-password"
+    }).exec()
+    if (!connectionRequests) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    return res.status(200).send(handler.success(connectionRequests))
 })
 
 export default app;
