@@ -1,8 +1,9 @@
 import UserHandler from "@handlers/user";
 import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Address from "@server/models/address";
+import User from "@server/models/user";
 import Profile from "@server/models/user/profile";
-import IUser, { ProfileRoles } from "@types_/user";
+import IUser from "@types_/user";
 import ISession from "@types_/user/session";
 import { getValue } from "@utils/object";
 import { Router } from "express";
@@ -10,19 +11,17 @@ import { Router } from "express";
 const app = Router()
 const handler = new UserHandler()
 
-app.post("/create", verifyToken(), verifyBody(["address", "role"]), async (_, res) => {
+app.post("/create", verifyToken(), verifyBody(["role"]), async (req, res) => {
     const { keys, values, session } = res.locals
-    const user = (session as ISession).user as IUser
-    const address = await Address.findById(getValue(keys, values, "address"))
-    if(!address) {
-        return res.status(404).send(handler.STATUS_404)
+    const user = await User.findById(((session as ISession).user as IUser)._id)
+    if(!user) {
+        return res.status(404).send(handler.error(handler.MISSING_AUTH_HEADER))
     }
-    let profile = await Profile.findById(user[(getValue(keys, values, "role") as ProfileRoles)])
-    if(!profile) {
-        profile = new Profile({
-            address: address._id
-        })
-    }
+    console.log(values[0])
+    const address = await Address.create(req.body?.address)
+    let profile =  new Profile({
+        address: address._id
+    })
     if(keys.includes("education")) {
         profile.set("education", getValue(keys, values, "education"))
     }
@@ -39,10 +38,15 @@ app.post("/create", verifyToken(), verifyBody(["address", "role"]), async (_, re
     if(!profile) {
         return res.status(400).send(handler.error(handler.STATUS_404))
     }
-    return res.status(200).send(handler.success(profile))
+    user.set(getValue(keys, values, "role"), profile)
+    const updatedUser = await user.save()
+    if(!updatedUser) {
+        return res.status(400).send(handler.error(handler.STATUS_404))
+    }
+    return res.status(200).send(handler.success(updatedUser))
 })
 
-app.put("/:id", verifyToken(), verifyBody(["address", "role"]), async (req, res) => {
+app.put("/:id", verifyToken(), verifyBody(["role"]), async (req, res) => {
     let profile = await Profile.findById(req.params.id)
     if(!profile) {
         return res.status(400).send(handler.error(handler.STATUS_404))
@@ -55,7 +59,7 @@ app.put("/:id", verifyToken(), verifyBody(["address", "role"]), async (req, res)
         profile.set("achievements", getValue(keys, values, "achievements"))
     }
     if(keys.includes("address")) {
-        profile.set("address", getValue(keys, values, "address"))
+        profile.set("address", req.body?.address)
     }
     if(keys.includes("skills")) {
         profile.set("skills", getValue(keys, values, "skills"))

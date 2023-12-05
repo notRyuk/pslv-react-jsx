@@ -6,7 +6,7 @@ import axios from 'axios';
 import urls, { serverPath, basePath } from '@utils/urls';
 import { selectSession } from '../auth/authSlice';
 import Loading from '../loading';
-import { useGetter } from '../../hooks/fetcher';
+import { useGetter, usePoster } from '../../hooks/fetcher';
 import Footer from '../footer';
 const ProfileComponent = ({
     user,
@@ -61,9 +61,26 @@ const ProfileComponent = ({
                 setIsLoading(false);
             }
         };
-        setOthers(session?.user._id === params.id)
+        setOthers(session?.user._id !== params.id)
         fetchProfileData();
     }, [session.token]);
+
+    const { trigger: createProfile } = usePoster(basePath+urls.user.profile.create)
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+        const adddress = {}
+        for (const entry of formData.entries()) {
+            address[entry[0]] = entry[1]
+        }
+        // createProfile({address, role: session?.user?.role})
+        const res = await axios.post(basePath+urls.user.profile.create, {address, role: session?.user?.role}, {
+            headers: {
+                authorization: `Bearer ${session?.token}`
+            }
+        }).then(res => res.data).catch(err => err?.response?.data || err)
+        console.log(res)
+    }
 
     return (
         <>
@@ -79,7 +96,7 @@ const ProfileComponent = ({
                                 tempUser?._id === session.user._id && (
                                     <Link to="/edit-details">
                                         <span className="material-symbols-rounded cover-edit">edit</span>
-                                    </Link> 
+                                    </Link>
                                 )
                             }
 
@@ -226,6 +243,55 @@ const ProfileComponent = ({
                                 </div>
                             </div>
                         </div>
+
+                        <form id='detailForm' onSubmit={handleSubmit}>
+                            <h2>Address Details</h2>
+                            <div className="twoInput">
+                                <div className="div">
+                                    {/* <label htmlFor="name">Name</label> */}
+                                    <input type="text" name="name" placeholder='Name' id="name" />
+                                </div>
+                                <div className="div">
+
+                                    {/* <label htmlFor="buildingName">Building Name</label> */}
+                                    <input type="text" name="buildingName" placeholder='Building Name' id="buildingName" />
+                                </div>
+                            </div>
+                            <div className="oneInput">
+                                {/* <label htmlFor="">Adress Line 1</label> */}
+                                <input type="text" name="line1" placeholder='Address Line 1' id='line1' />
+                            </div>
+                            <div className="oneInput">
+                                {/* <label htmlFor="">Adress Line 2</label> */}
+                                <input type="text" name="line2" placeholder='Adress Line 2' id='line' />
+                            </div>
+                            <div className="oneInput">
+                                {/* <label htmlFor="">Street</label> */}
+                                <input type="text" name="street" placeholder='Street name' id='street' />
+                            </div>
+                            <div className="twoInput">
+                                <div className="div">
+                                    <input type="text" name='city' placeholder='city' id='city' />
+                                </div>
+                                <div className="div">
+                                    <input type="text" name="state" placeholder='State' id="state" />
+                                </div>
+                            </div>
+                            <div className="twoInput">
+                                <div className="div">
+                                    {/* <label htmlFor="state">State</label> */}
+                                    <input type="text" name="country" placeholder='country' id="country" />
+                                </div>
+                                <div className="div">
+
+                                    {/* <label htmlFor="pinCode">Pin Code</label> */}
+                                    <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" />
+                                </div>
+                            </div>
+                            <button type='submit' className="submitButton mt-2" id="detailButton">
+                                Submit
+                            </button>
+                        </form>
 
                         {/* Profile Card - About */}
                         <div className="profile-card card">
@@ -437,7 +503,7 @@ const ProfileComponent = ({
 
                     {/* Right Container */}
                     <div className="container-right content">
-                {/* <div className="card left-group" style={{ color: '#cacaca' }}>
+                        {/* <div className="card left-group" style={{ color: '#cacaca' }}>
                     <h6>Connect with more people.....</h6>
                     {users.map((reqUser) => (
                         <form key={requser?.user} action="/api/connection/create" method="post">
@@ -466,8 +532,8 @@ const ProfileComponent = ({
                         </form>
                     ))}
                 </div> */}
-                <Footer></Footer>
-            </div>
+                        <Footer></Footer>
+                    </div>
                 </div>
             }
         </>

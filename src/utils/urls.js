@@ -10,13 +10,13 @@ export default {
     },
     user: {
         profile: {
-            create: "profile/create",
-            delete: "profile/:id",
+            create: "/profile/create",
+            delete: "/profile/:id",
             update: "/profile/update",
             get: "/user/details/:id"
         },
         address:{
-            create: "address/create"
+            create: "/address/create"
         },
         suggestedUser:{
             get: "/user/all-users"
