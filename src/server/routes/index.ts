@@ -11,6 +11,8 @@ import connectionRequestRouter from "./connection-request"
 import connectionRouter from "./connection"
 import connectionsRouter from "./connections"
 import addressRouter from "./address"
+import companyRouter from "./company"
+import companiesRouter from "./companies"
 
 const app = Router()
 
@@ -25,6 +27,8 @@ app.use("/connection-request", connectionRequestRouter)
 app.use("/connection", connectionRouter)
 app.use("/connections", connectionsRouter)
 app.use("/address", addressRouter)
+app.use("/company", companyRouter)
+app.use("/companies", companiesRouter)
 
 app.get("/test", (req, res) => {
     return res.send(req.headers.authorization)
