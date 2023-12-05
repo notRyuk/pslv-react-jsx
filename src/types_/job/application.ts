@@ -1,6 +1,7 @@
 import { Time } from "@types_";
 import IMongoDocument from "@types_/mongo";
 import IUser from "@types_/user";
+import IJob from ".";
 
 // application for the job posted
 export default interface IJobApplication extends IMongoDocument {
@@ -8,4 +9,5 @@ export default interface IJobApplication extends IMongoDocument {
     coverLetter: string
     resume: string
     createdAt: Time
+    job: IMongoDocument["_id"]|IJob
 }

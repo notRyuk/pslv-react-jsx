@@ -22,6 +22,11 @@ const jobApplicationSchema = new Schema<IJobApplication>({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    job: {
+        type: Schema.Types.ObjectId,
+        ref: Models.job,
+        required: handler.fieldRequired("job")
     }
 })
 

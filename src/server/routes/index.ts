@@ -13,6 +13,10 @@ import connectionsRouter from "./connections"
 import addressRouter from "./address"
 import companyRouter from "./company"
 import companiesRouter from "./companies"
+import jobRouter from "./job"
+import jobsRouter from "./jobs"
+import applicationRouter from "./application"
+import applicationsRouter from "./applications" 
 
 const app = Router()
 
@@ -29,9 +33,9 @@ app.use("/connections", connectionsRouter)
 app.use("/address", addressRouter)
 app.use("/company", companyRouter)
 app.use("/companies", companiesRouter)
-
-app.get("/test", (req, res) => {
-    return res.send(req.headers.authorization)
-})
+app.use("/job", jobRouter)
+app.use("/jobs", jobsRouter)
+app.use("/job-application", applicationRouter)
+app.use("/job-applications", applicationsRouter)
 
 export default app

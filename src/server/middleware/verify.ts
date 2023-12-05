@@ -1,7 +1,7 @@
 import { ErrorHandler } from "@handlers/error"
 import { JWT_SECRET } from "@server/config"
 import Session from "@server/models/user/session"
-import IUser from "@types_/user"
+import IUser, { ProfileRoles } from "@types_/user"
 import { Payload } from "@types_/user/session"
 import { getKeys, getValue, getValues } from "@utils/object"
 import { Request, Response, NextFunction } from "express"
@@ -82,5 +82,16 @@ export const verifyParams = (
     }
     res.locals.keys = keys
     res.locals.values = values
+    next()
+}
+
+export const verifyAdmin = (
+    handler: ErrorHandler<any> = new ErrorHandler<any>("request")
+) => async (_: Request, res: Response, next: NextFunction) => {
+    const { session } = res.locals;
+    const user = session.user as IUser
+    if(user.role !== ProfileRoles.admin && !Object.keys(user).includes("admin")) {
+        return res.status(403).send(handler.error("User is not admin!"))
+    }
     next()
 }

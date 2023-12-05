@@ -47,5 +47,17 @@ export default {
     },
     connections: {
         getByUser: "/connections/:user"
+    },
+    company: {
+        create: "/company/create",
+        findAll: "/companies"
+    },
+    job: {
+        create: "/job/create",
+        findAll: "/jobs",
+        application: {
+            create: "/job-application/create",
+            findByJob: "/job-applications/job/:job"
+        }
     }
 }
