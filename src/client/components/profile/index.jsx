@@ -65,7 +65,7 @@ const ProfileComponent = ({
         fetchProfileData();
     }, [session.token]);
 
-    const { trigger: createProfile } = usePoster(basePath+urls.user.profile.create)
+    // const { trigger: createProfile } = usePoster(basePath+urls.user.profile.create)
     const handleSubmit = async (e) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
@@ -79,7 +79,7 @@ const ProfileComponent = ({
                 authorization: `Bearer ${session?.token}`
             }
         }).then(res => res.data).catch(err => err?.response?.data || err)
-        console.log(res)
+        // console.log(res)
     }
 
     return (
@@ -139,10 +139,10 @@ const ProfileComponent = ({
                                                 </div>
                                                 <div className="modal-body">
                                                     <div className="mb-2">
-                                                        Email : {contact?.email}
+                                                        Email : {tempUser?.email}
                                                     </div>
                                                     <div className="mb-2">
-                                                        Phone : {contact?.phone}
+                                                        Phone : {tempUser?.phone}
                                                     </div>
                                                 </div>
                                                 <div className="modal-footer">
