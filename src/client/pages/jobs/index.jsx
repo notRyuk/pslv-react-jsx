@@ -21,7 +21,7 @@ const Index = () => {
   ];
 
   const usermain = {
-    role: "employer", // Change to 'alumni' to see the alumni section
+    role: "alumni", // Change to 'alumni' to see the alumni section
   };
 
   return <JobContainer usermain={usermain} jobs={jobs} alumnis={alumnis} csrfToken={csrfToken} allJobs={allJobs} />;

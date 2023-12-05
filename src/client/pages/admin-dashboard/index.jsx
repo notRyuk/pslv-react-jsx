@@ -8,4 +8,9 @@ const index = () => {
   )
 }
 
+export const layout = {
+  hasFooter: false,
+  hasHeader: false
+}
+
 export default index

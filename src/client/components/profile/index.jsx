@@ -6,6 +6,7 @@ import axios from 'axios';
 import urls, { serverPath, basePath } from '@utils/urls';
 import { selectSession } from '../auth/authSlice';
 import Loading from '../loading';
+import CompleteProfile from '../edit-details';
 const ProfileComponent = ({
     user,
     usermain,
@@ -70,9 +71,7 @@ const ProfileComponent = ({
                             <div className="cover"></div>
                             {
                                 tempUser?._id === session.user._id && (
-                                    <Link to="/edit-details">
-                                        <span className="material-symbols-rounded cover-edit">edit</span>
-                                    </Link> 
+                                    <CompleteProfile></CompleteProfile>
                                 )
                             }
 

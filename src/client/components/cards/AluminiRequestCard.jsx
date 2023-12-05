@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { selectSession } from '../auth/authSlice'
 
-const RequestedUser = (props) => {
+const AluminiRequestCard = (props) => {
     const acceptRequestUrl = basePath + urls.request.acceptMutual.replace(':request', props.cr?._id)
     const ignoreRequestUrl = basePath + urls.request.ignore.replace(':request', props.cr?._id)
-    const session = useSelector(selectSession)
+    const session = useSelector(selectSession);
     const clickHandler = async () => {
         const data = await axios.put(acceptRequestUrl, {}, {
             headers: {
@@ -36,7 +36,7 @@ const RequestedUser = (props) => {
     return (
         <>
             <div className="invitation">
-                <Link to={`/profile/${props.user?._id}`}>
+                <Link to={`/profile/${props?.user?._id}`}>
                     <div className="userProfile networkUserProfile">
                         <div className="profileImgPost">
                             <img
@@ -45,8 +45,8 @@ const RequestedUser = (props) => {
                             />
                         </div>
                         <div className="userInfo">
-                            <h5>{props.user?.name.first} {props.user?.name.last}</h5>
-                            <p>{props.user?.bio}</p>
+                            <h5>{props?.user?.name?.first} {props?.user?.name?.last}</h5>
+                            <p>{props?.user?.bio}</p>
                         </div>
                     </div>
                 </Link>
@@ -59,4 +59,4 @@ const RequestedUser = (props) => {
     )
 }
 
-export default RequestedUser
+export default AluminiRequestCard
