@@ -10,13 +10,13 @@ export default {
     },
     user: {
         profile: {
-            create: "profile/create",
-            delete: "profile/:id",
+            create: "/profile/create",
+            delete: "/profile/:id",
             update: "/profile/update",
             get: "/user/details/:id"
         },
         address:{
-            create: "address/create"
+            create: "/address/create"
         },
         suggestedUser:{
             get: "/user/all-users"
@@ -43,9 +43,33 @@ export default {
         create: "/connection-request/create",
         acceptMutual: "/connection-request/:request/mutual/accept",
         from: "/connection-request/from",
-        ignore:"/connection-request/:request/ignore"
+        ignore:"/connection-request/:request/ignore",
+        alumni: "/admin/connection-request/:request/:status"
     },
     connections: {
         getByUser: "/connections/:user"
+    },
+    company: {
+        create: "/company/create",
+        findAll: "/companies"
+    },
+    job: {
+        create: "/job/create",
+        findAll: "/jobs",
+        application: {
+            create: "/job-application/create",
+            findByJob: "/job-applications/job/:job"
+        }
+    },
+    news: {
+        create: "/news/create",
+        update: "/news/:id",
+        delete: "/news/:id",
+        find: "/news"
+    },
+    achievement: {
+        create: "/achievement/create",
+        findAll: "/achievements",
+        findById: "/achievements/:id",
     }
 }

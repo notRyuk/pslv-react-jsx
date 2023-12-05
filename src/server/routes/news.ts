@@ -1,5 +1,5 @@
 import NewsHandler from "@handlers/feed/news";
-import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
+import { verifyAdmin, verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import News from "@server/models/feed/news";
 import { getValue } from "@utils/object";
 import { Router } from "express";
@@ -10,7 +10,7 @@ const handler = new NewsHandler();
 const required = ["title"];
 
 // Create News
-app.post("/create", verifyToken(), verifyBody(required), async (req, res) => {
+app.post("/create", verifyToken(), verifyAdmin(), verifyBody(required), async (_, res) => {
     const { keys, values } = res.locals;
     const news = await News.create({
         title: getValue(keys, values, "title"),
@@ -22,14 +22,12 @@ app.post("/create", verifyToken(), verifyBody(required), async (req, res) => {
     return res.status(200).send(handler.success(news));
 });
 
-// Retrieve All News
-app.get("/", async (req, res) => {
+app.get("/", verifyToken(), async (_, res) => {
     const newsList = await News.find();
     return res.status(200).send(handler.success(newsList));
 });
 
-// Retrieve News by ID
-app.get("/:id", async (req, res) => {
+app.get("/:id", verifyToken(), async (req, res) => {
     const newsId = req.params.id;
     const news = await News.findById(newsId);
     if (!news) {
@@ -38,8 +36,7 @@ app.get("/:id", async (req, res) => {
     return res.status(200).send(handler.success(news));
 });
 
-// Update News by ID
-app.put("/:id", verifyToken(), verifyBody(required), async (req, res) => {
+app.put("/:id", verifyToken(), verifyAdmin(), verifyBody(required), async (req, res) => {
     const newsId = req.params.id;
     const { keys, values } = res.locals;
     const news = await News.findByIdAndUpdate(
@@ -56,10 +53,9 @@ app.put("/:id", verifyToken(), verifyBody(required), async (req, res) => {
     return res.status(200).send(handler.success(news));
 });
 
-// Delete News by ID
-app.delete("/:id", verifyToken(), verifyParams(["id"]), async (req, res) => {
-    const newsId = req.params.id;
-    const news = await News.findByIdAndDelete(newsId);
+app.delete("/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), async (_, res) => {
+    const { keys, values } = res.locals
+    const news = await News.findByIdAndDelete(getValue(keys, values, "id"));
     if (!news) {
         return res.status(404).send(handler.error(handler.STATUS_404));
     }

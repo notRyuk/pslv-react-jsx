@@ -6,7 +6,8 @@ import axios from 'axios';
 import urls, { serverPath, basePath } from '@utils/urls';
 import { selectSession } from '../auth/authSlice';
 import Loading from '../loading';
-import CompleteProfile from '../edit-details';
+import { useGetter, usePoster } from '../../hooks/fetcher';
+import Footer from '../footer';
 const ProfileComponent = ({
     user,
     usermain,
@@ -14,7 +15,6 @@ const ProfileComponent = ({
     address,
     connection,
     job,
-    others,
     post,
     postImpression,
     aboutData,
@@ -31,6 +31,7 @@ const ProfileComponent = ({
 
     const [tempUser, setTempUser] = useState({})
     const [isLoading, setIsLoading] = useState(true);
+    const [others, setOthers] = useState(false)
 
     function addNewSkill() {
         skills?.push()
@@ -39,6 +40,11 @@ const ProfileComponent = ({
     const profileUrl = basePath + urls.user.profile.get.replace(':id', params.id)
     // const tempUser = useSelector(selectLoggedInUser)
     const session = useSelector(selectSession)
+
+    const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", params.id)
+    const postUrl = basePath + urls.posts.get.replace(":id", params.id)
+    const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
+    const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
@@ -55,9 +61,26 @@ const ProfileComponent = ({
                 setIsLoading(false);
             }
         };
-
+        setOthers(session?.user._id !== params.id)
         fetchProfileData();
     }, [session.token]);
+
+    const { trigger: createProfile } = usePoster(basePath+urls.user.profile.create)
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+        const adddress = {}
+        for (const entry of formData.entries()) {
+            address[entry[0]] = entry[1]
+        }
+        // createProfile({address, role: session?.user?.role})
+        const res = await axios.post(basePath+urls.user.profile.create, {address, role: session?.user?.role}, {
+            headers: {
+                authorization: `Bearer ${session?.token}`
+            }
+        }).then(res => res.data).catch(err => err?.response?.data || err)
+        console.log(res)
+    }
 
     return (
         <>
@@ -71,7 +94,9 @@ const ProfileComponent = ({
                             <div className="cover"></div>
                             {
                                 tempUser?._id === session.user._id && (
-                                    <CompleteProfile></CompleteProfile>
+                                    <Link to="/edit-details">
+                                        <span className="material-symbols-rounded cover-edit">edit</span>
+                                    </Link> 
                                 )
                             }
 
@@ -159,7 +184,7 @@ const ProfileComponent = ({
                                     </div>
 
                                     {/* Connection Info */}
-                                    <p className="connection-info">{connection} connections</p>
+                                    <p className="connection-info">{connectedUser?.data.length} connections</p>
 
                                     {/* Additional Info for Alumni */}
                                     {tempUser?.role === 'alumni' && (
@@ -194,7 +219,7 @@ const ProfileComponent = ({
                                         <span className="material-symbols-rounded">description</span>
                                     </div>
                                     <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                        <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{post?.length} Posts</Link>
+                                        <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{postData?.data?.length} Posts</Link>
                                         <div style={{ fontSize: '12px' }}>Discover and Edit your post.</div>
                                     </div>
                                 </div>
@@ -212,12 +237,61 @@ const ProfileComponent = ({
                                         <span className="material-symbols-rounded">group</span>
                                     </div>
                                     <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                        <Link to={others ? '#' : '/network'} className="linkStyle">{connection} connections</Link>
+                                        <Link to={session?.user._id !== params.id ? '#' : '/network'} className="linkStyle">{connectedUser?.data.length} connections</Link>
                                         <div style={{ fontSize: '12px' }}>See Your connections.</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <form id='detailForm' onSubmit={handleSubmit}>
+                            <h2>Address Details</h2>
+                            <div className="twoInput">
+                                <div className="div">
+                                    {/* <label htmlFor="name">Name</label> */}
+                                    <input type="text" name="name" placeholder='Name' id="name" />
+                                </div>
+                                <div className="div">
+
+                                    {/* <label htmlFor="buildingName">Building Name</label> */}
+                                    <input type="text" name="buildingName" placeholder='Building Name' id="buildingName" />
+                                </div>
+                            </div>
+                            <div className="oneInput">
+                                {/* <label htmlFor="">Adress Line 1</label> */}
+                                <input type="text" name="line1" placeholder='Address Line 1' id='line1' />
+                            </div>
+                            <div className="oneInput">
+                                {/* <label htmlFor="">Adress Line 2</label> */}
+                                <input type="text" name="line2" placeholder='Adress Line 2' id='line' />
+                            </div>
+                            <div className="oneInput">
+                                {/* <label htmlFor="">Street</label> */}
+                                <input type="text" name="street" placeholder='Street name' id='street' />
+                            </div>
+                            <div className="twoInput">
+                                <div className="div">
+                                    <input type="text" name='city' placeholder='city' id='city' />
+                                </div>
+                                <div className="div">
+                                    <input type="text" name="state" placeholder='State' id="state" />
+                                </div>
+                            </div>
+                            <div className="twoInput">
+                                <div className="div">
+                                    {/* <label htmlFor="state">State</label> */}
+                                    <input type="text" name="country" placeholder='country' id="country" />
+                                </div>
+                                <div className="div">
+
+                                    {/* <label htmlFor="pinCode">Pin Code</label> */}
+                                    <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" />
+                                </div>
+                            </div>
+                            <button type='submit' className="submitButton mt-2" id="detailButton">
+                                Submit
+                            </button>
+                        </form>
 
                         {/* Profile Card - About */}
                         <div className="profile-card card">
@@ -428,8 +502,8 @@ const ProfileComponent = ({
                     </div>
 
                     {/* Right Container */}
-                    {/* <div className="container-right content">
-                <div className="card left-group" style={{ color: '#cacaca' }}>
+                    <div className="container-right content">
+                        {/* <div className="card left-group" style={{ color: '#cacaca' }}>
                     <h6>Connect with more people.....</h6>
                     {users.map((reqUser) => (
                         <form key={requser?.user} action="/api/connection/create" method="post">
@@ -457,8 +531,9 @@ const ProfileComponent = ({
                             </div>
                         </form>
                     ))}
-                </div>
-            </div> */}
+                </div> */}
+                        <Footer></Footer>
+                    </div>
                 </div>
             }
         </>

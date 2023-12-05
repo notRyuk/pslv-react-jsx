@@ -4,7 +4,7 @@ import Session from "@server/models/user/session"
 import IUser from "@types_/user"
 import { Payload } from "@types_/user/session"
 import { getKeys, getValue, getValues } from "@utils/object"
-import { Request, Response, NextFunction } from "express"
+import { NextFunction, Request, Response } from "express"
 import jwt, { TokenExpiredError } from "jsonwebtoken"
 
 export const verifyBody = (
@@ -82,5 +82,16 @@ export const verifyParams = (
     }
     res.locals.keys = keys
     res.locals.values = values
+    next()
+}
+
+export const verifyAdmin = (
+    handler: ErrorHandler<any> = new ErrorHandler<any>("request")
+) => async (_: Request, res: Response, next: NextFunction) => {
+    const { session } = res.locals;
+    const user = session.user as IUser
+    if(!Object.keys(user).includes("admin")) {
+        return res.status(403).send(handler.error("User is not admin!"))
+    }
     next()
 }

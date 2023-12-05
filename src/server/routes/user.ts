@@ -1,6 +1,7 @@
 import UserHandler from "@handlers/user";
 import { verifyParams, verifyToken } from "@server/middleware/verify";
 import User from "@server/models/user";
+import Admin from "@server/models/user/admin";
 import Connection from "@server/models/user/connection";
 import ConnectionRequest from "@server/models/user/connection-request";
 import IUser from "@types_/user";
@@ -58,8 +59,6 @@ app.get("/details/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     const user = await User.findById(getValue(keys, values, "id")).populate([
         { path: "profile", strictPopulate: false },
         { path: "profile.address", strictPopulate: false },
-        { path: "student", strictPopulate: false },
-        { path: "alumni", strictPopulate: false },
         { path: "admin", strictPopulate: false },
         { path: "faculty", strictPopulate: false },
     ]).select("-password").exec()
@@ -67,6 +66,28 @@ app.get("/details/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     return res.status(200).send(handler.success(user))
+})
+
+app.put("/promote/:user/:role", verifyToken(), verifyParams(["user", "role"]), async (_, res) => {
+    const { keys, values, session } = res.locals
+    const user = await User.findById(getValue(keys, values, "user"))
+    if(!user) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    const admin = await Admin.create({
+        role: getValue(keys, values, "role"),
+        createdBy: (session.user as IUser)._id
+    })
+    if(!admin) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    user.set("admin", admin._id)
+    const updatedUser = await user.save()
+    if(!updatedUser) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    updatedUser.admin = admin
+    return res.status(200).send(handler.success(updatedUser))
 })
 
 export default app

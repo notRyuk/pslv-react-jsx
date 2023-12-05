@@ -21,6 +21,8 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
     const [isLoading, setIsLoading] = useState(true);
     const tempUser = useSelector(selectLoggedInUser);
     const session = useSelector(selectSession);
+    const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", session?.user._id)
+    const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
 
     const { data: suggestedUser, mutate: suggestMutate, isLoading: suggestIsLoading } = useGetter(suggestUrl)
     useEffect(() => {
@@ -65,7 +67,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                                 <span>{user.institute}</span>
                             </div>
                             <div className="connection">
-                                <strong>{connection}</strong>
+                                <strong>{connectedUser?.data.length}</strong>
                                 <small>Connections</small>
                             </div>
                             <div className="specialLink">

@@ -24,7 +24,7 @@ const NetworkComponent = () => {
                 <div className="leftNetworkContent content">
                     <div className="card">
                         <h5>Manage my network</h5>
-                        <Link to="/connections" className="network-link">
+                        <Link to="/network" className="network-link">
                             <div className="networkCommunity">
                                 <div className="networkSummary">
                                     <i className="fa-solid fa-user-group"></i>
