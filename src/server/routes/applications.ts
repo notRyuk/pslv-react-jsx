@@ -7,7 +7,7 @@ import { Router } from "express";
 const app = Router()
 const handler = new JobApplicationHandler()
 
-app.get("/job/:job", verifyToken(), verifyParams(["job"]), async (req, res) => {
+app.get("/job/:job", verifyToken(), verifyParams(["job"]), async (_, res) => {
     const { keys, values } = res.locals
     const applications = await JobApplication.find({
         job: getValue(keys, values, "job")

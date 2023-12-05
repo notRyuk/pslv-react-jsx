@@ -1,10 +1,10 @@
 import { ErrorHandler } from "@handlers/error"
 import { JWT_SECRET } from "@server/config"
 import Session from "@server/models/user/session"
-import IUser, { ProfileRoles } from "@types_/user"
+import IUser from "@types_/user"
 import { Payload } from "@types_/user/session"
 import { getKeys, getValue, getValues } from "@utils/object"
-import { Request, Response, NextFunction } from "express"
+import { NextFunction, Request, Response } from "express"
 import jwt, { TokenExpiredError } from "jsonwebtoken"
 
 export const verifyBody = (
@@ -90,7 +90,7 @@ export const verifyAdmin = (
 ) => async (_: Request, res: Response, next: NextFunction) => {
     const { session } = res.locals;
     const user = session.user as IUser
-    if(user.role !== ProfileRoles.admin && !Object.keys(user).includes("admin")) {
+    if(!Object.keys(user).includes("admin")) {
         return res.status(403).send(handler.error("User is not admin!"))
     }
     next()
