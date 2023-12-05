@@ -1,15 +1,13 @@
 export enum Models {
     // user
     user = "user",
-    student = "student",
-    alumni = "alumni",
     admin = "admin",
     session = "session",
     education = "education",
     profile = "profile",
 
     institute = "institute",
-    course = "institute-courses",
+    course = "institute-course",
     faculty = "faculty",
 
     // connection

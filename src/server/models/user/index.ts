@@ -21,7 +21,6 @@ const userSchema = new Schema<IUser>({
         type: Date,
         required: handler.fieldRequired("dob")
     },
-
     email: {
         type: String,
         unique: true,
@@ -44,7 +43,6 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: handler.fieldRequired("password")
     },
-
     bio: String,
     profilePhoto: String,
     role: {
@@ -52,10 +50,9 @@ const userSchema = new Schema<IUser>({
         enum: Object.values(ProfileRoles),
         default: ProfileRoles.student
     },
-
     profile: {
         type: Schema.Types.ObjectId,
-        ref: Models.student
+        ref: Models.profile
     },
     admin: {
         type: Schema.Types.ObjectId,
