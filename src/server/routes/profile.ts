@@ -38,7 +38,7 @@ app.post("/create", verifyToken(), verifyBody(["role"]), async (req, res) => {
     if(!profile) {
         return res.status(400).send(handler.error(handler.STATUS_404))
     }
-    user.set(getValue(keys, values, "role"), profile)
+    user.set("profile", profile)
     const updatedUser = await user.save()
     if(!updatedUser) {
         return res.status(400).send(handler.error(handler.STATUS_404))
@@ -46,7 +46,7 @@ app.post("/create", verifyToken(), verifyBody(["role"]), async (req, res) => {
     return res.status(200).send(handler.success(updatedUser))
 })
 
-app.put("/:id", verifyToken(), verifyBody(["role"]), async (req, res) => {
+app.put("/:id", verifyToken(), verifyBody([]), async (req, res) => {
     let profile = await Profile.findById(req.params.id)
     if(!profile) {
         return res.status(400).send(handler.error(handler.STATUS_404))
