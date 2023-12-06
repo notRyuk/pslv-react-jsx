@@ -90,7 +90,7 @@ export const verifyAdmin = (
 ) => async (_: Request, res: Response, next: NextFunction) => {
     const { session } = res.locals;
     const user = session.user as IUser
-    if(!Object.keys(user).includes("admin")) {
+    if(!user.admin) {
         return res.status(403).send(handler.error("User is not admin!"))
     }
     next()

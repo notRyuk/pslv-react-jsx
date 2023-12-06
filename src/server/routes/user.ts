@@ -1,5 +1,5 @@
 import UserHandler from "@handlers/user";
-import { verifyParams, verifyToken } from "@server/middleware/verify";
+import { verifyAdmin, verifyParams, verifyToken } from "@server/middleware/verify";
 import User from "@server/models/user";
 import Admin from "@server/models/user/admin";
 import Connection from "@server/models/user/connection";
@@ -77,7 +77,7 @@ app.get("/details/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     return res.status(200).send(handler.success(user))
 })
 
-app.put("/promote/:user/:role", verifyToken(), verifyParams(["user", "role"]), async (_, res) => {
+app.put("/promote/:user/:role", verifyToken(), verifyAdmin(), verifyParams(["user", "role"]), async (_, res) => {
     const { keys, values, session } = res.locals
     const user = await User.findById(getValue(keys, values, "user"))
     if(!user) {

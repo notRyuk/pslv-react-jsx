@@ -23,6 +23,8 @@ import achievementRouter from "./achievement"
 import achievementsRouter from "./achievements"
 import educationRouter from "./education"
 import workRouter from "./work"
+import instituteRouter from "./institute"
+import institutesRouter from "./institutes"
 
 const app = Router()
 
@@ -49,5 +51,7 @@ app.use("/achievement", achievementRouter)
 app.use("/achievements", achievementsRouter)
 app.use("/education", educationRouter)
 app.use("/work", workRouter)
+app.use("/institute", instituteRouter)
+app.use("/institutes", institutesRouter)
 
 export default app
