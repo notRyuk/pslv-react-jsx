@@ -9,7 +9,8 @@ import Loading from '../loading';
 import { useGetter, usePoster } from '../../hooks/fetcher';
 import Footer from '../footer';
 import Modal from '../modal';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, Box, TextField } from '@mui/material';
+import { Stack } from 'react-bootstrap';
 const ProfileComponent = ({
     user,
     usermain,
@@ -23,12 +24,14 @@ const ProfileComponent = ({
     interests,
     users,
 }) => {
-    const [showContactModal, setShowContactModal] = useState(false);
-    const [showAddressModal, setShowAddressModal] = useState(false);
-    const [showAboutModal, setShowAboutModal] = useState(false);
     const [showSkillModal, setShowSkillModal] = useState(false);
-    const [showInterestModal, setShowInterestModal] = useState(false);
-    const [newSkill, setNewSkill] = useState("");
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [showAchievementModal, setShowAchievementModal] = useState(false);
+    const [showContactModal, setShowContactModal] = useState(false);
+    const [showAboutModal, setShowAboutModal] = useState(false);
+    const [info, setInfo] = useState("")
+    const [description, setDescription] = useState("")
+    const [files, setFiles] = useState([])
 
     // const [tempUser, setTempUser] = useState({})
     // const [isLoading, setIsLoading] = useState(true);
@@ -60,45 +63,48 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
+    const handleFileChange = (e) => {
+        const selectedFiles = e.target.files;
+
+        setFiles(Array.from(selectedFiles));
+    };
+    const handleAddAchievement = async () => {
+        const data = new FormData()
+        data.append("info", info)
+        if(description.length) data.append("description", description)
+        if(files.length)data.append("documents", files)
+        const res = await axios.post(basePath + urls.achievement.create, data, {
+            headers: {
+                authorization: `Bearer ${session?.token}`,
+                "Content-Type": 'application/pdf'
+            }
+        })
+        if (res?.data) {
+            setShowAchievementModal(false)
+            setDescription("")
+            setInfo("")
+            setFiles([])
+        }
+    }
 
     const { data: tempUser, mutate: tempUserMutate, isLoading } = useGetter(profileUrl)
-
-    // const fetchProfileData = async () => {
-    //     try {
-    //         const res = await axios.get(profileUrl, {
-    //             headers: {
-    //                 authorization: `Bearer ${session.token}`
-    //             },
-    //         });
-    //         setTempUser(res.data.data);
-    //     } catch (error) {
-    //         console.error("Error while fetching profile data:", error);
-    //     } finally {
-    //         // Set loading to false regardless of success or failure
-    //         setIsLoading(false);
-    //     }
-    // };
 
     useEffect(() => {
         setOthers(session?.user._id !== params.id)
         console.log(tempUser?.data);
-        // fetchProfileData();
     }, [session.token]);
 
-    // const { trigger: createProfile } = usePoster(basePath+urls.user.profile.create)
     const handleSubmit = async (e) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         for (const entry of formData.entries()) {
             address[entry[0]] = entry[1]
         }
-        // createProfile({address, role: session?.user?.role})
         const res = await axios.post(basePath + urls.user.profile.create, { address, role: session?.user?.role }, {
             headers: {
                 authorization: `Bearer ${session?.token}`
             }
         }).then(res => res.data).catch(err => err?.response?.data || err)
-        // console.log(res)
     }
 
     return (
@@ -385,37 +391,6 @@ const ProfileComponent = ({
                                 </div>
                             </div>
 
-                            {/* Skills Modal */}
-                            {/* <div className={`modal profileModal fade ${showSkillModal ? 'show' : ''}`} id="skillModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
-                                <div className="modal-dialog">
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <h5 className="modal-title" id="exampleModalLabel">Add a Skill</h5>
-                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div className="modal-body">
-                                            <form onSubmit={(e) => {
-                                                e.preventDefault();
-                                                console.log(skills);
-                                                const skill = {
-                                                    skill: newSkill
-                                                }
-                                                skills?.push(skill);
-                                            }}>
-                                                <div className="mb-3">
-                                                    <label htmlFor="exampleInputEmail1" className="form-label">Skill</label>
-                                                    <input type="text" onChange={(e) => { setNewSkill(e.target.value) }} className="form-control" name="skill" />
-                                                </div>
-                                                <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Add Skill</button>
-                                            </form>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
-
                             {/* Skills Container */}
                             <div className="skill-container">
                                 {/* Render Skills */}
@@ -439,7 +414,7 @@ const ProfileComponent = ({
                                 <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
                                     {!others &&
                                         <div>
-                                            <Link to="#" data-bs-toggle="modal" data-bs-target="#interestModal">
+                                            <Link onClick={() => setShowAchievementModal(true)} data-bs-toggle="modal">
                                                 <span className="material-symbols-rounded about-edit">add</span>
                                             </Link>
                                         </div>
@@ -447,29 +422,7 @@ const ProfileComponent = ({
                                 </div>
                             </div>
 
-                            {/* Interests Modal */}
-                            <div className={`modal profileModal fade ${showInterestModal ? 'show' : ''}`} id="interestModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
-                                <div className="modal-dialog">
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <h5 className="modal-title" id="exampleModalLabel">Add an Interest</h5>
-                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div className="modal-body">
-                                            <form action="/add-interest" method="post">
-                                                <div className="mb-3">
-                                                    <label htmlFor="exampleInputEmail1" className="form-label">Interest</label>
-                                                    <input type="text" className="form-control" name="interest" />
-                                                </div>
-                                                <button type="submit" className="btn submitButton" style={{ width: '100%' }}>Add Interest</button>
-                                            </form>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
 
                             {/* Interests Container */}
                             <div className="skill-container">
@@ -594,6 +547,103 @@ const ProfileComponent = ({
                     )}
                     onChange={(_, value) => setChangedSkill(value)}
                 />
+            </Modal>
+            <Modal
+                open={showAchievementModal}
+                setOpen={setShowAchievementModal}
+                title={"Add Achievements"}
+                buttonType={"submit"}
+                handleSubmit={handleAddAchievement}
+            >
+                <Box component="form" noValidate sx={{ mt: 2, color: 'white' }} className='formContainer' padding={'1rem'}>
+                    <Stack direction={'column'}>
+                        <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="firstName"
+                                label="Title of the Achievement"
+                                name="info"
+                                autoComplete="firstName"
+                                autoFocus
+                                onChange={(e) => setInfo(e.target.value)}
+                                sx={{
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                                        color: "white"
+                                    },
+                                    "& .MuiInputLabel-outlined.Mui-focused": {
+                                        color: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                }}
+                            />
+                        </Stack>
+                        <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
+                            <TextField
+                                margin="normal"
+                                fullWidth
+                                name="description"
+                                label="Description of the Achievement"
+                                id="userBio"
+                                multiline
+                                onChange={(e) => setDescription(e.target.value)}
+                                rows={4}
+                                autoComplete="userBio"
+                                sx={{
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                                        color: "white"
+                                    },
+                                    "& .MuiInputLabel-outlined.Mui-focused": {
+                                        color: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                }}
+                            />
+                        </Stack>
+                        <Stack sx={{ mt: 2 }} direction={'column'} spacing={2}>
+                            <div style={{ marginBottom: '-1rem', marginTop: '1rem' }}>Add files of proof</div>
+                            <TextField
+                                type='file'
+                                margin="normal"
+                                fullWidth
+                                onChange={handleFileChange}
+                                inputProps={{
+                                    multiple: true,
+                                    accept: 'application/pdf'
+                                }}
+                                name="documents"
+                                // label="File"
+                                id="profileImageUrl"
+                                autoComplete="profileImageUrl"
+                                sx={{
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                                        color: "white"
+                                    },
+                                    "& .MuiInputLabel-outlined.Mui-focused": {
+                                        color: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                }}
+                            />
+                        </Stack>
+                    </Stack>
+                </Box>
             </Modal>
         </>
     );

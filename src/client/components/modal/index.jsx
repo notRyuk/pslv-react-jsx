@@ -6,7 +6,7 @@ import {
     Button
 } from "@mui/material"
 
-export default function Modal({ children, handleSubmit, open, setOpen, title }) {
+export default function Modal({ children, handleSubmit, open, setOpen, title, buttonType }) {
     const handleClose = () => setOpen(false)
     return (
         <Dialog
@@ -43,10 +43,12 @@ export default function Modal({ children, handleSubmit, open, setOpen, title }) 
                 <Button 
                     variant="filled" 
                     color="success"
-                    onClick={handleSubmit}
+                    // onClick={handleSubmit}
                     sx={{
                         color: "#029ffa"
                     }}
+                    type={buttonType || "button"}
+                    onClick={handleSubmit}
                 >
                     Submit
                 </Button>
