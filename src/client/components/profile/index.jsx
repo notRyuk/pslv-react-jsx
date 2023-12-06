@@ -10,7 +10,9 @@ import { useGetter, usePoster } from '../../hooks/fetcher';
 import Footer from '../footer';
 import Modal from '../modal';
 import { Autocomplete, Chip, Box, TextField } from '@mui/material';
+import LaunchIcon from '@mui/icons-material/Launch';
 import { Stack } from 'react-bootstrap';
+import SubmitModal from '../submitModal';
 const ProfileComponent = ({
     user,
     usermain,
@@ -64,19 +66,17 @@ const ProfileComponent = ({
         }
     }
     const handleFileChange = (e) => {
-        const selectedFiles = e.target.files;
-
-        setFiles(Array.from(selectedFiles));
+        setFiles(e.target.files);
     };
-    const handleAddAchievement = async () => {
+    const handleAddAchievement = async (e) => {
+        e.preventDefault()
         const data = new FormData()
         data.append("info", info)
-        if(description.length) data.append("description", description)
-        if(files.length)data.append("documents", files)
+        data.append("description", description)
         const res = await axios.post(basePath + urls.achievement.create, data, {
             headers: {
                 authorization: `Bearer ${session?.token}`,
-                "Content-Type": 'application/pdf'
+                "Content-Type": 'multipart/form-data'
             }
         })
         if (res?.data) {
@@ -84,6 +84,7 @@ const ProfileComponent = ({
             setDescription("")
             setInfo("")
             setFiles([])
+            tempUserMutate()
         }
     }
 
@@ -137,7 +138,7 @@ const ProfileComponent = ({
                                     {/* Edit Title */}
                                     <div className="edit-title">
                                         <h3>
-                                            {tempUser?.data?.name?.first} {tempUser?.data?.name?.last} 
+                                            {tempUser?.data?.name?.first} {tempUser?.data?.name?.last}
                                             <Chip label={tempUser?.data?.role[0].toUpper} />
                                         </h3>
                                     </div>
@@ -287,7 +288,7 @@ const ProfileComponent = ({
 
 
                         {/* Profile Card - About */}
-                        <div className="profile-card card">
+                        {/* <div className="profile-card card">
                             <div className="about-title section-title">
                                 <div style={{ fontSize: '22px', fontWeight: 'bold' }}>About</div>
                                 {!others &&
@@ -301,10 +302,10 @@ const ProfileComponent = ({
                             <div className="about-description" style={{ fontSize: '20px' }}>
                                 {aboutData !== '' ? aboutData : 'Add About so that people can know you better'}
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* About Modal */}
-                        <div className={`modal profileModal fade ${showAboutModal ? 'show' : ''}`} id="aboutModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true">
+                        {/* <div className={`modal profileModal fade ${showAboutModal ? 'show' : ''}`} id="aboutModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true">
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-header">
@@ -325,7 +326,7 @@ const ProfileComponent = ({
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Profile Card - Working (conditionally rendered) */}
                         {usermain?.role === "alumni" && (
@@ -426,14 +427,21 @@ const ProfileComponent = ({
 
                             {/* Interests Container */}
                             <div className="skill-container">
-                                {interests?.length > 0 ? (
-                                    interests?.map((interest, index) => (
-                                        <div key={index} className="skill-main">
-                                            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{interest.interest}</div>
-                                        </div>
+                                {tempUser?.data?.profile?.achievements?.length > 0 ? (
+                                    tempUser?.data?.profile?.achievements?.map((achievement, index) => (
+                                        <>
+                                            <div key={index} className="skill-main">
+                                                <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{achievement?.info} {achievement?.documents.length > 0 ? <LaunchIcon component={"a"} href={serverPath + achievement.documents[0]}></LaunchIcon> : ""}</div>
+                                                {
+                                                    achievement?.description && <p>{achievement?.description}</p>
+                                                }
+                                            </div>
+
+                                        </>
+
                                     ))
                                 ) : (
-                                    <p>No Interests added</p>
+                                    <p>No Achievements added</p>
                                 )}
                             </div>
                         </div>
@@ -548,11 +556,10 @@ const ProfileComponent = ({
                     onChange={(_, value) => setChangedSkill(value)}
                 />
             </Modal>
-            <Modal
+            <SubmitModal
                 open={showAchievementModal}
                 setOpen={setShowAchievementModal}
                 title={"Add Achievements"}
-                buttonType={"submit"}
                 handleSubmit={handleAddAchievement}
             >
                 <Box component="form" noValidate sx={{ mt: 2, color: 'white' }} className='formContainer' padding={'1rem'}>
@@ -644,7 +651,7 @@ const ProfileComponent = ({
                         </Stack>
                     </Stack>
                 </Box>
-            </Modal>
+            </SubmitModal>
         </>
     );
 };
