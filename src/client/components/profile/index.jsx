@@ -351,85 +351,91 @@ const ProfileComponent = ({
                         )}
 
                         {/* Profile Card - Education */}
-                        <div className="profile-card card">
-                            <div className="about-title section-title">
-                                <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Education</div>
-                            </div>
-                            <div className="education-container">
-                                <div className="education-main">
-                                    {/* <img src="/images/college.png" height="100px" width="100px" alt="college-logo" /> */}
-                                    <div style={{ fontSize: '12px' }}>
-                                        <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                                            Education at {user?.institute}
+                        {Object.keys(tempUser?.data).includes("profile") ? <>
+                            <div className="profile-card card">
+                                <div className="about-title section-title">
+                                    <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Education</div>
+                                </div>
+                                <div className="education-container">
+                                    <div className="education-main">
+                                        {/* <img src="/images/college.png" height="100px" width="100px" alt="college-logo" /> */}
+                                        <div style={{ fontSize: '12px' }}>
+                                            <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
+                                                Education at {user?.institute}
+                                            </div>
+                                            <div>
+                                                {user?.joinYear} <span style={{ fontSize: '15px' }}>•</span> {user?.passYear}
+                                            </div>
+                                            <div style={{ paddingTop: '7px' }}></div>
+                                            {/* Add any additional information about education */}
                                         </div>
-                                        <div>
-                                            {user?.joinYear} <span style={{ fontSize: '15px' }}>•</span> {user?.passYear}
-                                        </div>
-                                        <div style={{ paddingTop: '7px' }}></div>
-                                        {/* Add any additional information about education */}
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </> : <></>}
+
 
                         {/* Profile Card - Skills */}
-                        <div className="profile-card card">
-                            {/* Section Title */}
-                            <div className="about-title section-title">
-                                {/* Title Text */}
-                                <div className="title-text" style={{ fontSize: '22px', fontWeight: 'bold' }}>Skills</div>
+                        {Object.keys(tempUser?.data).includes("profile") ? <>
+                            <div className="profile-card card">
+                                {/* Section Title */}
+                                <div className="about-title section-title">
+                                    {/* Title Text */}
+                                    <div className="title-text" style={{ fontSize: '22px', fontWeight: 'bold' }}>Skills</div>
 
-                                {/* Button Container */}
-                                <div className="button-container" style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
-                                    {!others && (
-                                        <div>
-                                            {/* Add Skill Button */}
-                                            <Link data-bs-toggle="modal" onClick={() => setShowSkillModal(true)}>
-                                                <span className="material-symbols-rounded about-edit">add</span>
-                                            </Link>
-                                        </div>
+                                    {/* Button Container */}
+                                    <div className="button-container" style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                                        {!others && (
+                                            <div>
+                                                {/* Add Skill Button */}
+                                                <Link data-bs-toggle="modal" onClick={() => setShowSkillModal(true)}>
+                                                    <span className="material-symbols-rounded about-edit">add</span>
+                                                </Link>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Skills Container */}
+                                <div className="skill-container">
+                                    {/* Render Skills */}
+                                    {tempUser?.data?.profile?.skills?.length > 0 ? (
+                                        tempUser?.data?.profile?.skills?.map((skill, index) => (
+                                            <div key={index} className="skill-main">
+                                                <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{skill.name}</div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        // No Skills Message
+                                        <p>No Skills added</p>
                                     )}
                                 </div>
                             </div>
+                        </> : <></>}
 
-                            {/* Skills Container */}
-                            <div className="skill-container">
-                                {/* Render Skills */}
-                                {tempUser?.data?.profile?.skills?.length > 0 ? (
-                                    tempUser?.data?.profile?.skills?.map((skill, index) => (
-                                        <div key={index} className="skill-main">
-                                            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{skill.name}</div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    // No Skills Message
-                                    <p>No Skills added</p>
-                                )}
-                            </div>
-                        </div>
 
-                        {/* Profile Card - Interests */}
-                        <div className="profile-card card">
-                            <div className="about-title section-title">
-                                <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Achievements</div>
-                                <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
-                                    {!others &&
-                                        <div>
-                                            <Link onClick={() => setShowAchievementModal(true)} data-bs-toggle="modal">
-                                                <span className="material-symbols-rounded about-edit">add</span>
-                                            </Link>
-                                        </div>
-                                    }
+                        {/* Profile Card - Achievements */}
+                        {Object.keys(tempUser?.data).includes("profile") ? <>
+                            <div className="profile-card card">
+                                <div className="about-title section-title">
+                                    <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Achievements</div>
+                                    <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                                        {!others &&
+                                            <div>
+                                                <Link onClick={() => setShowAchievementModal(true)} data-bs-toggle="modal">
+                                                    <span className="material-symbols-rounded about-edit">add</span>
+                                                </Link>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
 
 
 
-                            {/* Interests Container */}
-                            <div className="skill-container">
-                                {tempUser?.data?.profile?.achievements?.length > 0 ? (
-                                    tempUser?.data?.profile?.achievements?.map((achievement, index) => (
-                                        <>
+                                {/* Interests Container */}
+                                <div className="skill-container">
+                                    {tempUser?.data?.profile?.achievements?.length > 0 ? (
+                                        tempUser?.data?.profile?.achievements?.map((achievement, index) => (
                                             <div key={index} className="skill-main">
                                                 <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{achievement?.info} {achievement?.documents.length > 0 ? <LaunchIcon component={"a"} href={serverPath + achievement.documents[0]}></LaunchIcon> : ""}</div>
                                                 {
@@ -437,14 +443,14 @@ const ProfileComponent = ({
                                                 }
                                             </div>
 
-                                        </>
-
-                                    ))
-                                ) : (
-                                    <p>No Achievements added</p>
-                                )}
+                                        ))
+                                    ) : (
+                                        <p>No Achievements added</p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        </> : <></>}
+
 
                     </div>
 

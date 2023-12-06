@@ -1,15 +1,49 @@
-import React from "react";
-import companyImg from "../../assets/images/company.png"
-import jobHuntImg from "../../assets/images/job-hunt.svg"
+import React, { useState } from "react";
+import companyImg from "../../assets/images/company.png";
+import jobHuntImg from "../../assets/images/job-hunt.svg";
+import { useGetter } from "@client/hooks/fetcher.js";
+import urls, { serverPath, basePath } from "../../../utils/urls";
+import { Autocomplete, Chip, TextField } from "@mui/material";
+import { useSelector } from "react-redux";
+import { selectSession } from "../auth/authSlice";
+import styles from "./styles.module.scss";
 
 const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
+  const [company, setCompany] = useState("");
+  const companyUrl = basePath + urls.company.findAll;
+  const { data: companyData } = useGetter(companyUrl);
+  const { data: skillsData } = useGetter(basePath + urls.skills);
+  const [changedSkill, setChangedSkill] = useState("");
+  const [skills, setSkills] = useState([]);
+  const session = useSelector(selectSession);
+  const [currentSkills, setCurrentSkills] = useState([]);
+  console.log(skillsData);
+
+  const handleAddSkill = async () => {
+    const res = await axios.put(
+      basePath + urls.skill.create,
+      { name: changedSkill },
+      {
+        headers: {
+          authorization: `Bearer ${session?.token}`,
+        },
+      }
+    );
+    if (res?.data) {
+      console.log(res?.data);
+      setShowSkillModal(false);
+      setChangedSkill("");
+      tempUserMutate();
+    }
+  };
+
   return (
     <main className="job-container">
       <div
         className="continer-left"
         style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
       >
-        {usermain.role === "alumni" ? (
+        {session?.user?.role === "alumni" ? (
           <div className="card">
             <h2>{jobs.length} Jobs Posted</h2>
           </div>
@@ -38,12 +72,12 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
         )}
       </div>
       <div className="container-main">
-        {usermain.role === "alumni" ? (
+        {session?.user.role === "alumni" ? (
           <div className="card">
-            <h3 style={{ textAlign: "center" }}>Post a job</h3>
+            <h3 style={{ textAlign: "center" }}>Create Referral</h3>
             <form action="/post-job" method="post" className="jobForm">
               <label className="jobLabel" htmlFor="job-title">
-                Job Title
+                Title
               </label>
               <input
                 className="jobInput"
@@ -56,16 +90,34 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
               <label className="jobLabel" htmlFor="company-name">
                 Company Name
               </label>
-              <input
-                className="jobInput"
-                type="text"
-                id="company-name"
-                name="companyname"
-                required
+              {console.log(companyData?.data)}
+              <Autocomplete
+                sx={{
+                  bgcolor: "white",
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    color: "black",
+                    borderColor: "black",
+                  },
+                  "& .MuiInputLabel-outlined.Mui-focused": {
+                    color: "black",
+                  },
+                }}
+                freeSolo
+                options={
+                  companyData?.data?.map((company) => company.name) || []
+                }
+                renderInput={(params) => (
+                  <TextField
+                    name="company"
+                    {...params}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                )}
+                onChange={(_, value) => setCompany(value)}
               />
 
               <label className="jobLabel" htmlFor="job-description">
-                Job Description
+                Description
               </label>
               <textarea
                 className="jobInput"
@@ -73,55 +125,75 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                 name="jobdescription"
                 required
               ></textarea>
+              <label className="jobLabel" htmlFor="job-skills">
+                Skills
+              </label>
+              <Autocomplete
+                sx={{
+                  bgcolor: "white",
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    color: "black",
+                    borderColor: "black",
+                  },
+                  "& .MuiInputLabel-outlined.Mui-focused": {
+                    color: "black",
+                  },
+                }}
+                freeSolo
+                options={
+                  skillsData?.data
+                    ?.filter(
+                      (skill) =>
+                        !skills.map((e) => e?._id)?.includes(skill?._id)
+                    )
+                    ?.map((e) => e?.name) || []
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    onChange={(e) => setChangedSkill(e.target.value)}
+                  />
+                )}
+                onChange={(_, value) => {
+                  setCurrentSkills((prev) => [
+                    ...prev,
+                    skillsData?.data?.filter((k) => k.name === value)[0],
+                  ]);
+                }}
+              />
+              <div className={styles.changedSkillContainer}>
+                {currentSkills.map((skill, i) => (
+                  <Chip
+                    label={
+                      skillsData?.data?.filter((k) => k._id === skill)[0].name
+                    }
+                    key={i}
+                  />
+                ))}
+              </div>
 
               <label className="jobLabel" htmlFor="job-location">
-                Job Location
+                Apply Before
               </label>
               <input
                 className="jobInput"
-                type="text"
+                type="date"
                 id="job-location"
                 name="joblocation"
                 required
               />
 
-              <label className="jobLabel" htmlFor="job-type">
-                Job Type
-              </label>
-              <select
-                className="jobInput"
-                id="job-type"
-                name="jobtype"
-                required
-              >
-                <option value="full-time">Full Time</option>
-                <option value="part-time">Part Time</option>
-                <option value="contract">Contract</option>
-                <option value="temporary">Temporary</option>
-                <option value="internship">Internship</option>
-              </select>
-
               <label className="jobLabel" htmlFor="job-salary">
-                Salary
+                Experience in Years
               </label>
               <input
                 className="jobInput"
                 type="number"
                 id="job-salary"
-                name="jobsalary"
+                name="experience"
                 required
               />
 
-              <label className="jobLabel" htmlFor="job-skills">
-                Skills
-              </label>
-              <textarea
-                className="jobInput"
-                id="job-skills"
-                name="jobskills"
-                required
-              ></textarea>
-              <input type="hidden" name="_csrf" value={csrfToken} />
               <button
                 type="submit"
                 className="submitButton"
