@@ -45,23 +45,23 @@ const ProfileComponent = ({
     const postUrl = basePath + urls.posts.get.replace(":id", params.id)
     const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
     const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
-    const { data: skillsData } = useGetter(basePath+urls.skills)
+    const { data: skillsData } = useGetter(basePath + urls.skills)
     const [changedSkill, setChangedSkill] = useState("")
 
     const handleAddSkill = async () => {
-        const res = await axios.put(basePath+urls.user.profile.addSkill, {skill: changedSkill}, {
+        const res = await axios.put(basePath + urls.user.profile.addSkill, { skill: changedSkill }, {
             headers: {
                 authorization: `Bearer ${session?.token}`
             }
         })
-        if(res?.data) {
+        if (res?.data) {
             setShowSkillModal(false)
             setChangedSkill("")
             tempUserMutate()
         }
     }
 
-    const {data: tempUser, mutate: tempUserMutate, isLoading} = useGetter(profileUrl)
+    const { data: tempUser, mutate: tempUserMutate, isLoading } = useGetter(profileUrl)
 
     // const fetchProfileData = async () => {
     //     try {
@@ -81,6 +81,7 @@ const ProfileComponent = ({
 
     useEffect(() => {
         setOthers(session?.user._id !== params.id)
+        console.log(tempUser?.data);
         // fetchProfileData();
     }, [session.token]);
 
@@ -88,7 +89,6 @@ const ProfileComponent = ({
     const handleSubmit = async (e) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
-        const adddress = {}
         for (const entry of formData.entries()) {
             address[entry[0]] = entry[1]
         }
@@ -180,19 +180,35 @@ const ProfileComponent = ({
                                                 </div>
                                                 <div className="modal-body">
                                                     <div className="mb-2">
-                                                        Address : {address?.address}
+                                                        Name : {`${tempUser?.data?.profile?.address.name}`}
+                                                    </div>
+                                                    {tempUser?.data?.profile?.address.buildingName !== "" && <div className="mb-2">
+                                                        Building Name : {tempUser?.data?.profile?.address.buildingName}
+                                                    </div>}
+
+                                                    <div className="mb-2">
+                                                        Street : {tempUser?.data?.profile?.address.street}
                                                     </div>
                                                     <div className="mb-2">
-                                                        City : {address?.city}
+                                                        Address Line 1 : {tempUser?.data?.profile?.address.line1}
+                                                    </div>
+                                                    {
+                                                        tempUser?.data?.profile?.address.line2 &&
+                                                        <div className="mb-2">
+                                                            Address Line 2 : {tempUser?.data?.profile?.address.line2}
+                                                        </div>
+                                                    }
+                                                    <div className="mb-2">
+                                                        City : {tempUser?.data?.profile?.address.city}
                                                     </div>
                                                     <div className="mb-2">
-                                                        Pincode : {address?.pincode}
+                                                        Pincode : {tempUser?.data?.profile?.address?.pinCode}
                                                     </div>
                                                     <div className="mb-2">
-                                                        State : {address?.state}
+                                                        State : {tempUser?.data?.profile?.address?.state}
                                                     </div>
                                                     <div className="mb-2">
-                                                        Country : {address?.country}
+                                                        Country : {tempUser?.data?.profile?.address?.country}
                                                     </div>
                                                 </div>
                                                 <div className="modal-footer">
@@ -263,54 +279,6 @@ const ProfileComponent = ({
                             </div>
                         </div>
 
-                        <form id='detailForm' onSubmit={handleSubmit}>
-                            <h2>Address Details</h2>
-                            <div className="twoInput">
-                                <div className="div">
-                                    {/* <label htmlFor="name">Name</label> */}
-                                    <input type="text" name="name" placeholder='Name' id="name" />
-                                </div>
-                                <div className="div">
-
-                                    {/* <label htmlFor="buildingName">Building Name</label> */}
-                                    <input type="text" name="buildingName" placeholder='Building Name' id="buildingName" />
-                                </div>
-                            </div>
-                            <div className="oneInput">
-                                {/* <label htmlFor="">Adress Line 1</label> */}
-                                <input type="text" name="line1" placeholder='Address Line 1' id='line1' />
-                            </div>
-                            <div className="oneInput">
-                                {/* <label htmlFor="">Adress Line 2</label> */}
-                                <input type="text" name="line2" placeholder='Adress Line 2' id='line' />
-                            </div>
-                            <div className="oneInput">
-                                {/* <label htmlFor="">Street</label> */}
-                                <input type="text" name="street" placeholder='Street name' id='street' />
-                            </div>
-                            <div className="twoInput">
-                                <div className="div">
-                                    <input type="text" name='city' placeholder='city' id='city' />
-                                </div>
-                                <div className="div">
-                                    <input type="text" name="state" placeholder='State' id="state" />
-                                </div>
-                            </div>
-                            <div className="twoInput">
-                                <div className="div">
-                                    {/* <label htmlFor="state">State</label> */}
-                                    <input type="text" name="country" placeholder='country' id="country" />
-                                </div>
-                                <div className="div">
-
-                                    {/* <label htmlFor="pinCode">Pin Code</label> */}
-                                    <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" />
-                                </div>
-                            </div>
-                            <button type='submit' className="submitButton mt-2" id="detailButton">
-                                Submit
-                            </button>
-                        </form>
 
                         {/* Profile Card - About */}
                         <div className="profile-card card">
@@ -467,7 +435,7 @@ const ProfileComponent = ({
                         {/* Profile Card - Interests */}
                         <div className="profile-card card">
                             <div className="about-title section-title">
-                                <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Interests</div>
+                                <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Achievements</div>
                                 <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
                                     {!others &&
                                         <div>
@@ -550,21 +518,79 @@ const ProfileComponent = ({
                         </form>
                     ))}
                 </div> */}
+                        {
+                            Object.keys(tempUser?.data).includes("profile") ? <></> : <button className='btn btn-primary btn-outline' onClick={() => setShowAddressModal(true)}>Complete Your Profile</button>
+                        }
                         <Footer></Footer>
                     </div>
                 </div>
             }
             <Modal
+                open={showAddressModal}
+                setOpen={setShowAddressModal}
+                title={"Complete your profile"}
+                handleSubmit={handleSubmit}
+            >
+                <div className='formContainer card'>
+                    <form id='detailForm'>
+                        <h2>Address Details</h2>
+                        <div className="twoInput">
+                            <div className="div">
+                                {/* <label htmlFor="name">Name</label> */}
+                                <input type="text" name="name" placeholder='Name' id="name" required />
+                            </div>
+                            <div className="div">
+
+                                {/* <label htmlFor="buildingName">Building Name</label> */}
+                                <input type="text" name="buildingName" placeholder='Building Name' id="buildingName" />
+                            </div>
+                        </div>
+                        <div className="oneInput">
+                            {/* <label htmlFor="">Adress Line 1</label> */}
+                            <input type="text" name="line1" placeholder='Address Line 1' id='line1' required />
+                        </div>
+                        <div className="oneInput">
+                            {/* <label htmlFor="">Adress Line 2</label> */}
+                            <input type="text" name="line2" placeholder='Adress Line 2' id='line' />
+                        </div>
+                        <div className="oneInput">
+                            {/* <label htmlFor="">Street</label> */}
+                            <input type="text" name="street" placeholder='Street name' id='street' required />
+                        </div>
+                        <div className="twoInput">
+                            <div className="div">
+                                <input type="text" name='city' placeholder='city' id='city' required />
+                            </div>
+                            <div className="div">
+                                <input type="text" name="state" placeholder='State' id="state" required />
+                            </div>
+                        </div>
+                        <div className="twoInput">
+                            <div className="div">
+                                {/* <label htmlFor="state">State</label> */}
+                                <input type="text" name="country" placeholder='country' id="country" required />
+                            </div>
+                            <div className="div">
+
+                                {/* <label htmlFor="pinCode">Pin Code</label> */}
+                                <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" required />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </Modal>
+
+            <Modal
                 open={showSkillModal}
                 setOpen={setShowSkillModal}
-                title={"Title"}
+                title={"Add Skill"}
                 handleSubmit={handleAddSkill}
             >
                 <Autocomplete
                     freeSolo
                     options={skillsData?.data?.filter(skill => !tempUser?.data?.profile?.skills?.map(e => e?._id)?.includes(skill?._id))?.map(e => e?.name) || []}
                     renderInput={(params) => (
-                        <TextField {...params} label="Add your skills" onChange={e => setChangedSkill(e.target.value)}/>
+                        <TextField {...params} label="Add your skills" onChange={e => setChangedSkill(e.target.value)} />
                     )}
                     onChange={(_, value) => setChangedSkill(value)}
                 />
