@@ -22,7 +22,7 @@ export default class InstituteHandler extends ErrorHandler<IInstitute> {
             this.emailsArrayMessage = this.emptyArray("emails")
             return await Promise.reject<boolean>(this.emailsArrayMessage)
         }
-        const duplicates = []
+        const duplicates = [] as string[]
         for(let i=0; i<emails.length; i++) {
             if(duplicates.includes(emails[i])) {
                 continue
@@ -41,7 +41,7 @@ export default class InstituteHandler extends ErrorHandler<IInstitute> {
             this.phoneArrayMessage = this.emptyArray("phones")
             return await Promise.reject<boolean>(this.phoneArrayMessage)
         }
-        const duplicates = []
+        const duplicates = [] as string[]
         for(let i=0; i<phones.length; i++) {
             if(duplicates.includes(phones[i])) {
                 continue

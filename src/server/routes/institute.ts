@@ -8,17 +8,20 @@ import { Router } from "express";
 const app = Router()
 const handler = new InstituteHandler()
 
-const required = ["name", "contact", "address"]
+const required = [
+    "name",
+    "address"
+]    
 app.post("/create",
     verifyToken(),
     verifyAdmin(),
     verifyBody(required),
-    async (_, res) => {
+    async (req, res) => {
         const { keys, values, session } = res.locals
         const user = session.user as IUser
         const institute = await Institute.create({
             name: getValue(keys, values, "name"),
-            contact: getValue(keys, values, "contact"),
+            contact: req.body.contact,
             admin: user._id,
             address: getValue(keys, values, "address"),
             ...(keys.includes("faculty") && {
@@ -37,3 +40,5 @@ app.post("/create",
         return res.status(200).send(handler.success(institute))
     }
 )
+
+export default app
