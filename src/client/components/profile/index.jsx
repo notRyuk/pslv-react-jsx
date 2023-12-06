@@ -45,29 +45,26 @@ const ProfileComponent = ({
     const postUrl = basePath + urls.posts.get.replace(":id", params.id)
     const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
     const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
-    const { data: userData, mutate: profileMutate, isLoading: profileisLoading } = useGetter(profileUrl)
+    // const { data: userData, mutate: profileMutate, isLoading: profileisLoading } = useGetter(profileUrl)
     useEffect(() => {
-        setTempUser(userData)
-        setIsLoading(profileisLoading)
-        // const fetchProfileData = async () => {
-        //     try {
-        //         const res = await axios.get(profileUrl, {
-        //             headers: {
-        //                 authorization: `Bearer ${session.token}`
-        //             },
-        //         });
-        //         setTempUser(res.data.data);
-        //     } catch (error) {
-        //         console.error("Error while fetching profile data:", error);
-        //     } finally {
-        //         // Set loading to false regardless of success or failure
-        //         setIsLoading(false);
-        //     }
-        // };
-        console.log(userData?.data)
+        const fetchProfileData = async () => {
+            try {
+                const res = await axios.get(profileUrl, {
+                    headers: {
+                        authorization: `Bearer ${session.token}`
+                    },
+                });
+                setTempUser(res.data.data);
+            } catch (error) {
+                console.error("Error while fetching profile data:", error);
+            } finally {
+                // Set loading to false regardless of success or failure
+                setIsLoading(false);
+            }
+        };
         setOthers(session?.user._id !== params.id)
-        // fetchProfileData();
-    }, [session.token, profileisLoading]);
+        fetchProfileData();
+    }, [session.token]);
 
     // const { trigger: createProfile } = usePoster(basePath+urls.user.profile.create)
     const handleSubmit = async (e) => {
