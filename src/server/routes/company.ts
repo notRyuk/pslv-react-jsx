@@ -1,5 +1,5 @@
 import CompanyHandler from "@handlers/job/company"
-import { verifyAdmin, verifyBody, verifyToken } from "@server/middleware/verify"
+import { verifyBody, verifyToken } from "@server/middleware/verify"
 import Company from "@server/models/job/company"
 import { getValue } from "@utils/object"
 import { Router } from "express"
@@ -9,7 +9,6 @@ const handler = new CompanyHandler()
 
 app.post("/create",
     verifyToken(),
-    verifyAdmin(),
     verifyBody(["name"]),
     async (_, res) => {
         const { keys, values } = res.locals
