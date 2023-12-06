@@ -72,9 +72,5 @@ export default {
         create: "/achievement/create",
         findAll: "/achievements",
         findById: "/achievements/:id",
-    },
-    company: {
-        create: "/company/create",
-        getAll: "/companies"
     }
 }
