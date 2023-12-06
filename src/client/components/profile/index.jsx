@@ -9,7 +9,7 @@ import Loading from '../loading';
 import { useGetter, usePoster } from '../../hooks/fetcher';
 import Footer from '../footer';
 import Modal from '../modal';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, Chip, TextField } from '@mui/material';
 const ProfileComponent = ({
     user,
     usermain,
@@ -131,8 +131,8 @@ const ProfileComponent = ({
                                     {/* Edit Title */}
                                     <div className="edit-title">
                                         <h3>
-                                            {tempUser?.data?.name?.first} {tempUser?.data?.name?.last} (
-                                            <span style={{ textTransform: 'capitalize' }}>{tempUser?.data?.role}</span>)
+                                            {tempUser?.data?.name?.first} {tempUser?.data?.name?.last} 
+                                            <Chip label={tempUser?.data?.role[0].toUpper} />
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
