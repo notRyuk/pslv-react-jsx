@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
+import urls,{ basePath } from '../../../utils/urls';
+import { useGetter } from '../../hooks/fetcher';
 
 const NewsCard = () => {
+    const newsCreateUrl = basePath+urls.news.create
+    const newsUpdateUrl = basePath+urls.news.update
+    const newsDeleteUrl = basePath+urls.news.delete
+    const newsGetUrl = basePath+urls.news.find
+    const {data:newsData, mutate: newsMutate, isLoading} = useGetter(newsGetUrl)
     const [showEditModal, setShowEditModal] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showDetailView, setShowDetailView] = useState(false);
@@ -79,7 +86,10 @@ const NewsCard = () => {
     }
 
     return (
-        <>
+        <div className='row'>
+            <div className="col-3"></div>
+            <div className="col-6" style={{background: "#1B2730", boxShadow: "1px 1px 20px 0px black"}}>
+
             <ul className="newsSection list-group">
                 {news.map((eachNews, index) => (
                     <li className="list-group-item mt-2" style={{ backgroundColor: "#1b2730", borderTopWidth: '1px' }} key={index}>
@@ -103,11 +113,14 @@ const NewsCard = () => {
                     </li>
                 ))}
             </ul>
-
-            {/* Add News */}
-            <button type="button" className="btn btn-primary mt-3" onClick={handleAddClick}>
+            <button type="button" className="btn btn-primary mt-3 w-100" onClick={handleAddClick}>
                 Add
             </button>
+            </div>
+            <div className="col-3"></div>
+
+            {/* Add News */}
+            
 
             {/* Add News Modal */}
             <div className={`modal mt-5 ${showAddModal ? 'show' : ''}`} style={{ display: showAddModal ? 'block' : 'none' }}>
@@ -117,10 +130,13 @@ const NewsCard = () => {
                             <h5 className="modal-title" style={{ color: 'black' }}>
                                 Add News
                             </h5>
-                            <button type="button" className="btn-close" onClick={handleAddModalClose}></button>
+                            <button type="button" className="btn-close btn" style={{fontSize:'1rem'}} onClick={handleAddModalClose}></button>
                         </div>
                         <div className="modal-body">
+                            <input type='text' className='form-control mb-2' placeholder='Title' name='title' required/>
+                            
                             <textarea
+                                placeholder='Description'
                                 id="addNewsTextarea"
                                 className="form-control"
                                 rows="4"
@@ -133,7 +149,7 @@ const NewsCard = () => {
                                 Close
                             </button>
                             <button type="button" className="btn btn-primary" onClick={handleAddNews}>
-                                Save changes
+                                Add News
                             </button>
                         </div>
                     </div>
@@ -148,7 +164,7 @@ const NewsCard = () => {
                             <h5 className="modal-title" style={{ color: 'black' }}>
                                 Edit News
                             </h5>
-                            <button type="button" className="btn-close" onClick={handleEditModalClose}></button>
+                            <button type="button" className="btn-close" style={{fontSize:'1rem'}} onClick={handleEditModalClose}></button>
                         </div>
                         <div className="modal-body">
                             <textarea
@@ -193,7 +209,7 @@ const NewsCard = () => {
             </div>
 
             {/* ... (remaining JSX code) */}
-        </>
+        </div>
     );
 };
 

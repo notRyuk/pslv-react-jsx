@@ -1,5 +1,5 @@
 import InstituteHandler from "@handlers/institute";
-import { verifyAdmin, verifyBody, verifyToken } from "@server/middleware/verify";
+import { verifyAdmin, verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Institute from "@server/models/institute";
 import IUser from "@types_/user";
 import { getValue } from "@utils/object";
@@ -40,5 +40,14 @@ app.post("/create",
         return res.status(200).send(handler.success(institute))
     }
 )
+
+app.delete("/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), async (_, res) => {
+    const { keys, values } = res.locals;
+    const work = await Institute.findByIdAndDelete(getValue(keys, values, "id"));
+    if (!work) {
+        return res.status(404).send(handler.error(handler.STATUS_404));
+    }
+    return res.status(200).send(handler.success(work));
+});
 
 export default app

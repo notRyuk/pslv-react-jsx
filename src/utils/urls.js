@@ -72,5 +72,11 @@ export default {
         create: "/achievement/create",
         findAll: "/achievements",
         findById: "/achievements/:id",
+    },
+    institute: {
+        create: "/institute/create",
+        delete: "/institute/:id",
+        findAll: "/institutes",
+        findById: "/institutes/:id"
     }
 }

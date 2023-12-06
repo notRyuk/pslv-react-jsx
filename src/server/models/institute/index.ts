@@ -51,21 +51,21 @@ const instituteSchema = new Schema<IInstitute>({
         ref: Models.address,
         required: handler.fieldRequired("address")
     },
-    faculty: {
-        type: [Schema.Types.ObjectId],
+    faculty: [{
+        type: Schema.Types.ObjectId,
         ref: Models.user,
         default: []
-    },
-    courses: {
-        type: [Schema.Types.ObjectId],
+    }],
+    courses: [{
+        type: Schema.Types.ObjectId,
         ref: Models.course,
         default: []
-    },
-    awards: {
-        type: [Schema.Types.ObjectId],
+    }],
+    awards: [{
+        type: Schema.Types.ObjectId,
         ref: Models.achievement,
         default: []
-    }
+    }]
 })
 
 const Institute = model(Models.institute, instituteSchema)
