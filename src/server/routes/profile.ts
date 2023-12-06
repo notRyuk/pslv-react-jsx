@@ -1,6 +1,7 @@
 import UserHandler from "@handlers/user";
 import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Address from "@server/models/address";
+import Skill from "@server/models/skill";
 import User from "@server/models/user";
 import Profile from "@server/models/user/profile";
 import IUser from "@types_/user";
@@ -44,6 +45,31 @@ app.post("/create", verifyToken(), verifyBody(["role"]), async (req, res) => {
         return res.status(400).send(handler.error(handler.STATUS_404))
     }
     return res.status(200).send(handler.success(updatedUser))
+})
+
+app.put("/add-skill", verifyToken(), verifyBody(["skill"]), async (_, res) => {
+    const { keys, values, session } = res.locals
+    const profileId = (session.user as IUser).profile
+    if(!profileId) {
+        return res.status(404).send(handler.error("Profile id not found! Please create the profile"))
+    }
+    const profile = await Profile.findById(profileId)
+    if(!profile) {
+        return res.status(404).send(handler.error("User profile not found! Please create the profile"))
+    }
+    let skill = await Skill.findOne({name: (getValue(keys, values, "skill")as string).trim()})
+    if(!skill) {
+        skill = await Skill.create({ name: getValue(keys, values, "skill")})
+    }
+    if(!skill) {
+        return res.status(502).send(handler.error("Internal server error! Please try again"))
+    }
+    profile.set("skills", [...profile.skills, skill._id])
+    const updatedProfile = await profile.save()
+    if(!updatedProfile) {
+        return res.status(502).send(handler.error("Internal server error! Please try again"))
+    }
+    return res.status(200).send(handler.success(updatedProfile))
 })
 
 app.put("/:id", verifyToken(), verifyBody([]), async (req, res) => {

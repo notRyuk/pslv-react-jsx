@@ -18,9 +18,11 @@ import jobsRouter from "./jobs"
 import applicationRouter from "./application"
 import applicationsRouter from "./applications"
 import adminRouter from "./admin" 
-import newsRouer from "./news"
+import newsRouter from "./news"
 import achievementRouter from "./achievement"
 import achievementsRouter from "./achievements"
+import educationRouter from "./education"
+import workRouter from "./work"
 
 const app = Router()
 
@@ -42,8 +44,10 @@ app.use("/jobs", jobsRouter)
 app.use("/job-application", applicationRouter)
 app.use("/job-applications", applicationsRouter)
 app.use("/admin", adminRouter)
-app.use("/news", newsRouer)
+app.use("/news", newsRouter)
 app.use("/achievement", achievementRouter)
 app.use("/achievements", achievementsRouter)
+app.use("/education", educationRouter)
+app.use("/work", workRouter)
 
 export default app

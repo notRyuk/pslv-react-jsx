@@ -10,7 +10,7 @@ const handler = new WorkHandler();
 const required = ["company", "from", "isCurrent", "name"];
 
 // Create Work
-app.post("/create", verifyToken(), verifyBody(required), async (req, res) => {
+app.post("/create", verifyToken(), verifyBody(required), async (_, res) => {
     const { keys, values } = res.locals;
     const work = await Work.create({
         company: getValue(keys, values, "company"),
