@@ -25,6 +25,7 @@ import educationRouter from "./education"
 import workRouter from "./work"
 import instituteRouter from "./institute"
 import institutesRouter from "./institutes"
+import courseRouter from "./course"
 
 const app = Router()
 
@@ -53,5 +54,6 @@ app.use("/education", educationRouter)
 app.use("/work", workRouter)
 app.use("/institute", instituteRouter)
 app.use("/institutes", institutesRouter)
+app.use("/course", courseRouter)
 
 export default app
