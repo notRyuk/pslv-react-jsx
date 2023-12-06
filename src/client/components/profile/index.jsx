@@ -8,6 +8,8 @@ import { selectSession } from '../auth/authSlice';
 import Loading from '../loading';
 import { useGetter, usePoster } from '../../hooks/fetcher';
 import Footer from '../footer';
+import Modal from '../modal';
+import { Autocomplete, TextField } from '@mui/material';
 const ProfileComponent = ({
     user,
     usermain,
@@ -18,7 +20,6 @@ const ProfileComponent = ({
     post,
     postImpression,
     aboutData,
-    skills,
     interests,
     users,
 }) => {
@@ -29,8 +30,8 @@ const ProfileComponent = ({
     const [showInterestModal, setShowInterestModal] = useState(false);
     const [newSkill, setNewSkill] = useState("");
 
-    const [tempUser, setTempUser] = useState({})
-    const [isLoading, setIsLoading] = useState(true);
+    // const [tempUser, setTempUser] = useState({})
+    // const [isLoading, setIsLoading] = useState(true);
     const [others, setOthers] = useState(false)
 
     function addNewSkill() {
@@ -38,32 +39,49 @@ const ProfileComponent = ({
     }
     const params = useParams()
     const profileUrl = basePath + urls.user.profile.get.replace(':id', params.id)
-    // const tempUser = useSelector(selectLoggedInUser)
     const session = useSelector(selectSession)
 
     const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", params.id)
     const postUrl = basePath + urls.posts.get.replace(":id", params.id)
     const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
     const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
-    // const { data: userData, mutate: profileMutate, isLoading: profileisLoading } = useGetter(profileUrl)
-    useEffect(() => {
-        const fetchProfileData = async () => {
-            try {
-                const res = await axios.get(profileUrl, {
-                    headers: {
-                        authorization: `Bearer ${session.token}`
-                    },
-                });
-                setTempUser(res.data.data);
-            } catch (error) {
-                console.error("Error while fetching profile data:", error);
-            } finally {
-                // Set loading to false regardless of success or failure
-                setIsLoading(false);
+    const { data: skillsData } = useGetter(basePath+urls.skills)
+    const [changedSkill, setChangedSkill] = useState("")
+
+    const handleAddSkill = async () => {
+        const res = await axios.put(basePath+urls.user.profile.addSkill, {skill: changedSkill}, {
+            headers: {
+                authorization: `Bearer ${session?.token}`
             }
-        };
+        })
+        if(res?.data) {
+            setShowSkillModal(false)
+            setChangedSkill("")
+            tempUserMutate()
+        }
+    }
+
+    const {data: tempUser, mutate: tempUserMutate, isLoading} = useGetter(profileUrl)
+
+    // const fetchProfileData = async () => {
+    //     try {
+    //         const res = await axios.get(profileUrl, {
+    //             headers: {
+    //                 authorization: `Bearer ${session.token}`
+    //             },
+    //         });
+    //         setTempUser(res.data.data);
+    //     } catch (error) {
+    //         console.error("Error while fetching profile data:", error);
+    //     } finally {
+    //         // Set loading to false regardless of success or failure
+    //         setIsLoading(false);
+    //     }
+    // };
+
+    useEffect(() => {
         setOthers(session?.user._id !== params.id)
-        fetchProfileData();
+        // fetchProfileData();
     }, [session.token]);
 
     // const { trigger: createProfile } = usePoster(basePath+urls.user.profile.create)
@@ -75,7 +93,7 @@ const ProfileComponent = ({
             address[entry[0]] = entry[1]
         }
         // createProfile({address, role: session?.user?.role})
-        const res = await axios.post(basePath+urls.user.profile.create, {address, role: session?.user?.role}, {
+        const res = await axios.post(basePath + urls.user.profile.create, { address, role: session?.user?.role }, {
             headers: {
                 authorization: `Bearer ${session?.token}`
             }
@@ -94,16 +112,16 @@ const ProfileComponent = ({
                             {/* Cover and Edit Button */}
                             <div className="cover"></div>
                             {
-                                tempUser?._id === session.user._id && (
+                                tempUser?.data?._id === session.user._id && (
                                     <Link to="/edit-details">
                                         <span className="material-symbols-rounded cover-edit">edit</span>
-                                    </Link> 
+                                    </Link>
                                 )
                             }
 
                             {/* Profile Information */}
                             <div className="profileInfo">
-                                <img src={serverPath + tempUser?.profilePhoto} alt="profileImg" className="profileImg" />
+                                <img src={serverPath + tempUser?.data?.profilePhoto} alt="profileImg" className="profileImg" />
                             </div>
                             {/* <p>{fetchedUser.email}</p> */}
                             {/* Profile Details */}
@@ -113,12 +131,12 @@ const ProfileComponent = ({
                                     {/* Edit Title */}
                                     <div className="edit-title">
                                         <h3>
-                                            {tempUser?.name?.first} {tempUser?.name?.last} (
-                                            <span style={{ textTransform: 'capitalize' }}>{tempUser?.role}</span>)
+                                            {tempUser?.data?.name?.first} {tempUser?.data?.name?.last} (
+                                            <span style={{ textTransform: 'capitalize' }}>{tempUser?.data?.role}</span>)
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
-                                    <p className="personalDescription">{tempUser?.bio || ""}</p>
+                                    <p className="personalDescription">{tempUser?.data?.bio || ""}</p>
 
                                     {/* Location Information */}
                                     <p className="location-info">
@@ -140,10 +158,10 @@ const ProfileComponent = ({
                                                 </div>
                                                 <div className="modal-body">
                                                     <div className="mb-2">
-                                                        Email : {tempUser?.email}
+                                                        Email : {tempUser?.data?.email}
                                                     </div>
                                                     <div className="mb-2">
-                                                        Phone : {tempUser?.phone}
+                                                        Phone : {tempUser?.data?.phone}
                                                     </div>
                                                 </div>
                                                 <div className="modal-footer">
@@ -188,14 +206,14 @@ const ProfileComponent = ({
                                     <p className="connection-info">{connectedUser?.data.length} connections</p>
 
                                     {/* Additional Info for Alumni */}
-                                    {tempUser?.role === 'alumni' && (
+                                    {tempUser?.data?.role === 'alumni' && (
                                         <p className="connection-info">
                                             {job} Jobs posted
                                         </p>
                                     )}
                                 </div>
                                 {/* Apply for Alumni Form (conditionally rendered) */}
-                                {tempUser?.role === 'student' && tempUser?._id === session.user._id && (
+                                {tempUser?.data?.role === 'student' && tempUser?.data?._id === session.user._id && (
                                     <form className='alumni-submit ms-auto' action="/apply-for-alumni" method="post">
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </form>
@@ -391,7 +409,7 @@ const ProfileComponent = ({
                                     {!others && (
                                         <div>
                                             {/* Add Skill Button */}
-                                            <Link data-bs-toggle="modal" data-bs-target="#skillModal">
+                                            <Link data-bs-toggle="modal" onClick={() => setShowSkillModal(true)}>
                                                 <span className="material-symbols-rounded about-edit">add</span>
                                             </Link>
                                         </div>
@@ -400,7 +418,7 @@ const ProfileComponent = ({
                             </div>
 
                             {/* Skills Modal */}
-                            <div className={`modal profileModal fade ${showSkillModal ? 'show' : ''}`} id="skillModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
+                            {/* <div className={`modal profileModal fade ${showSkillModal ? 'show' : ''}`} id="skillModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true" style={{ color: 'black' }}>
                                 <div className="modal-dialog">
                                     <div className="modal-content">
                                         <div className="modal-header">
@@ -408,7 +426,6 @@ const ProfileComponent = ({
                                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div className="modal-body">
-                                            {/* Skill Form */}
                                             <form onSubmit={(e) => {
                                                 e.preventDefault();
                                                 console.log(skills);
@@ -429,15 +446,15 @@ const ProfileComponent = ({
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Skills Container */}
                             <div className="skill-container">
                                 {/* Render Skills */}
-                                {skills?.length > 0 ? (
-                                    skills?.map((skill, index) => (
+                                {tempUser?.data?.profile?.skills?.length > 0 ? (
+                                    tempUser?.data?.profile?.skills?.map((skill, index) => (
                                         <div key={index} className="skill-main">
-                                            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{skill.skill}</div>
+                                            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{skill.name}</div>
                                         </div>
                                     ))
                                 ) : (
@@ -537,6 +554,21 @@ const ProfileComponent = ({
                     </div>
                 </div>
             }
+            <Modal
+                open={showSkillModal}
+                setOpen={setShowSkillModal}
+                title={"Title"}
+                handleSubmit={handleAddSkill}
+            >
+                <Autocomplete
+                    freeSolo
+                    options={skillsData?.data?.filter(skill => !tempUser?.data?.profile?.skills?.map(e => e?._id)?.includes(skill?._id))?.map(e => e?.name) || []}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Add your skills" onChange={e => setChangedSkill(e.target.value)}/>
+                    )}
+                    onChange={(_, value) => setChangedSkill(value)}
+                />
+            </Modal>
         </>
     );
 };
