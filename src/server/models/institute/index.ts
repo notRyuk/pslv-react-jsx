@@ -6,6 +6,10 @@ import { model, Schema } from "mongoose";
 const handler = new InstituteHandler()
 
 const instituteSchema = new Schema<IInstitute>({
+    name: {
+        type: String,
+        required: handler.fieldRequired("name")
+    },
     contact: {
         type: {
             emails: {
