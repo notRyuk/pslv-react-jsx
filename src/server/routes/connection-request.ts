@@ -59,7 +59,10 @@ app.get("/", verifyToken(), async (_, res) => {
 })
 
 app.get("/alumniRequests", verifyToken(), verifyAdmin(), async (_, res) => {
-    const connectionRequests = await ConnectionRequest.find({ type: ConnectionTypes.alumniRequest }) || []
+    const connectionRequests = await ConnectionRequest.find({ type: ConnectionTypes.alumniRequest }).populate({
+        path: "from",
+        select: "-password"
+    }).exec() || []
     return res.status(200).send(handler.success(connectionRequests))
 })
 
