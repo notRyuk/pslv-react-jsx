@@ -13,10 +13,13 @@ import urls, { basePath } from "../../../utils/urls"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
 import { useFormik, FormikProvider } from "formik";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { selectSession } from "../auth/authSlice";
 
 
 export default function Institute() {
-    const { data: instituteData } = useGetter(basePath + urls.institute.findAll)
+    const { data: instituteData, mutate: mutateInstituteData } = useGetter(basePath + urls.institute.findAll)
     const initialValues = {
         name: "",
         contact: {
@@ -45,7 +48,7 @@ export default function Institute() {
         initialValues
     })
 
-    const { values: formData, handleChange: handleChangeFormData, setValues: setFormData } = form
+    const { values: formData, handleChange: handleChangeFormData, setValues: setFormData, resetForm } = form
 
     const [email, setEmail] = useState("")
     const handleAddEmail = () => {
@@ -74,6 +77,44 @@ export default function Institute() {
         const currentForm = structuredClone(formData)
         currentForm.contact.phone.splice(index, 1)
         setFormData(currentForm)
+    }
+
+    const initialState = {
+        name: "",
+        value: ""
+    }
+    const [otherHandle, setOtherHandle] = useState(initialState)
+    const handleChangeOtherHandle = (e) => setOtherHandle(prev => ({...prev, [e.target.name]: e.target.value}))
+    const handleAddSocial = () => {
+        const currentForm = structuredClone(formData)
+        const otherHandles = currentForm.contact.social.others.map(e => e[0]) || []
+        if (otherHandles.includes(otherHandle.name.trim())) {
+            currentForm.contact.social.others[otherHandles.indexOf(otherHandle.name.trim())][1] = otherHandle.value
+        }
+        else {
+            currentForm.contact.social.others.push([otherHandle.name, otherHandle.value])
+        }
+        setFormData(currentForm)
+        setOtherHandle(initialState)
+    }
+    const handleRemoveSocial = (index) => {
+        const currentForm = structuredClone(formData)
+        currentForm.contact.social.others.splice(index, 1)
+        setFormData(currentForm)
+    }
+
+    const session = useSelector(selectSession)
+    const handleFormSubmit = async () => {
+        console.log(formData)
+        const res = await axios.post(basePath+urls.institute.create, formData, {
+            headers: {
+                authorization: `Bearer ${session?.token}`
+            }
+        })
+        if(res.data) {
+            resetForm()
+            mutateInstituteData()
+        } 
     }
 
     return (
@@ -256,10 +297,12 @@ export default function Institute() {
                         display: "flex",
                         flexDirection: "column",
                         gap: "1rem",
-                        padding: "1rem"
+                        padding: "1rem",
+                        typography: "body1"
                     }}
                 >
                     <Typography variant="h5">Add Socials</Typography>
+
                     <Stack direction={"row"} gap={"1rem"} alignItems={"center"} justifyContent={"center"}>
                         <Box width={"90%"}>
                             <TextField
@@ -288,6 +331,7 @@ export default function Institute() {
                             <Chip label={e} onDelete={e => handleRemoveEmail(i)} />
                         ))}
                     </Box>
+
                     <Stack direction={"row"} gap={"1rem"} alignItems={"center"} justifyContent={"center"}>
                         <Box width={"90%"}>
                             <TextField
@@ -298,7 +342,7 @@ export default function Institute() {
                                 autoComplete="phone"
                                 onChange={(e) => setPhone(e.target.value.trim())}
                                 value={phone}
-                                type="text"
+                                type="number"
                             />
                         </Box>
                         <Box width={"10%"}>
@@ -316,6 +360,7 @@ export default function Institute() {
                             <Chip label={e} onDelete={e => handleRemovePhone(i)} />
                         ))}
                     </Box>
+
                     <Stack direction={"row"} gap={"1rem"}>
                         <Box width={"40%"}>
                             <TextField
@@ -338,8 +383,66 @@ export default function Institute() {
                             />
                         </Box>
                     </Stack>
+                    <Stack direction={"row"} gap={"1rem"}>
+                        <Box width={"60%"}>
+                            <TextField
+                                variant="filled"
+                                label="Twitter Handle"
+                                name="contact.social.x"
+                                fullWidth
+                                onChange={handleChangeFormData}
+                                type="url"
+                            />
+                        </Box>
+                        <Box width={"40%"}>
+                            <TextField
+                                variant="filled"
+                                label="Quora Handle"
+                                name="contact.social.quora"
+                                fullWidth
+                                onChange={handleChangeFormData}
+                                type="url"
+                            />
+                        </Box>
+                    </Stack>
 
+                    <Stack direction={"row"} gap={"1rem"}>
+                        <Box width={"20%"}>
+                            <TextField
+                                variant="filled"
+                                label="Social Media Name"
+                                name="name"
+                                fullWidth
+                                onChange={handleChangeOtherHandle}
+                                type="url"
+                                value={otherHandle.name}
+                            />
+                        </Box>
+                        <Box width={"70%"}>
+                            <TextField
+                                variant="filled"
+                                label="Social Media URL"
+                                name="value"
+                                fullWidth
+                                onChange={handleChangeOtherHandle}
+                                type="url"
+                                value={otherHandle.value}
+                            />
+                        </Box>
+                        <Box width={"10%"}>
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                onClick={handleAddSocial}
+                            >
+                                Add Phone
+                            </Button>
+                        </Box>
+                    </Stack>
                 </Paper>
+                <Box width={"100%"}>
+                    <Button variant="contained" fullWidth onClick={handleFormSubmit}>Submit</Button>
+                </Box>
             </Box>
         </Stack>
     )
