@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom'
 import { selectSession } from '../auth/authSlice'
 
 const AluminiRequestCard = (props) => {
-    const acceptRequestUrl = basePath + urls.request.acceptMutual.replace(':request', props.cr?._id)
-    const ignoreRequestUrl = basePath + urls.request.ignore.replace(':request', props.cr?._id)
+    const acceptRequestUrl = basePath + urls.request.alumni.replace(':request', props.cr?._id).replace(':status', "accept")
+    const ignoreRequestUrl = basePath + urls.request.alumni.replace(':request', props.cr?._id).replace(':status', "reject")
     const session = useSelector(selectSession);
     const clickHandler = async () => {
         const data = await axios.put(acceptRequestUrl, {}, {
@@ -15,19 +15,17 @@ const AluminiRequestCard = (props) => {
                 authorization: `Bearer ${session.token}`,
             }
         })
-        props.connectionMutate()
         props.requestMutate()
     }
     const ignoreHandler = async () => {
         try {
-            const response = await axios.delete(ignoreRequestUrl, {
+            const response = await axios.put(ignoreRequestUrl, {}, {
                 headers: {
                     authorization: `Bearer ${session.token}`,
                 }
             });
             // console.log(response.data);
             props.requestMutate();
-            props.suggestMutate();
         } catch (error) {
             console.error("Error deleting connection request:", error);
         }
@@ -50,9 +48,10 @@ const AluminiRequestCard = (props) => {
                         </div>
                     </div>
                 </Link>
+                <a href={serverPath + props?.cr?.document} style={{fontSize:"1rem"}} target='_blank'>Document</a>
                 <div className="networkOption">
-                    <button className="noborderButton" type='button' onClick={ignoreHandler}>Ignore</button>
-                    <button className="text-button" type='button' onClick={clickHandler}>Accept</button>
+                    <button className="noborderButton" type='button' onClick={ignoreHandler}>Reject</button>
+                    <button className="text-button" style={{fontSize:"1rem"}} type='button' onClick={clickHandler}>Accept</button>
                 </div>
             </div>
         </>
