@@ -74,15 +74,11 @@ app.post("/login", verifyBody(["email", "password"], handler), async (_, res) =>
     if(!Hash.simpleCompare(getValue(keys, values, "password") as string, user.password)) {
         return res.status(401).send(handler.error("Incorrect password, try again."))
     }
-    let session = await Session.findOneAndDelete({user: user._id})
-    if(!session) {
-        return res.status(408).send(handler.error(handler.STATUS_408))
-    }
     const token = jwt.sign({
         user: user._id.toString(),
         createdAt: Date.now()
     }, JWT_SECRET, {expiresIn: JWT_SESSION_TIMEOUT})
-    session = await Session.create({user: user._id, token })
+    const session = await Session.create({user: user._id, token })
     session.user = user
     return res.status(200).send(handler.success(session))
 })

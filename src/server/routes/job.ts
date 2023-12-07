@@ -12,7 +12,7 @@ const handler = new JobHandler()
 app.post("/create",
     verifyToken(),
     verifyBody(["title", "description", "company", "experienceYears"]),
-    async (_, res) => {
+    async (req, res) => {
         const { keys, values, session } = res.locals;
         let company = await Company.findOne({ name: getValue(keys, values, "company") })
         if(!company) {
@@ -28,7 +28,7 @@ app.post("/create",
             company,
             experienceYears: getValue(keys, values, "experienceYears"),
             ...(keys.includes("skills") && getValue(keys, values, "skills") && getValue(keys, values, "skills").length && {
-                skills: getValue(keys, values, "skills")
+                skills: req.body.skills
             }),
             ...(keys.includes("endsAt") && getValue(keys, values, "endsAt") && getValue(keys, values, "endsAt").length && {
                 endsAt: getValue(keys, values, "endsAt")

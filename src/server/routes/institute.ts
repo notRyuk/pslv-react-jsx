@@ -1,5 +1,6 @@
 import InstituteHandler from "@handlers/institute";
 import { verifyAdmin, verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
+import Address from "@server/models/address";
 import Institute from "@server/models/institute";
 import IUser from "@types_/user";
 import { getValue } from "@utils/object";
@@ -10,7 +11,6 @@ const handler = new InstituteHandler()
 
 const required = [
     "name",
-    "address"
 ]    
 app.post("/create",
     verifyToken(),
@@ -19,11 +19,15 @@ app.post("/create",
     async (req, res) => {
         const { keys, values, session } = res.locals
         const user = session.user as IUser
+        const address = await Address.create(req.body.address)
+        if(!address) {
+            return res.status(404).send(handler.error(handler.STATUS_404))
+        }
         const institute = await Institute.create({
             name: getValue(keys, values, "name"),
             contact: req.body.contact,
             admin: user._id,
-            address: getValue(keys, values, "address"),
+            address: address._id,
             ...(keys.includes("faculty") && {
                 faculty: getValue(keys, values, "faculty")
             }),

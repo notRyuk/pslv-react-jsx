@@ -22,11 +22,11 @@ export default function Page() {
     const user = useSelector(selectLoggedInUser)
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (!Object.keys(user).includes("admin")) {
-            navigate("/home")
-        }
-    }, [user])
+    // useEffect(() => {
+    //     if (!Object.keys(user).includes("admin")) {
+    //         navigate("/home")
+    //     }
+    // }, [user])
 
     return (
         <Box sx={{ width: '100%', typography: 'h2', marginTop: "4.5rem" }}>
