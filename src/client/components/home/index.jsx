@@ -21,6 +21,8 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
     const [isLoading, setIsLoading] = useState(true);
     const tempUser = useSelector(selectLoggedInUser);
     const session = useSelector(selectSession);
+    const newsGetUrl = basePath + urls.news.find
+    const { data: newsData, mutate: newsMutate, isLoading: newsLoading } = useGetter(newsGetUrl)
     const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", session?.user._id)
     const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
 
@@ -110,24 +112,28 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                     <div className="right-content content">
                         <div className="card">
                             <h5>Mascot News</h5>
-                            <ul className="newsSection">
-                                <li>
-                                    <i className="fa-solid fa-circle"></i> Mascot announces new tools for job seekers
-                                    Mascot has just released a suite of new tools to help job seekers find their next career move. Mascot hopes that these new tools will help job seekers feel more confident and empowered in their job search.
-                                </li>
-                                <li>
-                                    <i className="fa-solid fa-circle"></i> Microsoft acquires Mascot Learning
-                                    Microsoft has acquired Mascot Learning, the educational arm of the professional social media platform. With this acquisition, Microsoft hopes to expand its e-learning offerings and provide more educational resources to its users.
-                                </li>
-                                <li>
-                                    <i className="fa-solid fa-circle"></i> Mascot releases diversity report, outlines plans for improvement
-                                    In an effort to be more transparent about its diversity initiatives, Mascot has released its annual diversity report. The report outlines the company's current demographics and highlights areas where improvements need to be made.
-                                </li>
-                                {/* ... more news items */}
+                            <ul className="newsSection list-group">
+                                {newsData?.data?.length > 0 ? newsData?.data.map((eachNews, index) => (
+                                    <li className="list-group-item mt-2" style={{ backgroundColor: "#1b2730", borderTopWidth: '1px' }} key={index}>
+                                        <div style={{ display: 'flex', alignItems: '', fontSize: '1.1rem', cursor: 'pointer', borderTopWidth: '1px' }}>
+                                            {/* <i className="fa-solid fa-circle me-2" style={{ paddingTop: '9px' }}></i> */}
+                                            <div className="row">
+                                                <div className="col">
+                                                    <h4 style={{ color: 'white' }}>{eachNews.title}</h4>
+                                                    <span style={{ flex: 1, color: "gray" }}>
+                                                        {eachNews.description}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </li>
+                                )) : <h3 style={{ color: "white", padding: "0.5rem 0" }}>No News Added Yet</h3>}
                             </ul>
-                            <div className="specialLink">
+                            {/* <div className="specialLink">
                                 <Link to="#">Show More</Link>
-                            </div>
+                            </div> */}
                         </div>
                         <Footer></Footer>
                     </div>

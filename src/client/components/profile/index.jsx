@@ -17,7 +17,6 @@ const ProfileComponent = ({
     user,
     usermain,
     contact,
-    address,
     connection,
     job,
     post,
@@ -98,14 +97,20 @@ const ProfileComponent = ({
     const handleSubmit = async (e) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
+        const address = {}
         for (const entry of formData.entries()) {
             address[entry[0]] = entry[1]
+            // console.log(entry);
         }
         const res = await axios.post(basePath + urls.user.profile.create, { address, role: session?.user?.role }, {
             headers: {
                 authorization: `Bearer ${session?.token}`
             }
-        }).then(res => res.data).catch(err => err?.response?.data || err)
+        })
+        if (res?.data) {
+            setShowAddressModal(false)
+            tempUserMutate()
+        }
     }
 
     return (
@@ -147,9 +152,10 @@ const ProfileComponent = ({
 
                                     {/* Location Information */}
                                     <p className="location-info">
-                                        <Link to="#" data-bs-toggle="modal" data-bs-target="#addressModal" className="linkStyle">
+                                        {Object.keys(tempUser?.data).includes("profile") ? <Link to="#" data-bs-toggle="modal" data-bs-target="#addressModal" className="linkStyle">
                                             Address
-                                        </Link>
+                                        </Link> : <></>}
+
                                         <span style={{ fontSize: '15px' }}>•</span>
                                         <Link to="#" className="linkStyle" data-bs-toggle="modal" data-bs-target="#contactModal">
                                             Contact Info
@@ -492,14 +498,14 @@ const ProfileComponent = ({
                     </div>
                 </div>
             }
-            <Modal
+            <SubmitModal
                 open={showAddressModal}
                 setOpen={setShowAddressModal}
                 title={"Complete your profile"}
                 handleSubmit={handleSubmit}
             >
                 <div className='formContainer card'>
-                    <form id='detailForm'>
+                    <div id='detailForm'>
                         <h2>Address Details</h2>
                         <div className="twoInput">
                             <div className="div">
@@ -543,9 +549,9 @@ const ProfileComponent = ({
                                 <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" required />
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </Modal>
+            </SubmitModal>
 
             <Modal
                 open={showSkillModal}
