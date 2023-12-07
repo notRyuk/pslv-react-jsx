@@ -1,6 +1,8 @@
 import JobHandler from "@handlers/job";
 import { verifyBody, verifyToken } from "@server/middleware/verify";
 import Job from "@server/models/job";
+import Company from "@server/models/job/company";
+import IUser from "@types_/user";
 import { getValue } from "@utils/object";
 import { Router } from "express";
 
@@ -9,14 +11,21 @@ const handler = new JobHandler()
 
 app.post("/create",
     verifyToken(),
-    verifyBody(["from", "title", "description", "company", "experienceYears"]),
+    verifyBody(["title", "description", "company", "experienceYears"]),
     async (_, res) => {
-        const { keys, values } = res.locals;
+        const { keys, values, session } = res.locals;
+        let company = await Company.findOne({ name: getValue(keys, values, "company") })
+        if(!company) {
+            company = await Company.create({ name: getValue(keys, values, "company")})
+        }
+        if(!company) {
+            return res.status(404).send(handler.error(handler.STATUS_404))
+        }
         const job = await Job.create({
-            from: getValue(keys, values, "from"),
+            from: (session.user as IUser)._id,
             title: getValue(keys, values, "title"),
             description: getValue(keys, values, "description"),
-            company: getValue(keys, values, "company"),
+            company,
             experienceYears: getValue(keys, values, "experienceYears"),
             ...(keys.includes("skills") && getValue(keys, values, "skills") && getValue(keys, values, "skills").length && {
                 skills: getValue(keys, values, "skills")

@@ -8,8 +8,6 @@ const app = Router();
 const handler = new NewsHandler();
 
 const required = ["title"];
-
-// Create News
 app.post("/create", verifyToken(), verifyAdmin(), verifyBody(required), async (_, res) => {
     const { keys, values } = res.locals;
     const news = await News.create({
