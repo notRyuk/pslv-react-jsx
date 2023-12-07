@@ -11,14 +11,15 @@ import styles from "./styles.module.scss";
 const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
     const [company, setCompany] = useState("");
     const companyUrl = basePath + urls.company.findAll;
+    const jobGetUrl = basePath + urls.job.findAll;
     const { data: companyData } = useGetter(companyUrl);
+    const { data: jobData } = useGetter(jobGetUrl);
     const { data: skillsData } = useGetter(basePath + urls.skills);
     const [changedSkill, setChangedSkill] = useState("");
     const [skills, setSkills] = useState([]);
     const session = useSelector(selectSession);
     const [currentSkills, setCurrentSkills] = useState([]);
-    console.log(skillsData);
-    console.log(companyData)
+    // console.log(jobData);
 
     const handleAddSkill = async () => {
         const res = await axios.put(
@@ -46,14 +47,14 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
     }
     const [formData, setFormData] = useState(initial)
 
-    const handleChangeFormData = (e) => setFormData(prev => ({...prev, [e.target.name]: e.target.value}))
+    const handleChangeFormData = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
     const handleCreateCompany = async (e) => {
         e.preventDefault()
         const data = structuredClone(formData)
         data.company = company
         data.skills = currentSkills.map(e => e._id)
-        const res = await axios.post(basePath+urls.job.create, data, {
+        const res = await axios.post(basePath + urls.job.create, data, {
             headers: {
                 authorization: `Bearer ${session?.token}`
             }
@@ -63,8 +64,8 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
 
     return (
         <main className="job-container">
-            <div
-                className="continer-left"
+            {/* <div
+                className="container-left"
                 style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
             >
                 {session?.user?.role === "alumni" ? (
@@ -94,7 +95,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                         ))}
                     </div>
                 )}
-            </div>
+            </div> */}
             <div className="container-main">
                 {session?.user.role === "alumni" ? (
                     <div className="card">
@@ -178,12 +179,12 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                 )}
                                 value={changedSkill}
                                 onChange={(_, value, reason) => {
-                                    if(reason === "clear") {
+                                    if (reason === "clear") {
                                         setChangedSkill("")
-                                        return 
+                                        return
                                     }
                                     setCurrentSkills((prev) => {
-                                        if(prev.includes(skillsData?.data?.filter((k) => k.name === value)[0])) {
+                                        if (prev.includes(skillsData?.data?.filter((k) => k.name === value)[0])) {
                                             return prev
                                         }
                                         return [
@@ -209,7 +210,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                             })
                                         }}
                                     />
-                                    
+
                                 ))}
                             </div>
 
@@ -247,27 +248,28 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                             </button>
                         </form>
                     </div>
-                ) : allJobs.length > 0 ? (
+                ) : jobData?.length > 0 ? (
                     <div className="card job-card-container">
                         <div className="container-title">
                             <div
                                 style={{ fontSize: "18px", fontWeight: 600, color: "white" }}
                             >
-                                Recommended for you
+                                Referrals, recommended for you
                             </div>
-                            <div style={{ fontSize: "13px", fontWeight: "normal" }}>
-                                Based on your job searches, profile and search history
-                            </div>
+                            {/* <div style={{ fontSize: "13px", fontWeight: "normal" }}>
+                                Based on your searches, profile and search history
+                            </div> */}
                         </div>
-                        {allJobs.map((job) => (
-                            <div className="job-card" key={job.id}>
-                                <div className="company-image">
-                                    <img
-                                        src={companyImg}
-                                        height="50px"
-                                        width="50px"
-                                        alt="company-img"
-                                    />
+                        {jobData?.map((job) => (
+                            <div className="card" style={{ display: "flex", flexDirection: "column", boxShadow: "1px 1px 20px 0px black" }} key={job._id}>
+                                <div className="userProfile">
+                                    <div className="profileImgPost">
+                                        <img src={serverPath + job.from.profilePhoto} alt="profileImg" />
+                                    </div>
+                                    <div className="userInfo">
+                                        <h5>{job.from.name.first} {job.from.name.last}</h5>
+                                        <p>{job.from.bio}</p>
+                                    </div>
                                 </div>
                                 <div className="company-info">
                                     <div
@@ -285,9 +287,9 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                             }}
                                             className="job-name"
                                         >
-                                            {job.title} ({job.type})
+                                            {job.title} ({job.description})
                                         </div>
-                                        <div
+                                        {/* <div
                                             style={{
                                                 display: "flex",
                                                 flexDirection: "row",
@@ -301,20 +303,18 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                             <span className="material-symbols-rounded job-icon">
                                                 bookmark
                                             </span>
-                                        </div>
+                                        </div> */}
                                     </div>
                                     <div className="company-name">
                                         AT{" "}
                                         <span style={{ fontWeight: "bold" }}>
-                                            {job.companyname}
+                                            {job.company.name}
                                         </span>
                                     </div>
-                                    <div className="company-location">
-                                        Location: {job.location}
-                                    </div>
                                     <div className="posted-time">Skills: {job.skills}</div>
-                                    <div>Salary: {job.salary}</div>
-                                    <div
+                                    <div className="posted-time">Experience Years: {job.experienceYears}</div>
+                                    <div className="posted-time">Apply Before: {job.endsAt}</div>
+                                    {/* <div
                                         style={{
                                             display: "flex",
                                             flexDirection: "row",
@@ -329,7 +329,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                             star
                                         </span>
                                         <div>Actively Hiring</div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         ))}
@@ -339,7 +339,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                 )}
             </div>
             <div className="container-right">
-                <div className="card job-helper">
+                {session?.user?.role === 'student' ? (<div className="card job-helper">
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <div style={{ fontSize: "18px", fontWeight: 600, color: "white" }}>
                             Job Seeker Guidance
@@ -395,7 +395,97 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                             your skills and knowledge.
                         </div>
                     </div>
-                </div>
+                </div>) :
+                    jobData?.length > 0 ? (
+                        <div className="card job-card-container">
+                            <div className="container-title">
+                                <div
+                                    style={{ fontSize: "18px", fontWeight: 600, color: "white" }}
+                                >
+                                    Referrals, recommended for you
+                                </div>
+                                {/* <div style={{ fontSize: "13px", fontWeight: "normal" }}>
+                                    Based on your searches, profile and search history
+                                </div> */}
+                            </div>
+                            {jobData?.map((job) => (
+                                <div className="card" style={{display: "flex", flexDirection: "column", boxShadow:"1px 1px 20px 0px black"}} key={job._id}>
+                                    <div className="userProfile">
+                                        <div className="profileImgPost">
+                                            <img src={serverPath + job.from.profilePhoto} alt="profileImg" />
+                                        </div>
+                                        <div className="userInfo">
+                                            <h5>{job.from.name.first} {job.from.name.last}</h5>
+                                            <p>{job.from.bio}</p>
+                                        </div>
+                                    </div>
+                                    <div className="company-info">
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                justifyContent: "space-between",
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    color: "white",
+                                                    fontSize: "18px",
+                                                    fontWeight: 450,
+                                                }}
+                                                className="job-name"
+                                            >
+                                                {job.title} ({job.description})
+                                            </div>
+                                            {/* <div
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    gap: "2rem",
+                                                    fontSize: "18px",
+                                                }}
+                                            >
+                                                <span className="material-symbols-rounded job-icon job-visibility">
+                                                    visibility_off
+                                                </span>
+                                                <span className="material-symbols-rounded job-icon">
+                                                    bookmark
+                                                </span>
+                                            </div> */}
+                                        </div>
+                                        <div className="company-name">
+                                            AT{" "}
+                                            <span style={{ fontWeight: "bold" }}>
+                                                {job.company.name}
+                                            </span>
+                                        </div>
+                                        <div className="posted-time">Skills: {job.skills}</div>
+                                        <div className="posted-time">Experience Years: {job.experienceYears}</div>
+                                        <div className="posted-time">Apply Before: {job.endsAt}</div>
+                                        {/* <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                paddingTop: "5px",
+                                                gap: "4px",
+                                            }}
+                                        >
+                                            <span
+                                                className="material-symbols-rounded job-icon"
+                                                style={{ color: "orange", fontSize: "25px" }}
+                                            >
+                                                star
+                                            </span>
+                                            <div>Actively Hiring</div>
+                                        </div> */}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <h1>No Jobs Available</h1>
+                    )
+                }
             </div>
         </main>
     );
