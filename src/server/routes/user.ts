@@ -61,7 +61,10 @@ app.get("/details/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
             path: "profile", 
             strictPopulate: false,
             populate: [
-                "education",
+                {
+                    path: "education", 
+                    populate: "institute"
+                },
                 "achievements",
                 "skills",
                 "address",

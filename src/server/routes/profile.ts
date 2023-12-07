@@ -72,6 +72,8 @@ app.put("/add-skill", verifyToken(), verifyBody(["skill"]), async (_, res) => {
     return res.status(200).send(handler.success(updatedProfile))
 })
 
+
+
 app.put("/:id", verifyToken(), verifyBody([]), async (req, res) => {
     let profile = await Profile.findById(req.params.id)
     if(!profile) {

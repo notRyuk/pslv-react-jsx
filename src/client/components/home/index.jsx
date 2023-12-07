@@ -66,7 +66,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                                     {tempUser?.name.first} {tempUser?.name.last} <span style={{ textTransform: 'capitalize' }}>({tempUser?.role})</span>
                                 </strong>
                                 <small className="userProfession">{tempUser?.bio || ""}</small>
-                                <span>{user.institute}</span>
+                                {/* <span>{user.institute}</span> */}
                             </div>
                             <div className="connection">
                                 <strong>{connectedUser?.data.length}</strong>

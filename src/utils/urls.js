@@ -80,5 +80,8 @@ export default {
         delete: "/institute/:id",
         findAll: "/institutes",
         findById: "/institutes/:id"
+    },
+    education: {
+        create: "/education/create"
     }
 }

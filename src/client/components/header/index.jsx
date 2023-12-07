@@ -269,17 +269,19 @@ export default function PrimarySearchAppBar() {
                                 </Badge>
                             </IconButton>
                         </Link>
-                        <Link to={'/jobs'}>
-                            <IconButton
-                                size="large"
-                                aria-label="show 4 new Jobs"
-                                color="inherit"
-                            >
-                                <Badge badgeContent={4} color="error">
-                                    <WorkIcon />
-                                </Badge>
-                            </IconButton>
-                        </Link>
+                        {!Object.keys(user).includes("admin") && (
+                            <Link to={'/jobs'}>
+                                <IconButton
+                                    size="large"
+                                    aria-label="show 4 new Jobs"
+                                    color="inherit"
+                                >
+                                    <Badge badgeContent={4} color="error">
+                                        <WorkIcon />
+                                    </Badge>
+                                </IconButton>
+                            </Link>
+                        )}
                         <Link to={'/messages'}>
                             <IconButton
                                 size="large"

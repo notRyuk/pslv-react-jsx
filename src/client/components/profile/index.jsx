@@ -9,10 +9,12 @@ import Loading from '../loading';
 import { useGetter, usePoster } from '../../hooks/fetcher';
 import Footer from '../footer';
 import Modal from '../modal';
-import { Autocomplete, Chip, Box, TextField } from '@mui/material';
+import { Autocomplete, Chip, Box, TextField, FormControl, InputLabel, Select, MenuItem, FormControlLabel, RadioGroup, Radio } from '@mui/material';
 import LaunchIcon from '@mui/icons-material/Launch';
-import { Stack } from 'react-bootstrap';
+import { FormLabel, Stack } from 'react-bootstrap';
 import SubmitModal from '../submitModal';
+import { useFormik } from "formik"
+
 const ProfileComponent = ({
     user,
     usermain,
@@ -28,6 +30,7 @@ const ProfileComponent = ({
     const [showSkillModal, setShowSkillModal] = useState(false);
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [showAchievementModal, setShowAchievementModal] = useState(false);
+    const [showEducationModal, setShowEducationModal] = useState(false);
     const [showContactModal, setShowContactModal] = useState(false);
     const [showAboutModal, setShowAboutModal] = useState(false);
     const [info, setInfo] = useState("")
@@ -48,11 +51,11 @@ const ProfileComponent = ({
     const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", params.id)
     const postUrl = basePath + urls.posts.get.replace(":id", params.id)
     const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
-    const { data: connectionData, mutate: connectionDataMutate, isLoading: connectionDataIsLoading } = useGetter(basePath+urls.request.getAll)
-    console.log(connectionData);
+    const { data: connectionData, mutate: connectionDataMutate, isLoading: connectionDataIsLoading } = useGetter(basePath + urls.request.findByType.replace(':type', "AlumniRequest"))
     const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
     const { data: skillsData } = useGetter(basePath + urls.skills)
     const [changedSkill, setChangedSkill] = useState("")
+    const [changedInstitute, setChangedInstitute] = useState("")
 
     const handleAddSkill = async () => {
         const res = await axios.put(basePath + urls.user.profile.addSkill, { skill: changedSkill }, {
@@ -93,7 +96,6 @@ const ProfileComponent = ({
 
     useEffect(() => {
         setOthers(session?.user._id !== params.id)
-        console.log(tempUser?.data);
     }, [session.token]);
 
     const handleSubmit = async (e) => {
@@ -102,7 +104,6 @@ const ProfileComponent = ({
         const address = {}
         for (const entry of formData.entries()) {
             address[entry[0]] = entry[1]
-            // console.log(entry);
         }
         const res = await axios.post(basePath + urls.user.profile.create, { address, role: session?.user?.role }, {
             headers: {
@@ -119,17 +120,45 @@ const ProfileComponent = ({
         const data = new FormData(e.currentTarget);
         data.append("to", "656de3f2bdcaade9d49d0f4b")
         data.append("type", "AlumniRequest")
-        for(const entries of data.entries()){
-            console.log(entries);
-        }
         const res = await axios.post(basePath + urls.request.create, data, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 authorization: `Bearer ${session.token}`
             },
         });
+        connectionDataMutate();
         // console.log(data);
     };
+
+    const form = useFormik({
+        initialValues: {
+            type: "",
+            institute: "",
+            joined: "",
+            completion: {
+                isCurrent: false
+            }
+        }
+    })
+
+    const { data: instituteData, mutate: instituteDataMutate } = useGetter(basePath + urls.institute.findAll)
+
+    const { values: formData, resetForm, handleChange: handleChangeFormData } = form
+    const handleAddEducation = async (e) => {
+        console.log(formData)
+        setShowEducationModal(false)
+        const res = await axios.post(basePath + urls.education.create, formData, {
+            headers: {
+                authorization: `Bearer ${session?.token}`
+            }
+        })
+        if (res.data) {
+            tempUserMutate()
+        }
+    }
+
+    console.log(tempUser)
+
     return (
         <>
             {isLoading ? <Loading></Loading> :
@@ -259,10 +288,10 @@ const ProfileComponent = ({
                                     )}
                                 </div>
                                 {/* Apply for Alumni Form (conditionally rendered) */}
-                                {tempUser?.data?.role === 'student' && tempUser?.data?._id === session.user._id && (
-                                        <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle">
+                                {tempUser?.data?.role === 'student' && connectionData?.data?.length === 0 && tempUser?.data?._id === session.user._id && (
+                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle">
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
-                                        </Link>
+                                    </Link>
                                 )}
                                 {/* ... */}
                             </div>
@@ -284,11 +313,11 @@ const ProfileComponent = ({
                                         <span className="material-symbols-rounded">description</span>
                                     </div>
                                     <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                        <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{postData?.data?.length} Posts</Link>
+                                        <Link to={others ? '#' : '/home'} className="linkStyle">{postData?.data?.length} Posts</Link>
                                         <div style={{ fontSize: '12px' }}>Discover and Edit your post.</div>
                                     </div>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <div>
                                         <span className="material-symbols-rounded">bar_chart</span>
                                     </div>
@@ -296,7 +325,7 @@ const ProfileComponent = ({
                                         <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{postImpression} Post impressions</Link>
                                         <div style={{ fontSize: '12px' }}>Checkout who's engaging with your posts.</div>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div>
                                     <div>
                                         <span className="material-symbols-rounded">group</span>
@@ -332,13 +361,13 @@ const ProfileComponent = ({
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel" style={{color:"black"}}>Add Your Gradesheet</h5>
+                                        <h5 className="modal-title" id="exampleModalLabel" style={{ color: "black" }}>Add Your Gradesheet</h5>
                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div className="modal-body">
                                         <form onSubmit={handleAlumniSubmit}>
                                             <div className="mb-3">
-                                                <label htmlFor="exampleInputEmail1" className="form-label" style={{color:"black"}}>Select file in pdf format</label>
+                                                <label htmlFor="exampleInputEmail1" className="form-label" style={{ color: "black" }}>Select file in pdf format</label>
                                                 <input type='file' accept="application/pdf" className='form-control' name='document'></input>
                                             </div>
                                             <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Request For Alumni</button>
@@ -377,21 +406,35 @@ const ProfileComponent = ({
                         {Object.keys(tempUser?.data).includes("profile") ? <>
                             <div className="profile-card card">
                                 <div className="about-title section-title">
-                                    <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Education</div>
+                                    <div className="about-title section-title">
+                                        <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Education</div>
+                                    </div>
+                                    <div className="button-container" style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                                        {!others && (
+                                            <div>
+                                                {/* Add Education Button */}
+                                                <Link data-bs-toggle="modal" onClick={() => setShowEducationModal(true)}>
+                                                    <span className="material-symbols-rounded about-edit">add</span>
+                                                </Link>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="education-container">
-                                    <div className="education-main">
+                                    <div className="education-main" style={{flexDirection: "column"}}>
                                         {/* <img src="/images/college.png" height="100px" width="100px" alt="college-logo" /> */}
-                                        <div style={{ fontSize: '12px' }}>
+                                        {tempUser?.data?.profile?.education?.length > 0 ? tempUser?.data?.profile?.education?.map(ed => (
+                                            <div style={{ fontSize: '12px', borderBottom: "1px solid white"}}>
                                             <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                                                Education at {user?.institute}
+                                                {ed.institute.name}
                                             </div>
                                             <div>
-                                                {user?.joinYear} <span style={{ fontSize: '15px' }}>•</span> {user?.passYear}
+                                                Joined in {ed?.joined} <span style={{ fontSize: '15px' }}>•</span> Education Type : {ed?.type}
                                             </div>
                                             <div style={{ paddingTop: '7px' }}></div>
                                             {/* Add any additional information about education */}
                                         </div>
+                                        )) : (<h1 style={{ fontSize: '1rem' }}>No Education Detail added</h1>)}
                                     </div>
                                 </div>
                             </div>
@@ -509,7 +552,7 @@ const ProfileComponent = ({
                     ))}
                 </div> */}
                         {
-                            Object.keys(tempUser?.data).includes("profile") ? <></> : <button className='btn btn-primary btn-outline' onClick={() => setShowAddressModal(true)}>Complete Your Profile</button>
+                            (others || Object.keys(tempUser?.data).includes("profile")) ? <></> : <button className='btn btn-primary btn-outline' onClick={() => setShowAddressModal(true)}>Complete Your Profile</button>
                         }
                         <Footer></Footer>
                     </div>
@@ -584,6 +627,77 @@ const ProfileComponent = ({
                     )}
                     onChange={(_, value) => setChangedSkill(value)}
                 />
+            </Modal>
+            <Modal
+                open={showEducationModal}
+                setOpen={setShowEducationModal}
+                title={"Add Education"}
+                handleSubmit={handleAddEducation}
+            >
+                <Stack direction='column' gap={"2rem"}>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Type of Education</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={formData.type}
+                            label="Education"
+                            name="type"
+                            onChange={handleChangeFormData}
+                        >
+                            <MenuItem value={"metric"}>Metric</MenuItem>
+                            <MenuItem value={"high school"}>High School</MenuItem>
+                            <MenuItem value={"graduation"}>Graduation</MenuItem>
+                            <MenuItem value={"post graduation"}>Post Graduation</MenuItem>
+                            <MenuItem value={"Ph.D"}>Ph.D</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Select Institute</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={formData.institute}
+                            label="Insitute"
+                            name="institute"
+                            onChange={handleChangeFormData}
+                        >
+                            {instituteData?.data?.map(e => (
+                                <MenuItem key={e?._id} value={e?._id}>{e?.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel id="demo-radio-buttons-group-label">Are you currently studying here?</FormLabel>
+                        <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            name="radio-buttons-group"
+                            value={formData.completion.isCurrent}
+                        >
+                            <FormControlLabel
+                                value={true}
+                                control={<Radio />}
+                                label="Yes"
+                                name="completion.isCurrent"
+                                onChange={handleChangeFormData}
+                            />
+                            <FormControlLabel
+                                value={false}
+                                control={<Radio />}
+                                label="No"
+                                name="completion.isCurrent"
+                                onChange={handleChangeFormData}
+                            />
+                        </RadioGroup>
+                        <TextField 
+                            type='date' 
+                            variant='filled' 
+                            name="joined" 
+                            onChange={handleChangeFormData}
+                            value={formData.joined}
+                        />
+                    </FormControl>
+                </Stack>
             </Modal>
             <SubmitModal
                 open={showAchievementModal}
