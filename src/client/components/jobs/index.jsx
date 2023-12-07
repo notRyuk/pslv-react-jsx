@@ -54,12 +54,12 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
         const data = structuredClone(formData)
         data.company = company
         data.skills = currentSkills.map(e => e._id)
+        console.log(data)
         const res = await axios.post(basePath + urls.job.create, data, {
             headers: {
                 authorization: `Bearer ${session?.token}`
             }
         })
-        console.log(res.data)
     }
 
     return (

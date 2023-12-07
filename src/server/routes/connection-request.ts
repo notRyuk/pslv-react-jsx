@@ -43,7 +43,7 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
         from: user,
         to: getValue(keys, values, "to"),
         type: getValue(keys, values, "type"),
-        ...(getValue(keys, values, "type") === ConnectionTypes.alumniRequest && (keys.includes("document") && url && url.length) && {
+        ...(getValue(keys, values, "type") === ConnectionTypes.alumniRequest && (url && url.length) && {
             document: url
         })
     });
