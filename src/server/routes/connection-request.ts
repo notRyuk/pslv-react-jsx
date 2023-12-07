@@ -1,5 +1,5 @@
 import ConnectionRequestHandler from "@handlers/user/connection-request";
-import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
+import { verifyAdmin, verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Connection from "@server/models/user/connection";
 import ConnectionRequest from "@server/models/user/connection-request";
 import IUser from "@types_/user";
@@ -53,10 +53,15 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
     return res.status(200).send(handler.success(connectionRequest))
 });
 
-// app.get("/", async (_, res) => {
-//     const connectionRequests = await ConnectionRequest.find()
-//     return res.status(200).send(handler.success(connectionRequests))
-// })
+app.get("/", verifyToken(), async (_, res) => {
+    const connectionRequests = await ConnectionRequest.find()
+    return res.status(200).send(handler.success(connectionRequests))
+})
+
+app.get("/alumniRequests", verifyToken(), verifyAdmin(), async (_, res) => {
+    const connectionRequests = await ConnectionRequest.find({ type: ConnectionTypes.alumniRequest }) || []
+    return res.status(200).send(handler.success(connectionRequests))
+})
 
 
 // app.get("/:id", async (req, res) => {
