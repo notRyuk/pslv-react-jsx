@@ -311,7 +311,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                             {job.company.name}
                                         </span>
                                     </div>
-                                    <div className="posted-time">Skills: {job.skills}</div>
+                                    {/* <div className="posted-time">Skills: {job.skills}</div> */}
                                     <div className="posted-time">Experience Years: {job.experienceYears}</div>
                                     <div className="posted-time">Apply Before: {job.endsAt}</div>
                                     {/* <div
@@ -459,7 +459,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                                 {job.company.name}
                                             </span>
                                         </div>
-                                        <div className="posted-time">Skills: {job.skills}</div>
+                                        {/* <div className="posted-time">Skills: {job.skills}</div> */}
                                         <div className="posted-time">Experience Years: {job.experienceYears}</div>
                                         <div className="posted-time">Apply Before: {job.endsAt}</div>
                                         {/* <div

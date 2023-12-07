@@ -112,7 +112,22 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-
+    const handleAlumniSubmit = async (e) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        data.append("to", "656de3f2bdcaade9d49d0f4b")
+        data.append("type", "AlumniRequest")
+        for(const entries of data.entries()){
+            console.log(entries);
+        }
+        const res = await axios.post(basePath + urls.request.create, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                authorization: `Bearer ${session.token}`
+            },
+        });
+        // console.log(data);
+    };
     return (
         <>
             {isLoading ? <Loading></Loading> :
@@ -243,9 +258,9 @@ const ProfileComponent = ({
                                 </div>
                                 {/* Apply for Alumni Form (conditionally rendered) */}
                                 {tempUser?.data?.role === 'student' && tempUser?.data?._id === session.user._id && (
-                                    <form className='alumni-submit ms-auto' action="/apply-for-alumni" method="post">
+                                        <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle">
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
-                                    </form>
+                                        </Link>
                                 )}
                                 {/* ... */}
                             </div>
@@ -311,20 +326,20 @@ const ProfileComponent = ({
                         </div> */}
 
                         {/* About Modal */}
-                        {/* <div className={`modal profileModal fade ${showAboutModal ? 'show' : ''}`} id="aboutModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true">
+                        <div className={`modal profileModal fade ${showAboutModal ? 'show' : ''}`} id="aboutModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true">
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Add Your About</h5>
+                                        <h5 className="modal-title" id="exampleModalLabel" style={{color:"black"}}>Add Your resume</h5>
                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div className="modal-body">
-                                        <form action="/add-about" method="post">
+                                        <form onSubmit={handleAlumniSubmit}>
                                             <div className="mb-3">
-                                                <label htmlFor="exampleInputEmail1" className="form-label">About</label>
-                                                <textarea className="form-control" name="about" rows={3} defaultValue={aboutData !== '' ? aboutData : ''}></textarea>
+                                                <label htmlFor="exampleInputEmail1" className="form-label" style={{color:"black"}}>Select file in pdf format</label>
+                                                <input type='file' accept="application/pdf" className='form-control' name='document'></input>
                                             </div>
-                                            <button type="submit" className="btn submitButton" style={{ width: '100%' }}>Add About</button>
+                                            <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Request For Alumni</button>
                                         </form>
                                     </div>
                                     <div className="modal-footer">
@@ -332,7 +347,7 @@ const ProfileComponent = ({
                                     </div>
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
 
                         {/* Profile Card - Working (conditionally rendered) */}
                         {usermain?.role === "alumni" && (

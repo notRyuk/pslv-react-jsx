@@ -9,6 +9,8 @@ import { Box, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Institute from "@client/components/institute";
 import NewsCard from "../../../components/cards/newsCard";
+import { useGetter } from "../../../hooks/fetcher";
+import urls,{ basePath } from "../../../../utils/urls";
 
 const panels = {
     "Institutes": <Institute />,
@@ -17,6 +19,8 @@ const panels = {
 }
 
 export default function Page() {
+    const {data: requestData} = useGetter(basePath+urls.request.alumniRequests)
+    console.log(requestData);
     const [value, setValue] = useState(Object.keys(panels)[0])
     const handleChangeValue = (_, _new) => setValue(_new)
     const user = useSelector(selectLoggedInUser)
