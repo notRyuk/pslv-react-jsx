@@ -45,8 +45,7 @@ export default {
         acceptMutual: "/connection-request/:request/mutual/accept",
         from: "/connection-request/from",
         ignore:"/connection-request/:request/ignore",
-        alumni: "/admin/connection-request/:request/:status",
-        alumniRequests: "/connection-request/alumniRequests" 
+        alumni: "/admin/connection-request/:request/:status"
     },
     connections: {
         getByUser: "/connections/:user"
