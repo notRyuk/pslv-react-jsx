@@ -48,6 +48,8 @@ const ProfileComponent = ({
     const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", params.id)
     const postUrl = basePath + urls.posts.get.replace(":id", params.id)
     const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
+    const { data: connectionData, mutate: connectionDataMutate, isLoading: connectionDataIsLoading } = useGetter(basePath+urls.request.getAll)
+    console.log(connectionData);
     const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
     const { data: skillsData } = useGetter(basePath + urls.skills)
     const [changedSkill, setChangedSkill] = useState("")
