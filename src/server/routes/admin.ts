@@ -9,7 +9,7 @@ import { Router } from "express";
 const app = Router()
 const handler = new AdminHandler()
 
-app.put("/coonection-request/:request/:status", // status = accept / reject
+app.put("/connection-request/:request/:status", // status = accept / reject
     verifyToken(),
     verifyAdmin(),
     verifyParams(["request", "status"]),
