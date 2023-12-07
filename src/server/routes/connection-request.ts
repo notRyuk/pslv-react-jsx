@@ -53,8 +53,12 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
     return res.status(200).send(handler.success(connectionRequest))
 });
 
-app.get("/", verifyToken(), async (_, res) => {
-    const connectionRequests = await ConnectionRequest.find()
+app.get("/:type", verifyToken(), verifyParams(["type"]), async (_, res) => {
+    const { keys, values, session } = res.locals
+    const connectionRequests = await ConnectionRequest.find({
+        from: (session.user as IUser)._id,
+        type: getValue(keys, values, "type")
+    }) || []
     return res.status(200).send(handler.success(connectionRequests))
 })
 

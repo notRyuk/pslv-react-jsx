@@ -46,20 +46,38 @@ export default function Institute() {
     })
 
     const { values: formData, handleChange: handleChangeFormData, setValues: setFormData } = form
+
     const [email, setEmail] = useState("")
     const handleAddEmail = () => {
         const currentForm = structuredClone(formData)
-        if(!currentForm.contact.emails.includes(email.trim()))
+        if (!currentForm.contact.emails.includes(email.trim()))
             currentForm.contact.emails.push(email)
         setFormData(currentForm)
         setEmail("")
     }
-    const handleRemoveEmail = (e) => {
-        console.log(e.target.value)
+    const handleRemoveEmail = (index) => {
+        const currentForm = structuredClone(formData)
+        currentForm.contact.emails.splice(index, 1)
+        setFormData(currentForm)
+    }
+
+    const [phone, setPhone] = useState("")
+    const handleAddPhone = () => {
+        const currentForm = structuredClone(formData)
+        if (!currentForm.contact.phone.includes(phone.trim()))
+            currentForm.contact.phone.push(phone)
+        setFormData(currentForm)
+        setPhone("")
+    }
+
+    const handleRemovePhone = (index) => {
+        const currentForm = structuredClone(formData)
+        currentForm.contact.phone.splice(index, 1)
+        setFormData(currentForm)
     }
 
     return (
-        <Stack direction={"row"} gap={"1rem"}>
+        <Stack direction={"row"} gap={"1rem"} padding={"1rem"}>
             <Box
                 width={"25%"}
                 flex
@@ -244,7 +262,7 @@ export default function Institute() {
                     <Typography variant="h5">Add Socials</Typography>
                     <Stack direction={"row"} gap={"1rem"} alignItems={"center"} justifyContent={"center"}>
                         <Box width={"90%"}>
-                            <TextField 
+                            <TextField
                                 variant="filled"
                                 label="Email"
                                 name="email"
@@ -256,18 +274,71 @@ export default function Institute() {
                             />
                         </Box>
                         <Box width={"10%"}>
-                            <Button 
-                                variant="contained" 
+                            <Button
+                                variant="contained"
                                 fullWidth
                                 onClick={handleAddEmail}
-                            >Add Email</Button>
+                            >
+                                Add Email
+                            </Button>
                         </Box>
                     </Stack>
                     <Box>
-                        {formData.contact.emails.map(e => (
-                            <Chip label={e} onDelete={handleRemoveEmail} />
+                        {formData.contact.emails.map((e, i) => (
+                            <Chip label={e} onDelete={e => handleRemoveEmail(i)} />
                         ))}
                     </Box>
+                    <Stack direction={"row"} gap={"1rem"} alignItems={"center"} justifyContent={"center"}>
+                        <Box width={"90%"}>
+                            <TextField
+                                variant="filled"
+                                label="Phone No."
+                                name="phone"
+                                fullWidth
+                                autoComplete="phone"
+                                onChange={(e) => setPhone(e.target.value.trim())}
+                                value={phone}
+                                type="text"
+                            />
+                        </Box>
+                        <Box width={"10%"}>
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                onClick={handleAddPhone}
+                            >
+                                Add Phone
+                            </Button>
+                        </Box>
+                    </Stack>
+                    <Box>
+                        {formData.contact.phone.map((e, i) => (
+                            <Chip label={e} onDelete={e => handleRemovePhone(i)} />
+                        ))}
+                    </Box>
+                    <Stack direction={"row"} gap={"1rem"}>
+                        <Box width={"40%"}>
+                            <TextField
+                                variant="filled"
+                                label="Facebook Page URL"
+                                name="contact.social.facebook"
+                                fullWidth
+                                onChange={handleChangeFormData}
+                                type="url"
+                            />
+                        </Box>
+                        <Box width={"60%"}>
+                            <TextField
+                                variant="filled"
+                                label="Insta Page URL"
+                                name="contact.social.instagram"
+                                fullWidth
+                                onChange={handleChangeFormData}
+                                type="url"
+                            />
+                        </Box>
+                    </Stack>
+
                 </Paper>
             </Box>
         </Stack>

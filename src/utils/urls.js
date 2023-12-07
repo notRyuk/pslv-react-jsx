@@ -46,7 +46,8 @@ export default {
         from: "/connection-request/from",
         ignore:"/connection-request/:request/ignore",
         alumni: "/admin/connection-request/:request/:status",
-        alumniRequests: "/connection-request/alumniRequests" 
+        alumniRequests: "/connection-request/alumniRequests",
+        findByType: "/connection-request/:type"
     },
     connections: {
         getByUser: "/connections/:user"
