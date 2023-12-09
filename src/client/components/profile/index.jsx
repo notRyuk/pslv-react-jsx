@@ -55,7 +55,6 @@ const ProfileComponent = ({
     const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
     const { data: skillsData } = useGetter(basePath + urls.skills)
     const [changedSkill, setChangedSkill] = useState("")
-    const [changedInstitute, setChangedInstitute] = useState("")
 
     const handleAddSkill = async () => {
         const res = await axios.put(basePath + urls.user.profile.addSkill, { skill: changedSkill }, {
@@ -156,8 +155,8 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-
-    console.log(tempUser)
+    const {data : jobData} = useGetter(basePath + urls.job.findById.replace(":id", session.user._id))
+    // console.log(jobData)
 
     return (
         <>
@@ -283,7 +282,7 @@ const ProfileComponent = ({
                                     {/* Additional Info for Alumni */}
                                     {tempUser?.data?.role === 'alumni' && (
                                         <p className="connection-info">
-                                            {job} Jobs posted
+                                            {jobData?.data?.length} Jobs posted
                                         </p>
                                     )}
                                 </div>
@@ -421,19 +420,19 @@ const ProfileComponent = ({
                                     </div>
                                 </div>
                                 <div className="education-container">
-                                    <div className="education-main" style={{flexDirection: "column"}}>
+                                    <div className="education-main" style={{ flexDirection: "column" }}>
                                         {/* <img src="/images/college.png" height="100px" width="100px" alt="college-logo" /> */}
                                         {tempUser?.data?.profile?.education?.length > 0 ? tempUser?.data?.profile?.education?.map(ed => (
-                                            <div style={{ fontSize: '12px', borderBottom: "1px solid white"}}>
-                                            <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                                                {ed.institute.name}
+                                            <div style={{ fontSize: '12px', borderBottom: "1px solid white" }}>
+                                                <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
+                                                    {ed.institute.name}
+                                                </div>
+                                                <div>
+                                                    Joined in {ed?.joined} <span style={{ fontSize: '15px' }}>•</span> Education Type : {ed?.type}
+                                                </div>
+                                                <div style={{ paddingTop: '7px' }}></div>
+                                                {/* Add any additional information about education */}
                                             </div>
-                                            <div>
-                                                Joined in {ed?.joined} <span style={{ fontSize: '15px' }}>•</span> Education Type : {ed?.type}
-                                            </div>
-                                            <div style={{ paddingTop: '7px' }}></div>
-                                            {/* Add any additional information about education */}
-                                        </div>
                                         )) : (<h1 style={{ fontSize: '1rem' }}>No Education Detail added</h1>)}
                                     </div>
                                 </div>
@@ -634,8 +633,8 @@ const ProfileComponent = ({
                 title={"Add Education"}
                 handleSubmit={handleAddEducation}
             >
-                <Stack direction='column' gap={"2rem"}>
-                    <FormControl fullWidth>
+                <Stack direction='column'>
+                    <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
                         <InputLabel id="demo-simple-select-label">Type of Education</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -652,7 +651,7 @@ const ProfileComponent = ({
                             <MenuItem value={"Ph.D"}>Ph.D</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
                         <InputLabel id="demo-simple-select-label">Select Institute</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -689,10 +688,13 @@ const ProfileComponent = ({
                                 onChange={handleChangeFormData}
                             />
                         </RadioGroup>
-                        <TextField 
-                            type='date' 
-                            variant='filled' 
-                            name="joined" 
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Joining Date</FormLabel>
+                        <TextField
+                            type='date'
+                            variant='filled'
+                            name="joined"
                             onChange={handleChangeFormData}
                             value={formData.joined}
                         />
@@ -761,7 +763,7 @@ const ProfileComponent = ({
                                 }}
                             />
                         </Stack>
-                        <Stack sx={{ mt: 2 }} direction={'column'} spacing={2}>
+                        {/* <Stack sx={{ mt: 2 }} direction={'column'} spacing={2}>
                             <div style={{ marginBottom: '-1rem', marginTop: '1rem' }}>Add files of proof</div>
                             <TextField
                                 type='file'
@@ -791,7 +793,7 @@ const ProfileComponent = ({
                                     },
                                 }}
                             />
-                        </Stack>
+                        </Stack> */}
                     </Stack>
                 </Box>
             </SubmitModal>

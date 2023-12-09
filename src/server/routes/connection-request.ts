@@ -1,5 +1,5 @@
 import ConnectionRequestHandler from "@handlers/user/connection-request";
-import { verifyAdmin, verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
+import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Connection from "@server/models/user/connection";
 import ConnectionRequest from "@server/models/user/connection-request";
 import IUser from "@types_/user";
@@ -62,14 +62,6 @@ app.get("/:type", verifyToken(), verifyParams(["type"]), async (_, res) => {
     return res.status(200).send(handler.success(connectionRequests))
 })
 
-app.get("/alumniRequests", verifyToken(), verifyAdmin(), async (_, res) => {
-    const connectionRequests = await ConnectionRequest.find({ type: ConnectionTypes.alumniRequest }).populate({
-        path: "from",
-        select: "-password"
-    }).exec() || []
-    return res.status(200).send(handler.success(connectionRequests))
-})
-
 
 // app.get("/:id", async (req, res) => {
 //     const connectionRequestId = req.params.id;
@@ -120,7 +112,21 @@ app.put("/:request/mutual/accept", verifyToken(), verifyParams(["request"]), asy
     return res.status(200).send(handler.success(connection))
 })
 
-app.get("/from", verifyToken(), async (_, res) => {
+// app.get("/from", verifyToken(), async (_, res) => {
+//     const { session } = res.locals
+//     console.log("hello")
+//     const connectionRequests = await ConnectionRequest.find({ to: (session.user as IUser)._id}).populate({
+//         path: "from",
+//         select: "-password"
+//     }).exec()
+//     console.log(connectionRequests);
+//     if (!connectionRequests) {
+//         return res.status(404).send(handler.error(handler.STATUS_404))
+//     }
+//     return res.status(200).send(handler.success(connectionRequests))
+// })
+
+app.get("/", verifyToken(), async (_, res) => {
     const { session } = res.locals
     const connectionRequests = await ConnectionRequest.find({ to: (session.user as IUser)._id}).populate({
         path: "from",

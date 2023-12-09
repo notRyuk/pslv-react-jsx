@@ -43,10 +43,10 @@ export default {
     request: {
         create: "/connection-request/create",
         acceptMutual: "/connection-request/:request/mutual/accept",
-        from: "/connection-request/from",
+        from: "/connection-request",
         ignore:"/connection-request/:request/ignore",
         alumni: "/admin/connection-request/:request/:status",
-        alumniRequests: "/connection-request/alumniRequests",
+        alumniRequests: "/admin/alumni-requests",
         findByType: "/connection-request/:type"
     },
     connections: {
@@ -59,6 +59,7 @@ export default {
     job: {
         create: "/job/create",
         findAll: "/jobs",
+        findById: "/jobs/user",
         application: {
             create: "/job-application/create",
             findByJob: "/job-applications/job/:job"

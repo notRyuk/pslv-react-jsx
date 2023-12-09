@@ -13,7 +13,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
     const companyUrl = basePath + urls.company.findAll;
     const jobGetUrl = basePath + urls.job.findAll;
     const { data: companyData } = useGetter(companyUrl);
-    const { data: jobData } = useGetter(jobGetUrl);
+    const { data: jobData, mutate: jobMutate } = useGetter(jobGetUrl);
     const { data: skillsData } = useGetter(basePath + urls.skills);
     const [changedSkill, setChangedSkill] = useState("");
     const [skills, setSkills] = useState([]);
@@ -54,12 +54,16 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
         const data = structuredClone(formData)
         data.company = company
         data.skills = currentSkills.map(e => e._id)
-        console.log(data)
+        console.log(data);
+        // for(const entry of data.entries()){
+        //     console.log(entry);
+        // }
         const res = await axios.post(basePath + urls.job.create, data, {
             headers: {
                 authorization: `Bearer ${session?.token}`
             }
         })
+        jobMutate()
     }
 
     return (
@@ -124,8 +128,14 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                         color: "black",
                                         borderColor: "black",
                                     },
+                                    "& .MuiOutlinedInput-root": {
+                                        color: "black", // Set text color when not focused
+                                    },
                                     "& .MuiInputLabel-outlined.Mui-focused": {
                                         color: "black",
+                                    },
+                                    "& .MuiInputLabel-outlined": {
+                                        color: "black", // Set label color when not focused
                                     },
                                 }}
                                 freeSolo
@@ -335,7 +345,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                         ))}
                     </div>
                 ) : (
-                    <h1>No Jobs Available</h1>
+                    <div className="card"><h1>No Referral Available</h1></div>
                 )}
             </div>
             <div className="container-right">
@@ -483,7 +493,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                             ))}
                         </div>
                     ) : (
-                        <h1>No Jobs Available</h1>
+                        <div className="card"><h1>No Referral Available</h1></div>
                     )
                 }
             </div>

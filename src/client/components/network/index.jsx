@@ -1,6 +1,6 @@
 import Loading from "@client/components/loading";
 import urls, { basePath } from '@utils/urls';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useGetter } from '../../hooks/fetcher';
@@ -8,6 +8,7 @@ import { selectSession } from '../auth/authSlice';
 import ConnectedUser from '../cards/ConnectedUser';
 import RequestedUser from '../cards/RequestedUser';
 import SuggestedUserCard from '../cards/SuggestedUserCard';
+import axios from "axios";
 
 const NetworkComponent = () => {
     const session = useSelector(selectSession)
@@ -19,7 +20,7 @@ const NetworkComponent = () => {
     const { data: suggestedUser, mutate: suggestMutate, isLoading: suggestIsLoading } = useGetter(suggestUrl)
     return (
         <>
-            {/* {console.log(suggestedUser)} */}
+            {console.log(connectionRequests)}
             <main className="networkContainer">
                 <div className="leftNetworkContent content">
                     <div className="card">

@@ -3,6 +3,7 @@ import { verifyAdmin, verifyParams, verifyToken } from "@server/middleware/verif
 import User from "@server/models/user";
 import ConnectionRequest from "@server/models/user/connection-request";
 import { ProfileRoles } from "@types_/user";
+import { ConnectionTypes } from "@types_/user/connection-request";
 import { getValue } from "@utils/object";
 import { Router } from "express";
 
@@ -37,5 +38,13 @@ app.put("/connection-request/:request/:status", // status = accept / reject
         return res.status(200).send({user: updatedUser, message: "Updated the user from student to alumni"})
     }
 )
+
+app.get("/alumni-requests", verifyToken(), verifyAdmin(), async (_, res) => {
+    const connectionRequests = await ConnectionRequest.find({ type: ConnectionTypes.alumniRequest }).populate({
+        path: "from",
+        select: "-password"
+    }).exec() || []
+    return res.status(200).send(handler.success(connectionRequests))
+})
 
 export default app

@@ -21,13 +21,15 @@ app.post("/create",
         if(!company) {
             return res.status(404).send(handler.error(handler.STATUS_404))
         }
+        console.log(req.body.skills);
+        
         const job = await Job.create({
             from: (session.user as IUser)._id,
             title: getValue(keys, values, "title"),
             description: getValue(keys, values, "description"),
             company,
             experienceYears: getValue(keys, values, "experienceYears"),
-            ...(keys.includes("skills") && getValue(keys, values, "skills") && getValue(keys, values, "skills").length && {
+            ...(keys.includes("skills") && {
                 skills: req.body.skills
             }),
             ...(keys.includes("endsAt") && getValue(keys, values, "endsAt") && getValue(keys, values, "endsAt").length && {
@@ -37,6 +39,7 @@ app.post("/create",
                 isCompleted: getValue(keys, values, "isCompleted")
             })
         });
+
         if (!job)
             return res.status(400).json(handler.error(handler.STATUS_404));
         return res.status(200).json(handler.success(job));
