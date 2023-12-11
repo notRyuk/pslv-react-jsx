@@ -63,7 +63,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                             <div className="profileInfo">
                                 <img src={tempUser?.profilePhoto ? serverPath + tempUser?.profilePhoto : profile} alt="profileImg" className="profileImg" />
                                 <strong className="userName">
-                                    {tempUser?.name.first} {tempUser?.name.last} <span style={{ textTransform: 'capitalize' }}>({tempUser?.role})</span>
+                                    {tempUser?.name.first} {tempUser?.name.last} <span style={{ textTransform: 'capitalize' }}>({Object.keys(tempUser).includes("admin") ? "Admin" :tempUser?.role})</span>
                                 </strong>
                                 <small className="userProfession">{tempUser?.bio || ""}</small>
                                 {/* <span>{user.institute}</span> */}

@@ -1,6 +1,6 @@
 import UserHandler from "@handlers/user";
 import { JWT_SECRET, JWT_SESSION_TIMEOUT } from "@server/config";
-import { verifyBody, verifyToken } from "@server/middleware/verify";
+import { verifyBody, verifyToken, verifyParams } from "@server/middleware/verify";
 import User from "@server/models/user";
 import Session from "@server/models/user/session";
 import IUser from "@types_/user";
@@ -26,7 +26,7 @@ const registerFields = [
     "password",
     "role"
 ]
-app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, handler),  async (req, res) => {
+app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, handler), async (req, res) => {
     const { keys, values } = res.locals
     let user = new User({
         name: {
@@ -55,36 +55,45 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
         const token = jwt.sign({
             user: user._id.toString(),
             createdAt: Date.now()
-        }, JWT_SECRET, {expiresIn: JWT_SESSION_TIMEOUT})
+        }, JWT_SECRET, { expiresIn: JWT_SESSION_TIMEOUT })
         const session = await Session.create({ user: user._id, token })
         session.user = user
         return res.status(200).send(handler.success(session))
     }
-    catch(err: MongooseError|any) {
+    catch (err: MongooseError | any) {
         return res.status(401).send(handler.error(err.message))
     }
 })
 
 app.post("/login", verifyBody(["email", "password"], handler), async (_, res) => {
     const { keys, values } = res.locals
-    const user = await User.findOne({email: getValue(keys, values, "email")})
-    if(!user) {
+    const user = await User.findOne({ email: getValue(keys, values, "email") })
+    if (!user) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
-    if(!Hash.simpleCompare(getValue(keys, values, "password") as string, user.password)) {
+    if (!Hash.simpleCompare(getValue(keys, values, "password") as string, user.password)) {
         return res.status(401).send(handler.error("Incorrect password, try again."))
     }
     const token = jwt.sign({
         user: user._id.toString(),
         createdAt: Date.now()
-    }, JWT_SECRET, {expiresIn: JWT_SESSION_TIMEOUT})
-    const session = await Session.create({user: user._id, token })
+    }, JWT_SECRET, { expiresIn: JWT_SESSION_TIMEOUT })
+    const session = await Session.create({ user: user._id, token })
     session.user = user
     return res.status(200).send(handler.success(session))
 })
 
 app.post("/verify", verifyToken(handler), (_, res) => {
     return res.status(200).send(handler.success(res.locals.session))
+})
+
+app.get("/get-user/:email", verifyParams(["email"]),async (_, res) => {
+    const { keys, values } = res.locals
+    const user = await User.findOne({ email: getValue(keys, values, "email") });
+    // if (!user) {
+    //     return res.status(404).send(handler.error('User not found'));
+    // }
+    return res.status(200).send(handler.success(user || {}));
 })
 
 export default app

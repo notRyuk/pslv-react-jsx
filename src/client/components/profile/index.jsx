@@ -168,13 +168,13 @@ const ProfileComponent = ({
                         <div className="card profileCard-profile">
                             {/* Cover and Edit Button */}
                             <div className="cover"></div>
-                            {
+                            {/* {
                                 tempUser?.data?._id === session.user._id && (
                                     <Link to="/edit-details">
                                         <span className="material-symbols-rounded cover-edit">edit</span>
                                     </Link>
                                 )
-                            }
+                            } */}
 
                             {/* Profile Information */}
                             <div className="profileInfo">
@@ -313,7 +313,7 @@ const ProfileComponent = ({
                                     </div>
                                     <div style={{ fontSize: '20px', textDecoration: 'none' }}>
                                         <Link to={others ? '#' : '/home'} className="linkStyle">{postData?.data?.length} Posts</Link>
-                                        <div style={{ fontSize: '12px' }}>Discover and Edit your post.</div>
+                                        <div style={{ fontSize: '12px' }}>Discover your post.</div>
                                     </div>
                                 </div>
                                 {/* <div>

@@ -6,7 +6,8 @@ export default {
     auth: {
         register: "/auth/register",
         login: "/auth/login",
-        verify: "/auth/verify"
+        verify: "/auth/verify",
+        getUserByEmail: "/auth/get-user/:email"
     },
     user: {
         profile: {

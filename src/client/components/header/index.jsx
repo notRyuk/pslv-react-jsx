@@ -264,9 +264,9 @@ export default function PrimarySearchAppBar() {
                                 aria-label="show 4 new connection"
                                 color="inherit"
                             >
-                                <Badge badgeContent={4} color="error">
+                                {/* <Badge badgeContent={4} color="error"> */}
                                     <PeopleAltIcon />
-                                </Badge>
+                                {/* </Badge> */}
                             </IconButton>
                         </Link>
                         {!Object.keys(user).includes("admin") && (
@@ -276,9 +276,9 @@ export default function PrimarySearchAppBar() {
                                     aria-label="show 4 new Jobs"
                                     color="inherit"
                                 >
-                                    <Badge badgeContent={4} color="error">
+                                    {/* <Badge badgeContent={4} color="error"> */}
                                         <WorkIcon />
-                                    </Badge>
+                                    {/* </Badge> */}
                                 </IconButton>
                             </Link>
                         )}
@@ -288,9 +288,9 @@ export default function PrimarySearchAppBar() {
                                 aria-label="show 4 new mails"
                                 color="inherit"
                             >
-                                <Badge badgeContent={4} color="error">
+                                {/* <Badge badgeContent={4} color="error"> */}
                                     <MailIcon />
-                                </Badge>
+                                {/* </Badge> */}
                             </IconButton>
                         </Link>
                         <Link to={'/notifications'}>
@@ -299,9 +299,9 @@ export default function PrimarySearchAppBar() {
                                 aria-label="show 17 new notifications"
                                 color="inherit"
                             >
-                                <Badge badgeContent={17} color="error">
+                                {/* <Badge badgeContent={17} color="error"> */}
                                     <NotificationsIcon />
-                                </Badge>
+                                {/* </Badge> */}
                             </IconButton>
                         </Link>
                         <IconButton

@@ -20,27 +20,41 @@ import Hash from '@utils/hashClient';
 import { useDispatch, useSelector } from 'react-redux';
 import Details from '../../details';
 import { selectCreatedUser } from '../authSlice';
+import { useGetter } from '../../../hooks/fetcher';
+import urls,{ basePath } from '../../../../utils/urls';
+import axios from 'axios';
 
 export default function SignUp() {
   const [credential, setCredential] = useState({})
   const [credentialAdded, setCredentialAdded] = useState(false)
+  const [error, setError] = useState("")
 
   const dispatch = useDispatch();
   const user = useSelector(selectCreatedUser);
   const [selectedValue, setSelectedValue] = useState('student');
-
+  // const {data: userData} = useGetter(basePath+urls.auth.getUserByEmail.replace(":email", "hello@gmail.com"))
+  // console.log(userData);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email')
-    const password = data.get('password')
-    const hashed = await Hash.create(password)
-    setCredential({
-      email,
-      password: hashed,
-      role: selectedValue,
-    })
-    setCredentialAdded(true)
+
+    const res = await axios.get(basePath+urls.auth.getUserByEmail.replace(":email", email))
+    if(!Object.keys(res?.data?.data).includes("email")){
+      const password = data.get('password')
+      const hashed = await Hash.create(password)
+      setCredential({
+        email,
+        password: hashed,
+        role: selectedValue,
+      })
+      setCredentialAdded(true)
+      setError("")
+    }
+    else{
+      setError("This Email has been already taken!!")
+    }
+    
   };
 
   const handleChange = (event) => {
@@ -137,6 +151,9 @@ export default function SignUp() {
           checked={selectedValue === 'admin'}
           onChange={handleChange}
         /> */}
+              {error.length > 0 && <Typography variant="body2" color="error">
+              {error}
+              </Typography>}
               <Button
                 type="submit"
                 fullWidth
