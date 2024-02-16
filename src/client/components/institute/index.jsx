@@ -20,6 +20,19 @@ import { selectSession } from "../auth/authSlice";
 
 export default function Institute() {
     const { data: instituteData, mutate: mutateInstituteData } = useGetter(basePath + urls.institute.findAll)
+    const deleteHandler = async (id) => {
+        const deleteInstituteUrl = basePath + urls.institute.delete.replace(":id", id)
+        try {
+            const response = await axios.delete(deleteInstituteUrl, {
+                headers: {
+                    authorization: `Bearer ${session.token}`,
+                }
+            });
+            mutateInstituteData();
+        } catch (error) {
+            console.error("Error deleting Institute :", error);
+        }
+    };
     const initialValues = {
         name: "",
         contact: {
@@ -135,12 +148,12 @@ export default function Institute() {
                 >
                     <Box
                     >
-                        <Button
+                        {/* <Button
                             variant="contained"
                             fullWidth
                         >
                             New Institute
-                        </Button>
+                        </Button> */}
                         <Box
                             sx={{
                                 display: "flex",
@@ -165,7 +178,7 @@ export default function Institute() {
                                     >
                                         <Typography variant="body1">{e?.name}</Typography>
                                     </Paper>
-                                    <IconButton color="primary" aria-label="add to shopping cart">
+                                    <IconButton color="primary" aria-label="add to shopping cart" onClick={()=>{deleteHandler(e?._id)}}>
                                         <DeleteIcon sx={{ color: "red" }} />
                                     </IconButton>
                                 </Box>
