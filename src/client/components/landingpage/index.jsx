@@ -1,5 +1,4 @@
 import React from "react";
-import "./style.scss";
 import { Link } from "react-router-dom";
 import logo from '../../assets/images/logo.png'
 import discussionImg from "../../assets/images/Discussion-amico.png"
@@ -101,7 +100,7 @@ const Landing = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "1rem",
+          gap: "5rem",
           width: "70%",
           margin: "0 auto",
           marginBottom: "1rem",
@@ -110,38 +109,33 @@ const Landing = () => {
       >
         <div className="card landCard">
           <div style={{ width: "50%" }} className="container--main--index">
-            <h1 style={{ marginBottom: "1rem" }} id="heading-text"></h1>
-            Mascot is a social media platform designed for professional
-            networking, job searching, and career development. Its main purpose
-            is to connect professionals from all industries and provide a
-            platform for them to showcase their skills, experiences, and
-            accomplishments.
-            <br />
-            <br />
-            Mascot allows users to create a profile that functions as a digital
+            <h1>Welcome to your professional community</h1>
+            <div>
+              Mascot is a social media platform designed for professional
+              networking, job searching, and career development. Its main purpose
+              is to connect professionals from all industries and provide a
+              platform for them to showcase their skills, experiences, and
+              accomplishments.
+              <br />
+              <br />
+              {/* Mascot allows users to create a profile that functions as a digital
             resume, including details such as work history, education, skills,
             and recommendations. Users can connect with other professionals in
             their field, join industry-specific groups, and follow companies
             they're interested in.
             <br />
-            <br />
-            Mascot also offers job search functionality, allowing users to
-            search for job postings and apply for positions directly through the
-            platform. Additionally, Mascot provides a variety of educational
-            resources, such as courses and articles, to help users develop new
-            skills and advance their careers.
-            <br />
-            <br />
-            Overall, Mascot serves as a valuable tool for professionals to build
-            their personal brand, expand their network, and find new career
-            opportunities.
+            <br /> */}
+              Mascot serves as a valuable tool for professionals to build
+              their personal brand, expand their network, and find new career
+              opportunities.
+            </div>
           </div>
           <div className="imgSide">
             <img
               src={discussionImg}
               alt="randomImg"
-              width="500px"
-              height="500px"
+              width="400px"
+              height="400px"
             />
           </div>
         </div>
@@ -173,22 +167,12 @@ const Landing = () => {
           </div>
         </div>
         <div className="landCard card">
-          <div>
-            <h1>Post your job for millions of people to see</h1>
-          </div>
-          <div>
-            <button className="text-button">Post a job</button>
-          </div>
-        </div>
-        <div className="landCard">
-          <div style={{ width: "70%" }}>
-            <h3 style={{ marginBottom: "1rem" }}>
+          <div style={{ width: "70%" }} className="container--main--index">
+            <h2 style={{ marginBottom: "1rem" }}>
               Conversations today could lead to opportunity tomorrow
-            </h3>
-            <p>
-              Sending messages to people you know is a great way to strengthen
-              relationships as you take the next step in your career.
-            </p>
+            </h2>
+            Sending messages to people you know is a great way to strengthen
+            relationships as you take the next step in your career.
           </div>
           <div className="imgSide">
             <img

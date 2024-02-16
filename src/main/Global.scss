@@ -1549,6 +1549,7 @@ a:hover {
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
+  margin-top: 5rem;
   color: white;
   background-color: #1b2730;
   font-size: 1.5rem;
@@ -1687,32 +1688,32 @@ a:hover {
 
 /*animation index ejs*/
 
-/* div.container--main--index {
+.container--main--index {
 	display: flex;
-	justify-content: center;
+  flex-direction: column;
+	justify-content: space-between;
 	align-items: center;
-	min-height: 100vh;
-	min-width: 100vw;
-} */
+  gap: 3rem;
+} 
 
-div.container--main--index > h1#heading-text {
-	position: relative;
-}
+// div.container--main--index > h1#heading-text {
+// 	position: relative;
+// }
 
-/*Setup the blinking sidebar*/
-div.container--main--index>h1#heading-text:after {
-  content: "";
-  width: 2px;
-  height: 100%;
-  background-color: black;
-  position: absolute;
-  right: 0;
-  top: 0;
-  animation: blink 1s infinite steps(2, start);
-}
+// /*Setup the blinking sidebar*/
+// div.container--main--index>h1#heading-text:after {
+//   content: "";
+//   width: 2px;
+//   height: 100%;
+//   background-color: black;
+//   position: absolute;
+//   right: 0;
+//   top: 0;
+//   animation: blink 1s infinite steps(2, start);
+// }
 
-@keyframes blink {
-  to {
-    visibility: hidden;
-  }
-}
+// @keyframes blink {
+//   to {
+//     visibility: hidden;
+//   }
+// }
