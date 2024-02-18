@@ -1562,10 +1562,9 @@ a:hover {
 }
 .jobForm{
   margin: 0.5rem;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 4px 4px 5px 1px lightgray;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  box-shadow: 1px 1px 20px 0px black;
 }
 .jobLabel{
   display: block;
@@ -1580,13 +1579,6 @@ a:hover {
   box-sizing: border-box;
 }
 
-.jobForm {
-  margin: 0.5rem;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 4px 4px 5px 1px lightgray;
-}
 .jobLabel{
   display: block;
   margin-bottom: 5px;
