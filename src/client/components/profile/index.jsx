@@ -156,7 +156,7 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-    const {data : jobData} = useGetter(basePath + urls.job.findById.replace(":id", session.user._id))
+    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", session.user._id))
     // console.log(jobData)
 
     return (

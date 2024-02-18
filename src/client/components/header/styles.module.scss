@@ -1,9 +1,45 @@
-.logoImage{
+.logoImage {
     width: 150px;
 }
-.navbar{
+
+.navbar {
     padding: 0 6rem;
 }
-.iconContainer{
+
+.iconContainer {
     gap: 0.25rem;
+}
+
+
+.search {
+    padding: 10px 20px;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.search:hover {
+    background-color: #444F55;
+    cursor: pointer;
+}
+
+.list {
+    position: absolute;
+    width: 100%;
+    background-color: #1B2730;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 1px 1px 20px 0px black;
+    border-radius: 10px;
+    margin-top: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.profilePhoto img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }

@@ -22,8 +22,10 @@ export default {
         },
         suggestedUser:{
             get: "/user/all-users"
-        }
+        },
+        fetchAll: "/user/get-all"
     },
+    users: "/users/get-all",
     skills: "/skills",
     skill: {
         create: "/skill/create"

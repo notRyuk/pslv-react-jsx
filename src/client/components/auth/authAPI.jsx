@@ -36,7 +36,15 @@ export async function checkUser(loginInfo) {
   });
 }
 
+// export function fetchAllUsers() {
+//   return new Promise(async (resolve) => {
+//     //TODO: we will not hard-code server URL here
+//     const response = await fetch('http://localhost:8080/posts');
 
+//     const data = await response.json();
+//     resolve({ data });
+//   });
+// }
 
 // export async function checkUser(loginInfo) {
 //   return new Promise(async (resolve, reject) => {
