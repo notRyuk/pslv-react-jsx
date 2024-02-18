@@ -148,7 +148,7 @@ export default function PrimarySearchAppBar() {
             onClose={handleMenuClose}
         >
             {userNavigation.map((item) => (
-                <MenuItem className={classes.profileLinks} key={item.name}>
+                <MenuItem onClick={handleMenuClose} className={classes.profileLinks} key={item.name}>
                     <Link
                         to={item.link}
                     >
@@ -234,15 +234,6 @@ export default function PrimarySearchAppBar() {
         </Menu>
     );
     
-    const results = [
-        {
-            name : "Tushar"
-        },
-        {
-            name : "Rishabh"
-        }
-    ]
-
     const handleChange = (value)=>{
         setInput(value);
         const filteredResult = allUsers.filter(user => {
