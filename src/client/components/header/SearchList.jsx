@@ -5,7 +5,7 @@ export const SearchList = ({ results, setSearchResults, setInput }) => {
   return (
     <div className={classes.list}>
       {results.map((result, id) => {
-        return <SearchResult result={result} key={id} setSearchResults = {setSearchResults} setInput = {setInput}/>;
+        return <SearchResult result={result} key={id} setSearchResults={setSearchResults} setInput={setInput} />;
       })}
     </div>
   );

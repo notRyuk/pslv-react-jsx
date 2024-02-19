@@ -2,26 +2,34 @@
 import classes from "./styles.module.scss"
 import profile from "@client/assets/images/profile.png";
 import { serverPath } from "../../../utils/urls";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const SearchResult = ({ result, setSearchResults, setInput }) => {
-    const handleClick = ()=>{
+    const navigate = useNavigate();
+    const location = useLocation();
+    const handleClick = () => {
+        if(location.pathname !== "/jobs") navigate(`/profile/${result?._id}`)
         setInput("");
         setSearchResults([]);
     }
     return (
-        <Link to={`/profile/${result?._id}`}>
-            <div
-                className={classes.search}
-                onClick = {handleClick}
-            >
-                <div className={classes.profilePhoto}>
-                    <img src={result?.profilePhoto ? serverPath + result?.profilePhoto : profile} alt="profilePhoto" />
+        <div
+            className={classes.search}
+            onClick={handleClick}
+        >
+            {
+                location.pathname !== "/jobs" ? <>
+                    <div className={classes.profilePhoto}>
+                        <img src={result?.profilePhoto ? serverPath + result?.profilePhoto : profile} alt="profilePhoto" />
+                    </div>
+                    <div>
+                        {result?.name?.first} {result?.name?.last}
+                    </div>
+                </> : <div>
+                    {result?.title}
                 </div>
-                <div>
-                    {result?.name?.first} {result?.name?.last}
-                </div>
-            </div>
-        </Link>
+            }
+        </div>
     );
 };

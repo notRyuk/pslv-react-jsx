@@ -62,7 +62,7 @@ export default {
     job: {
         create: "/job/create",
         findAll: "/jobs",
-        findById: "/jobs/user",
+        findById: "/jobs/:id",
         application: {
             create: "/job-application/create",
             findByJob: "/job-applications/job/:job"
