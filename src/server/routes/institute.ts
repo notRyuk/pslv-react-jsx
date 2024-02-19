@@ -47,11 +47,11 @@ app.post("/create",
 
 app.delete("/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), async (_, res) => {
     const { keys, values } = res.locals;
-    const work = await Institute.findByIdAndDelete(getValue(keys, values, "id"));
-    if (!work) {
+    const institute = await Institute.findByIdAndDelete(getValue(keys, values, "id"));
+    if (!institute) {
         return res.status(404).send(handler.error(handler.STATUS_404));
     }
-    return res.status(200).send(handler.success(work));
+    return res.status(200).send(handler.success(institute));
 });
 
 export default app

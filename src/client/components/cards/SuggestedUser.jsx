@@ -1,19 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import urls,{ basePath, serverPath } from '@utils/urls'
+import urls, { basePath, serverPath } from '@utils/urls'
 import { useSelector } from 'react-redux'
 import { selectSession } from '../auth/authSlice'
 import axios from 'axios'
+import tempImage from "@client/assets/images/profile.png"
 
 const SuggestedUser = (props) => {
     const sendRequestUrl = basePath + urls.request.create
     const session = useSelector(selectSession)
-    const clickHandler = async()=>{
+    const clickHandler = async () => {
         const data = new FormData()
         data.append("to", props.user?._id)
         data.append("type", "Mutual")
         const res = await axios.post(sendRequestUrl, data, {
-            headers:{
+            headers: {
                 authorization: `Bearer ${session.token}`,
                 "Content-Type": 'multipart/form-data',
             }
@@ -27,7 +28,7 @@ const SuggestedUser = (props) => {
             <div className="connectSuggestion">
                 <Link to={`/profile/${props.user?._id}`}>
                     <div className="connectProfile">
-                        <img src={serverPath + props.user?.profilePhoto} alt="personImg" />
+                        <img src={props?.user?.profilePhoto ? serverPath + props.user?.profilePhoto : tempImage} alt="personImg" />
                         <div className="connectInfo">
                             <strong>{props.user?.name.first} {props.user?.name.last}</strong>
                             <small>{props.user?.bio}</small>

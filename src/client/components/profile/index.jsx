@@ -14,6 +14,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import { FormLabel, Stack } from 'react-bootstrap';
 import SubmitModal from '../submitModal';
 import { useFormik } from "formik"
+import tempImage from "@client/assets/images/profile.png"
 
 const ProfileComponent = ({
     user,
@@ -155,7 +156,7 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-    const {data : jobData} = useGetter(basePath + urls.job.findById.replace(":id", session.user._id))
+    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", session.user._id))
     // console.log(jobData)
 
     return (
@@ -178,7 +179,7 @@ const ProfileComponent = ({
 
                             {/* Profile Information */}
                             <div className="profileInfo">
-                                <img src={serverPath + tempUser?.data?.profilePhoto} alt="profileImg" className="profileImg" />
+                                <img src={tempUser?.data?.profilePhoto ? serverPath + tempUser?.data?.profilePhoto : tempImage} alt="profileImg" className="profileImg" />
                             </div>
                             {/* <p>{fetchedUser.email}</p> */}
                             {/* Profile Details */}

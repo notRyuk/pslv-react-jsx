@@ -102,4 +102,12 @@ app.put("/promote/:user/:role", verifyToken(), verifyAdmin(), verifyParams(["use
     return res.status(200).send(handler.success(updatedUser))
 })
 
+app.get('/get-all', verifyToken(), async (_, res) => {    
+    const users = await User.find();
+    if(!users){
+        return res.status(404).json(handler.error(handler.STATUS_404))
+    }
+    return res.status(200).json(handler.success(users));
+});
+
 export default app

@@ -4,6 +4,7 @@ import urls,{ basePath, serverPath } from '@utils/urls'
 import { useSelector } from 'react-redux'
 import { selectSession } from '../auth/authSlice'
 import axios from 'axios'
+import tempImage from "@client/assets/images/profile.png"
 
 const SuggestedUserCard = (props) => {
     const sendRequestUrl = basePath + urls.request.create
@@ -22,6 +23,8 @@ const SuggestedUserCard = (props) => {
         props.requestMutate()
         console.log(res);
     }
+
+    console.log(serverPath + props.user?.profilePhoto)
     return (
         <>
                 <div className="card profileCard suggestedCard" key={props.user?._id}>
@@ -29,7 +32,7 @@ const SuggestedUserCard = (props) => {
                     <Link to={`/profile/${props.user?._id}`} style={{zIndex : "2"}}>
                         <div className="profileInfo">
                             <img
-                                src={serverPath + props.user?.profilePhoto}
+                                src={props?.user?.profilePhoto?(serverPath + props.user?.profilePhoto):tempImage}
                                 alt="profileImg"
                                 className="profileImg"
                             />

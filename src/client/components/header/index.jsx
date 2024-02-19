@@ -22,11 +22,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import WorkIcon from "@mui/icons-material/Work";
 
+import { useState, useEffect } from "react";
 import classes from "./styles.module.scss";
 import { Link } from "react-router-dom";
-import { selectLoggedInUser } from "../auth/authSlice";
-import { useSelector } from "react-redux";
-
+import { selectLoggedInUser, selectSession } from "../auth/authSlice";
+import { getAllUsers, selectAllUsers} from "../auth/user/userSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { SearchList } from "./SearchList";
+import axios from "axios";
+import { basePath } from "../../../utils/urls";
+import urls from "../../../utils/urls";
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -69,7 +74,33 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function PrimarySearchAppBar() {
 
+    const usersUrl = basePath + urls.user.fetchAll;
+    const dispatch = useDispatch();
     const user = useSelector(selectLoggedInUser)
+    const session = useSelector(selectSession);
+
+    const [allUsers, setAllUsers] = useState([]);
+    const [searchResults, setSearchResults] = useState([])
+    const [input, setInput] = useState("");
+
+    useEffect(()=>{
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(usersUrl, {
+                    headers: {
+                        'Content-Type': 'application/JSON',
+                        authorization: `Bearer ${session.token}`
+                    },
+                });
+                dispatch(getAllUsers(res.data.data));
+                setAllUsers(res.data.data);
+            } catch (error) {
+                console.error("Error while fetching data:", error);
+            }
+        };
+        fetchData();
+    },[])
+
     const userNavigation = [
         { name: 'My Profile', link: `/profile/${user?._id}` },
         { name: 'Sign out', link: '/logout' },
@@ -117,7 +148,7 @@ export default function PrimarySearchAppBar() {
             onClose={handleMenuClose}
         >
             {userNavigation.map((item) => (
-                <MenuItem className={classes.profileLinks} key={item.name}>
+                <MenuItem onClick={handleMenuClose} className={classes.profileLinks} key={item.name}>
                     <Link
                         to={item.link}
                     >
@@ -202,20 +233,24 @@ export default function PrimarySearchAppBar() {
 
         </Menu>
     );
-
+    
+    const handleChange = (value)=>{
+        setInput(value);
+        const filteredResult = allUsers.filter(user => {
+            const name = user?.name?.first + " " + user?.name?.last;
+            return (
+                value &&
+                user &&
+                user.name &&
+                name.toLowerCase().includes(value.toLowerCase())
+            );
+        })
+        setSearchResults(filteredResult)
+    }
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" className={classes.navbar} sx={{ bgcolor: 'primary.dark' }}>
                 <Toolbar>
-                    {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton> */}
                     <Typography
                         variant="h6"
                         noWrap
@@ -235,7 +270,11 @@ export default function PrimarySearchAppBar() {
                         <StyledInputBase
                             placeholder="Search…"
                             inputProps={{ "aria-label": "search" }}
+                            value={input}
+                            onChange={(e)=>handleChange(e.target.value)}
+                            onBlur={()=> setSearchResults([])}
                         />
+                        <SearchList results={searchResults} setSearchResults = {setSearchResults} setInput = {setInput} />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box

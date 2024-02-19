@@ -7,6 +7,7 @@ import { Autocomplete, Chip, TextField } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectSession } from "../auth/authSlice";
 import styles from "./styles.module.scss";
+import tempImage from "@client/assets/images/profile.png"
 
 const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
     const [company, setCompany] = useState("");
@@ -274,7 +275,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                             <div className="card" style={{ display: "flex", flexDirection: "column", boxShadow: "1px 1px 20px 0px black" }} key={job._id}>
                                 <div className="userProfile">
                                     <div className="profileImgPost">
-                                        <img src={serverPath + job.from.profilePhoto} alt="profileImg" />
+                                        <img src={job?.from?.profilePhoto ? serverPath + job.from.profilePhoto : tempImage} alt="profileImg" />
                                     </div>
                                     <div className="userInfo">
                                         <h5>{job.from.name.first} {job.from.name.last}</h5>
@@ -419,10 +420,10 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                 </div> */}
                             </div>
                             {jobData?.map((job) => (
-                                <div className="card" style={{display: "flex", flexDirection: "column", boxShadow:"1px 1px 20px 0px black"}} key={job._id}>
+                                <div className="card" style={{ display: "flex", flexDirection: "column", boxShadow: "1px 1px 20px 0px black" }} key={job._id}>
                                     <div className="userProfile">
                                         <div className="profileImgPost">
-                                            <img src={serverPath + job.from.profilePhoto} alt="profileImg" />
+                                            <img src={job?.from?.profilePhoto ? serverPath + job.from.profilePhoto : tempImage} alt="profileImg" />
                                         </div>
                                         <div className="userInfo">
                                             <h5>{job.from.name.first} {job.from.name.last}</h5>

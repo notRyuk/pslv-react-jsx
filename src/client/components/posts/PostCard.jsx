@@ -5,6 +5,7 @@ import PostCarousel from './carousel'
 import { useSelector } from "react-redux";
 import { selectSession, selectLoggedInUser } from "@client/components/auth/authSlice";
 import axios from "axios";
+import tempImage from "@client/assets/images/profile.png"
 
 const PostCard = (props) => {
     const [likeInteract, setLikeIneract] = useState([])
@@ -74,7 +75,7 @@ const PostCard = (props) => {
             <div className="card">
                 <div className="userProfile">
                     <div className="profileImgPost">
-                        <img src={serverPath + props.post?.user.profilePhoto} alt="profileImg" />
+                        <img src={props?.post?.user?.profilePhoto ? serverPath + props.post?.user.profilePhoto : tempImage} alt="profileImg" />
                     </div>
                     <div className="userInfo">
                         <h5>{props.post?.user.name.first} {props.post?.user.name.last}</h5>
@@ -111,7 +112,7 @@ const PostCard = (props) => {
                                             likeInteract?.map((like) =>
                                                 <div className="userProfile" key={like?.user._id}>
                                                     <div className="profileImgPost">
-                                                        <img src={serverPath + like?.user.profilePhoto} alt="profileImg" />
+                                                        <img src={like?.user?.profilePhoto ? serverPath + like?.user.profilePhoto : tempImage} alt="profileImg" />
                                                     </div>
                                                     <div className="userInfo">
                                                         <h5>{like?.user.name.first} {like?.user.name.last}</h5>
@@ -135,7 +136,7 @@ const PostCard = (props) => {
                 <div className="actionBar">
                     {/* =======================================================implement like api hit ==================================================*/}
                     <button className="linkButton" onClick={likeHandler}>
-                        <i className={`fa-${likeInteract.map(like => like?.user._id).includes(session?.user._id)?"solid":"regular"} fa-thumbs-up`}></i> Like
+                        <i className={`fa-${likeInteract.map(like => like?.user._id).includes(session?.user._id) ? "solid" : "regular"} fa-thumbs-up`}></i> Like
                     </button>
                     {/* =============================================================== end ============================================================ */}
                     <div className="specialLink">
@@ -157,7 +158,7 @@ const PostCard = (props) => {
                                     <div className="allLikes" style={{ display: 'flex', flexDirection: 'column' }}>
                                         <div className="postBox">
                                             <div className="profileImgPost">
-                                                <img src={serverPath + loggedInUser?.profilePhoto} alt="profileImg" />
+                                                <img src={loggedInUser?.profilePhoto ? serverPath + loggedInUser?.profilePhoto : tempImage} alt="profileImg" />
                                             </div>
 
                                             <form style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', width: '100%' }} onSubmit={commentHandler}>
@@ -171,7 +172,7 @@ const PostCard = (props) => {
                                                 commentInteract.map((comment, index) => (
                                                     <div className="userProfile" key={index}>
                                                         <div className="profileImgPost">
-                                                            <img src={serverPath + comment?.user.profilePhoto} alt="profileImg" />
+                                                            <img src={comment?.user?.profilePhoto ? serverPath + comment?.user.profilePhoto : tempImage} alt="profileImg" />
                                                         </div>
                                                         <div className="userInfo" style={{ borderRadius: '10px', backgroundColor: 'rgb(231, 231, 231)', padding: '0.25rem 0.5rem', width: '80%' }}>
                                                             <h6 style={{ color: 'rgb(129, 129, 129)', margin: '0' }}>{comment?.user.name.first} {comment?.user.name.last}</h6>

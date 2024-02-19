@@ -15,15 +15,16 @@ import { useGetter } from "../../hooks/fetcher";
 import SuggestedUser from "../cards/SuggestedUser";
 
 const HomeComponent = ({ role, user, connection, users, posts }) => {
+    const session = useSelector(selectSession);
     const suggestUrl = basePath + urls.user.suggestedUser.get
+    const newsGetUrl = basePath + urls.news.find
+    const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", session?.user._id)
+
     const [tempPosts, setTempPosts] = useState([])
     const [isPostChanged, setIsPostChanged] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
     const tempUser = useSelector(selectLoggedInUser);
-    const session = useSelector(selectSession);
-    const newsGetUrl = basePath + urls.news.find
     const { data: newsData, mutate: newsMutate, isLoading: newsLoading } = useGetter(newsGetUrl)
-    const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", session?.user._id)
     const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
 
     const { data: suggestedUser, mutate: suggestMutate, isLoading: suggestIsLoading } = useGetter(suggestUrl)

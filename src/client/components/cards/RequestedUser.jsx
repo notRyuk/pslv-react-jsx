@@ -4,6 +4,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { selectSession } from '../auth/authSlice'
+import tempImage from "@client/assets/images/profile.png"
 
 const RequestedUser = (props) => {
     const acceptRequestUrl = basePath + urls.request.acceptMutual.replace(':request', props.cr?._id)
@@ -40,7 +41,7 @@ const RequestedUser = (props) => {
                     <div className="userProfile networkUserProfile">
                         <div className="profileImgPost">
                             <img
-                                src={serverPath + props.user?.profilePhoto}
+                                src={props?.user?.profilePhoto ? serverPath + props.user?.profilePhoto : tempImage}
                                 alt="profileImg"
                             />
                         </div>

@@ -10,6 +10,9 @@ export enum Models {
     course = "institute-course",
     faculty = "faculty",
 
+    // message
+    message = "message",
+
     // connection
     connectionRequest = "connection-request",
     connection = "connection",

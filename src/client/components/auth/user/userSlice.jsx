@@ -53,7 +53,9 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-   
+   getAllUsers: (state, action) => {
+    state.users = action.payload;
+   }
   },
   extraReducers: (builder) => {
     builder
@@ -88,6 +90,8 @@ export const userSlice = createSlice({
       });
   },
 });
+
+export const {getAllUsers} = userSlice.actions;
 
 // export const selectUserOrders = (state) => state.user.userOrders;
 export const selectUserInfo = (state) => state.user.userInfo;
