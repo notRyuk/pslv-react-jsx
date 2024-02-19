@@ -26,7 +26,7 @@
     display: flex;
     flex-direction: column;
     padding: 0.5rem;
-    box-shadow: -4px 4px 5px 1px #000000;
+    box-shadow: 1px 1px 20px 0px black;
     height: 600px;
   }
   .searchChat {
@@ -76,7 +76,7 @@
     display: flex;
     flex-direction: column;
     font-family: Arial, sans-serif;
-    box-shadow: -4px 4px 5px 1px #000000;
+    box-shadow: 1px 1px 20px 0px black;
   }
   
   #chat-header {

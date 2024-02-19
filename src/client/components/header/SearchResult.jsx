@@ -5,13 +5,14 @@ import { serverPath } from "../../../utils/urls";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-export const SearchResult = ({ result, setSearchResults, setInput }) => {
+export const SearchResult = ({ result, setSearchResults, setInput, setBlur }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const handleClick = () => {
         if(location.pathname !== "/jobs") navigate(`/profile/${result?._id}`)
         setInput("");
         setSearchResults([]);
+        setBlur(true)
     }
     return (
         <div

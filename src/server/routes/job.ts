@@ -39,7 +39,6 @@ app.post("/create",
                 isCompleted: getValue(keys, values, "isCompleted")
             })
         });
-        console.log(job)
         if (!job)
             return res.status(400).json(handler.error(handler.STATUS_404));
         return res.status(200).json(handler.success(job));

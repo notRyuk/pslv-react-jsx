@@ -36,7 +36,6 @@ export default function SignIn() {
     dispatch(
       checkUserAsync({ email, password: hashed })
     );
-    // console.log(error);
   };
   return (
     <>

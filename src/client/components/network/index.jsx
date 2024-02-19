@@ -20,7 +20,6 @@ const NetworkComponent = () => {
     const { data: suggestedUser, mutate: suggestMutate, isLoading: suggestIsLoading } = useGetter(suggestUrl)
     return (
         <>
-            {console.log(connectionRequests)}
             <main className="networkContainer">
                 <div className="leftNetworkContent content">
                     <div className="card">

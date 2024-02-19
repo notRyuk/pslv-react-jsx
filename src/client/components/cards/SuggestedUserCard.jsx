@@ -21,10 +21,8 @@ const SuggestedUserCard = (props) => {
         })
         props.suggestMutate()
         props.requestMutate()
-        console.log(res);
     }
 
-    console.log(serverPath + props.user?.profilePhoto)
     return (
         <>
                 <div className="card profileCard suggestedCard" key={props.user?._id}>

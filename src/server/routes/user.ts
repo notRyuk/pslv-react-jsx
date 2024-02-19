@@ -1,5 +1,5 @@
 import UserHandler from "@handlers/user";
-import { verifyAdmin, verifyParams, verifyToken } from "@server/middleware/verify";
+import { verifyAdmin, verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import User from "@server/models/user";
 import Admin from "@server/models/user/admin";
 import Connection from "@server/models/user/connection";
@@ -8,13 +8,14 @@ import IUser from "@types_/user";
 import IConnection from "@types_/user/connection";
 import IConnectionRequest from "@types_/user/connection-request";
 import { getValue } from "@utils/object";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
+import ISession from "@types_/user/session";
 
 const app = Router()
 const handler = new UserHandler()
 
 app.get("/all-users", verifyToken(), async (_, res) => {
-    const {session} = res.locals
+    const { session } = res.locals
     const connectionRequests = await ConnectionRequest.find({
         $or: [{ from: (session.user as IUser)._id }, { to: (session.user as IUser)._id }],
     });
@@ -47,7 +48,7 @@ app.get("/all-users", verifyToken(), async (_, res) => {
     );
     const allUserIds = Array.from(new Set([...connectionRequestUserIds, ...connectionUserIds]));
     // console.log(connectionUserIds);
-    
+
     const allUsers = await User.find({
         _id: { $nin: [(session.user as IUser)._id, ...allUserIds] },
     });
@@ -57,19 +58,19 @@ app.get("/all-users", verifyToken(), async (_, res) => {
 app.get("/details/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     const { keys, values } = res.locals
     const user = await User.findById(getValue(keys, values, "id")).populate([
-        { 
-            path: "profile", 
+        {
+            path: "profile",
             strictPopulate: false,
             populate: [
                 {
-                    path: "education", 
+                    path: "education",
                     populate: "institute"
                 },
                 "achievements",
                 "skills",
                 "address",
                 "workExperience"
-            ] 
+            ]
         },
         { path: "admin", strictPopulate: false },
         { path: "faculty", strictPopulate: false },
@@ -83,31 +84,69 @@ app.get("/details/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
 app.put("/promote/:user/:role", verifyToken(), verifyAdmin(), verifyParams(["user", "role"]), async (_, res) => {
     const { keys, values, session } = res.locals
     const user = await User.findById(getValue(keys, values, "user"))
-    if(!user) {
+    if (!user) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     const admin = await Admin.create({
         role: getValue(keys, values, "role"),
         createdBy: (session.user as IUser)._id
     })
-    if(!admin) {
+    if (!admin) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     user.set("admin", admin._id)
     const updatedUser = await user.save()
-    if(!updatedUser) {
+    if (!updatedUser) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     updatedUser.admin = admin
     return res.status(200).send(handler.success(updatedUser))
 })
 
-app.get('/get-all', verifyToken(), async (_, res) => {    
+app.get('/get-all', verifyToken(), async (_, res) => {
     const users = await User.find();
-    if(!users){
+    if (!users) {
         return res.status(404).json(handler.error(handler.STATUS_404))
     }
     return res.status(200).json(handler.success(users));
 });
+
+
+const registerFields = [
+    "name.first",
+    "name.last",
+    "dob",
+    "phone"
+]
+app.put(
+    "/update",
+    verifyToken(),
+    verifyBody(registerFields),
+    async (_: Request, res: Response) => {
+        const { keys, values, session } = res.locals
+        const user = await User.findById((session.user as IUser)._id)
+        if (!user) {
+            return res.status(404).send(handler.error(handler.STATUS_404))
+        }
+        for (const key of (keys as string[])) {
+            user.set(key, getValue(keys, values, key))
+
+        }
+        const updatedUser = await user.save()
+        if (!updatedUser) {
+            return res.status(404).send(handler.error(handler.STATUS_404))
+        }
+        return res.status(200).send(handler.success(updatedUser))
+    }
+)
+
+app.get("/", verifyToken(), async(_, res)=>{
+    const { session } = res.locals
+    const user = await User.findById(((session as ISession).user as IUser)._id)
+    if(!user) {
+        return res.status(404).send(handler.error(handler.MISSING_AUTH_HEADER))
+    }
+    return res.status(200).send(handler.success(user))
+})
 
 export default app

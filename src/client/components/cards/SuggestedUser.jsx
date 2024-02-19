@@ -20,11 +20,9 @@ const SuggestedUser = (props) => {
             }
         })
         props.suggestMutate()
-        console.log(res);
     }
     return (
         <>
-            {/* {console.log('from suggested user')} */}
             <div className="connectSuggestion">
                 <Link to={`/profile/${props.user?._id}`}>
                     <div className="connectProfile">

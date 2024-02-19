@@ -36,28 +36,27 @@ export async function checkUser(loginInfo) {
   });
 }
 
-// export function fetchAllUsers() {
-//   return new Promise(async (resolve) => {
-//     //TODO: we will not hard-code server URL here
-//     const response = await fetch('http://localhost:8080/posts');
+export async function updateLoggedInUser() {
+  return new Promise(async (resolve, reject) => {
 
-//     const data = await response.json();
-//     resolve({ data });
-//   });
-// }
+    try {
+      const res = await axios.get(basePath + urls.user.getLoggedInUser, {
+        headers : {
+          authorization : `Bearer ${JSON.parse(localStorage.getItem('session'))?.token}`
+        }
+      }).then(res => res.data).catch(err => err.response?.data || err.request);
 
-// export async function checkUser(loginInfo) {
-//   return new Promise(async (resolve, reject) => {
-//     const email = loginInfo.email;
-//     const password = loginInfo.password;
-
-//     const res = await axios.post(basePath + urls.auth.login, {
-//       email,
-//       password
-//     }).then(res => res.data).catch(err => err.response?.data || err.request)
-//     return (res?.status == "success" ? resolve(res) : reject(res))
-//   });
-// }
+      if (res?.status === "success") {
+        resolve(res);
+      } else {
+        const errorMessage = res?.message || "Wrong Credentials";
+        reject(new Error(errorMessage));
+      }
+    } catch (error) {
+      reject(new Error("An unexpected error occurred"));
+    }
+  });
+}
 
 
 export function signOut(userId) {

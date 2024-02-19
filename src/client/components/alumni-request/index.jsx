@@ -5,7 +5,6 @@ import AluminiRequestCard from '../cards/AluminiRequestCard';
 
 const AlumniRequest = () => {
     const {data: requestData, mutate:requestMutate} = useGetter(basePath+urls.request.alumniRequests)
-    console.log(requestData);
   return (
     <div className='card' style={{width:"60%", margin:"0 auto", boxShadow: "1px 1px 20px 0px black"}}>
         {

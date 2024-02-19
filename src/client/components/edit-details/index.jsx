@@ -3,21 +3,88 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Button from '@mui/material/Button';
 import MobileStepper from '@mui/material/MobileStepper';
 import { useTheme } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConnectedWorld from '../../assets/images/connected-world.png';
-import { selectLoggedInUser, updateUserAsync } from '../auth/authSlice';
+import { selectLoggedInUser, selectSession, updateLoggedInUserAsync } from '../auth/authSlice';
+import { basePath } from '../../../utils/urls';
+import { usePutter, useGetter } from '../../hooks/fetcher';
+import urls from '../../../utils/urls';
 
-
-const GetUserDetails = ({ role, user, dob }) => {
-  const loggedInUser = useSelector(selectLoggedInUser)
-  const userId = loggedInUser.id
+const GetUserDetails = () => {
+  const loggedInUser = useSelector(selectLoggedInUser);
+  const session = useSelector(selectSession)
   const dispatch = useDispatch()
 
-  const clickHandler = () => {
-    const newUser = { ...loggedInUser, details: { ...loggedInUser.details, firstName: formData.firstName } }
-    dispatch(updateUserAsync(newUser))
+  const { data: updatedUser, trigger: updateUser } = usePutter(basePath + urls.user.update)
+  const { data: updatedAddress, trigger: updateAddress } = usePutter(basePath + urls.user.address.update)
+  const { data: addressData, mutate: addressMutate } = useGetter(basePath + urls.user.address.get)
+
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [dob, setDob] = useState("");
+  const [phone, setPhone] = useState("");
+  const [bio, setBio] = useState("");
+
+  const [formData, setFormData] = useState({});
+
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+    setFirstname(loggedInUser?.name.first)
+    setLastname(loggedInUser?.name.last)
+    setDob(formatDate(loggedInUser?.dob))
+    setPhone(loggedInUser?.phone)
+    setBio(loggedInUser?.bio)
+    setFormData({
+      name: addressData?.data.name,
+      buildingName: addressData?.data.buildingName,
+      line1: addressData?.data.line1,
+      line2: addressData?.data.line2,
+      street: addressData?.data.street,
+      city: addressData?.data.city,
+      state: addressData?.data.state,
+      country: addressData?.data.country,
+      pinCode: addressData?.data.pinCode,
+    })
+  }, [loggedInUser, addressData])
+
+  const handleInputChange = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    setFormData({
+      ...formData,
+      [e.target.name]: value,
+    })
+  };
+
+  const clickHandler = async () => {
+    await updateUser({
+      name: {
+        first: firstname,
+        last: lastname
+      },
+      phone,
+      bio,
+      dob
+    })
+    dispatch(updateLoggedInUserAsync())
   }
+
+  const addressHandler = async (e) => {
+    e.preventDefault();
+    await updateAddress(formData)
+  }
+
+  // useEffect(() => {
+  //   // console.log(updatedUser);
+  // }, [updatedUser])
 
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -30,161 +97,127 @@ const GetUserDetails = ({ role, user, dob }) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const [formData, setFormData] = useState({
-    firstName: user.firstname || '',
-    lastName: user.lastname || '',
-    age: user.age || '',
-    dob: dob || '',
-    workplace: user.workplace || '',
-    profileImage: user.imageUrl || '',
-    educationType: '',
-    instituteName: '',
-    joined: '',
-    isCurrent: false,
-    completed: '',
-    remarks: '',
-  });
-
-  const handleInputChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({
-      ...formData,
-      [e.target.name]: value,
-    });
-  };
   return (
     <main className="mainFormContainer">
-      <h1 style={{ fontSize: "3rem", fontWeight: "600" }}>Complete Your Profile</h1>
+      <h1 style={{ fontSize: "3rem", fontWeight: "600" }}>Edit Your Profile</h1>
       <section className="formSection">
         <div className="formImgContainer" style={{ maxWidth: "500px", maxHeight: "425px" }}>
           <img src={ConnectedWorld} alt="connected-world" />
         </div>
-        <div className="formContainer card">
-          {role === 'student' && (
-            <form id="detailForm">
-              {activeStep === 0 ? (
-                <>
-                  <h2>Personal Details</h2>
-                  <div className="twoInput mt-1">
-                    <div className="">
-                      <label htmlFor="">First Name</label>
-                      <input
-                        type="text"
-                        className="firstName mt-1"
-                        name="firstName"
-                        placeholder="First Name"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        readOnly
-                        style={{ color: '#808080', cursor: 'not-allowed' }}
-                      />
-                    </div>
-                    <div className="">
-                      <label htmlFor="">Last Name</label>
-                      <input
-                        type="text"
-                        className="lastName mt-1"
-                        name="lastName"
-                        placeholder="Last Name"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        readOnly
-                        style={{ color: '#808080', cursor: 'not-allowed' }}
-                      />
-                    </div>
-                  </div>
-                  <div className="twoInput mt-1">
-                    <div className="">
-                      <label htmlFor="">Date of Birth</label>
-                      <input
-                        type="date"
-                        className="dob mt-1"
-                        name="dob"
-                        value={formData.dob}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="">
-                      <label htmlFor="">Profile Photo</label>
-                      <input
-                        type="file"
-                        className="profileImage mt-1"
-                        name="profileImage"
-                        placeholder="Profile Image"
-                        // value={formData.profileImage}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="oneInput mt-2">
-                    <label htmlFor="">Bio</label>
-                    <textarea id="bio" name="bio" rows="4" cols="50"></textarea>
-                  </div>
-                </>
-              ) : null}
-
-              {activeStep === 1 ? (
-                <>
-                  <h2>Address Details</h2>
-                  <div className="twoInput">
-                    <div className="div">
-                      {/* <label htmlFor="name">Name</label> */}
-                      <input type="text" name="name" placeholder='Name' id="name" />
-                    </div>
-                    <div className="div">
-
-                      {/* <label htmlFor="buildingName">Building Name</label> */}
-                      <input type="text" name="buildingName" placeholder='Building Name' id="buildingName" />
-                    </div>
-                  </div>
-                  <div className="oneInput">
-                    {/* <label htmlFor="">Adress Line 1</label> */}
-                    <input type="text" name="line1" placeholder='Address Line 1' id='line1' />
-                  </div>
-                  <div className="oneInput">
-                    {/* <label htmlFor="">Adress Line 2</label> */}
-                    <input type="text" name="line2" placeholder='Adress Line 2' id='line' />
-                  </div>
-                  <div className="oneInput">
-                    {/* <label htmlFor="">Street</label> */}
-                    <input type="text" name="street" placeholder='Street name' id='street' />
-                  </div>
-                  <div className="twoInput">
-                    <div className="div">
-                      <input type="text" name='city' placeholder='city' id='city' />
-                    </div>
-                    <div className="div">
-                      <input type="text" name="state" placeholder='State' id="state" />
-                    </div>
-                    
-                  </div>
-                  <div className="twoInput">
-                    <div className="div">
-                      {/* <label htmlFor="state">State</label> */}
-                      <input type="text" name="country" placeholder='country' id="country" />
-                    </div>
-                    <div className="div">
-
-                      {/* <label htmlFor="pinCode">Pin Code</label> */}
-                      <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" />
-                    </div>
-                  </div>
-                  <button type='button' onClick={clickHandler} className="submitButton mt-2" id="detailButton">
-                    Edit
-                  </button>
-                </>
-              ) : null}
-
-              {/* Include contact, institute, and address components as needed */}
-
-
+        <div className="formContainer card" style={{ width: "50%" }}>
+          {activeStep === 0 ? (
+            <form id='detailForm' style={{ width: "100%" }}>
+              <h2>Personal Details</h2>
+              <div className="twoInput mt-1">
+                <div className="">
+                  <label htmlFor="">First Name</label>
+                  <input
+                    type="text"
+                    className="firstName mt-1"
+                    name="firstName"
+                    placeholder="First Name"
+                    value={firstname}
+                    onChange={(e) => setFirstname(e.target.value)}
+                  // style={{ color: '#808080', cursor: 'not-allowed' }}
+                  />
+                </div>
+                <div className="">
+                  <label htmlFor="">Last Name</label>
+                  <input
+                    type="text"
+                    className="lastName mt-1"
+                    name="lastName"
+                    placeholder="Last Name"
+                    value={lastname}
+                    onChange={(e) => setLastname(e.target.value)}
+                  // style={{ color: '#808080', cursor: 'not-allowed' }}
+                  />
+                </div>
+              </div>
+              <div className="twoInput mt-1">
+                <div className="">
+                  <label htmlFor="">Date of Birth</label>
+                  <input
+                    type="date"
+                    className="dob mt-1"
+                    name="dob"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                  />
+                </div>
+                <div className="">
+                  <label htmlFor="">Phone Number</label>
+                  <input
+                    type="text"
+                    className="profileImage mt-1"
+                    name="phone"
+                    placeholder="PhoneNumber"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="oneInput mt-2">
+                <label htmlFor="">Bio</label>
+                <textarea id="bio" name="bio" rows="2" cols="50" value={bio} onChange={(e) => setBio(e.target.value)} />
+              </div>
+              <button type='button' onClick={clickHandler} className="submitButton mt-2" id="detailButton">
+                Edit Personal Details
+              </button>
             </form>
-          )}
-          {role === 'alumni' && (
-            <form id="detailForm">
-              {/* ... Alumni form inputs ... */}
+          ) : null}
+
+          {Object.keys(loggedInUser).includes("profile") && activeStep === 1 ? (
+            <form id="detailForm" onSubmit={addressHandler} style={{ width: "100%" }}>
+              <h2>Address Details</h2>
+              <div className="twoInput">
+                <div className="div">
+                  {/* <label htmlFor="name">Name</label> */}
+                  <input type="text" name="name" placeholder='Name' id="name" value={formData?.name} onChange={handleInputChange} />
+                </div>
+                <div className="div">
+
+                  {/* <label htmlFor="buildingName">Building Name</label> */}
+                  <input type="text" name="buildingName" placeholder='Building Name' id="buildingName" value={formData?.buildingName} onChange={handleInputChange} />
+                </div>
+              </div>
+              <div className="oneInput">
+                {/* <label htmlFor="">Adress Line 1</label> */}
+                <input type="text" name="line1" placeholder='Address Line 1' id='line1' value={formData?.line1} onChange={handleInputChange} />
+              </div>
+              <div className="oneInput">
+                {/* <label htmlFor="">Adress Line 2</label> */}
+                <input type="text" name="line2" placeholder='Adress Line 2' id='line' value={formData?.line2} onChange={handleInputChange} />
+              </div>
+              <div className="oneInput">
+                {/* <label htmlFor="">Street</label> */}
+                <input type="text" name="street" placeholder='Street name' id='street' value={formData?.street} onChange={handleInputChange} />
+              </div>
+              <div className="twoInput">
+                <div className="div">
+                  <input type="text" name='city' placeholder='city' id='city' value={formData?.city} onChange={handleInputChange} />
+                </div>
+                <div className="div">
+                  <input type="text" name="state" placeholder='State' id="state" value={formData?.state} onChange={handleInputChange} />
+                </div>
+
+              </div>
+              <div className="twoInput">
+                <div className="div">
+                  {/* <label htmlFor="state">State</label> */}
+                  <input type="text" name="country" placeholder='country' id="country" value={formData?.country} onChange={handleInputChange} />
+                </div>
+                <div className="div">
+
+                  {/* <label htmlFor="pinCode">Pin Code</label> */}
+                  <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" value={formData?.pinCode} onChange={handleInputChange} />
+                </div>
+              </div>
+              <button type='submit' className="submitButton mt-2" id="detailButton">
+                Edit
+              </button>
             </form>
-          )}
+          ) : null}
         </div>
       </section>
       <MobileStepper

@@ -11,7 +11,6 @@ import AluminiRequestCard from '../cards/AluminiRequestCard';
 
 const AdminDashboard = ({ role, user, connection, users, posts }) => {
 
-    console.log(tempUser);
     const status = "idle"
     const userInfoStatus = "idle"
     return (

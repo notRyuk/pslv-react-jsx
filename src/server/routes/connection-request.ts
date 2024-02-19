@@ -98,8 +98,6 @@ app.put("/:request/mutual/accept", verifyToken(), verifyParams(["request"]), asy
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     const user = session.user as IUser
-    console.log(user._id)
-    console.log(connectionRequest.to)
     if (user._id.toString() !== (connectionRequest.to as IUser)._id.toString()) {
         return res.status(403).send(handler.error("Unauthorized! Invalid user."))
     }

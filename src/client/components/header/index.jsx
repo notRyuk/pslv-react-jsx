@@ -92,17 +92,17 @@ export default function PrimarySearchAppBar() {
     // Handle mousedown on the document body
     const handleDocumentClick = (event) => {
         if (searchInputRef.current && !searchInputRef.current.contains(event.target)) {
-        // Clicked outside the search input
+            // Clicked outside the search input
             // setSearchResults([]);
             setBlur(true)
         }
     };
-    
+
     // Attach mousedown event listener to the document body
     useEffect(() => {
         document.body.addEventListener('mousedown', handleDocumentClick);
         return () => {
-        document.body.removeEventListener('mousedown', handleDocumentClick);
+            document.body.removeEventListener('mousedown', handleDocumentClick);
         };
     }, []);
 
@@ -294,6 +294,7 @@ export default function PrimarySearchAppBar() {
     }
     return (
         <Box sx={{ flexGrow: 1 }}>
+            {!blur && input && <div className={classes.backdropCreated} />}
             <AppBar position="fixed" className={classes.navbar} sx={{ bgcolor: 'primary.dark' }}>
                 <Toolbar>
                     <Typography
@@ -320,7 +321,7 @@ export default function PrimarySearchAppBar() {
                             // onBlur={() => setBlur(true)}
                             onFocus={() => setBlur(false)}
                         />
-                        {!blur && <SearchList results={searchResults} setSearchResults={setSearchResults} setInput={setInput} />}
+                        {!blur && <SearchList results={searchResults} setSearchResults={setSearchResults} setInput={setInput} setBlur = {setBlur}/>}
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box

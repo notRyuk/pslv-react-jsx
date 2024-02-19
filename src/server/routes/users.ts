@@ -6,12 +6,8 @@ import UserHandler from '@handlers/user';
 const app = Router();
 const handler = new UserHandler();
 
-app.get('/get-all', verifyToken(), async (_, res) => {
-    console.log("hello");
-    
+app.get('/get-all', verifyToken(), async (_, res) => {    
     const users = await User.find();
-    console.log(users.length);
-    
     if(!users){
         return res.status(404).json(handler.error(handler.STATUS_404))
     }

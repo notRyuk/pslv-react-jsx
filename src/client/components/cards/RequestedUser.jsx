@@ -26,7 +26,6 @@ const RequestedUser = (props) => {
                     authorization: `Bearer ${session.token}`,
                 }
             });
-            // console.log(response.data);
             props.requestMutate();
             props.suggestMutate();
         } catch (error) {

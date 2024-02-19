@@ -18,14 +18,17 @@ export default {
             addSkill: "/profile/add-skill"
         },
         address:{
-            create: "/address/create"
+            create: "/address/create",
+            get: "/profile/getAddress",
+            update: "/profile/updateAddress"
         },
         suggestedUser:{
             get: "/user/all-users"
         },
-        fetchAll: "/user/get-all"
+        fetchAll: "/user/get-all",
+        update: "/user/update",
+        getLoggedInUser: "/user"
     },
-    users: "/users/get-all",
     skills: "/skills",
     skill: {
         create: "/skill/create"
