@@ -22,11 +22,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import WorkIcon from "@mui/icons-material/Work";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import classes from "./styles.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { selectLoggedInUser, selectSession } from "../auth/authSlice";
-import { getAllUsers, selectAllUsers} from "../auth/user/userSlice";
+import { getAllUsers, getAllJobs } from "../auth/user/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchList } from "./SearchList";
 import axios from "axios";
@@ -74,17 +74,40 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function PrimarySearchAppBar() {
 
-    const usersUrl = basePath + urls.user.fetchAll;
     const dispatch = useDispatch();
+    const location = useLocation();
+
+    const usersUrl = basePath + urls.user.fetchAll;
+    const jobsUrl = basePath + urls.job.findAll;
     const user = useSelector(selectLoggedInUser)
     const session = useSelector(selectSession);
 
     const [allUsers, setAllUsers] = useState([]);
+    const [allJobs, setAllJobs] = useState([]);
     const [searchResults, setSearchResults] = useState([])
     const [input, setInput] = useState("");
+    const [blur, setBlur] = useState(false);
+    const searchInputRef = useRef(null);
 
-    useEffect(()=>{
-        const fetchData = async () => {
+    // Handle mousedown on the document body
+    const handleDocumentClick = (event) => {
+        if (searchInputRef.current && !searchInputRef.current.contains(event.target)) {
+        // Clicked outside the search input
+            // setSearchResults([]);
+            setBlur(true)
+        }
+    };
+    
+    // Attach mousedown event listener to the document body
+    useEffect(() => {
+        document.body.addEventListener('mousedown', handleDocumentClick);
+        return () => {
+        document.body.removeEventListener('mousedown', handleDocumentClick);
+        };
+    }, []);
+
+    useEffect(() => {
+        const fetchUsersData = async () => {
             try {
                 const res = await axios.get(usersUrl, {
                     headers: {
@@ -98,8 +121,23 @@ export default function PrimarySearchAppBar() {
                 console.error("Error while fetching data:", error);
             }
         };
-        fetchData();
-    },[])
+        const fetchJobsData = async () => {
+            try {
+                const res = await axios.get(jobsUrl, {
+                    headers: {
+                        'Content-Type': 'application/JSON',
+                        authorization: `Bearer ${session.token}`
+                    },
+                });
+                dispatch(getAllJobs(res.data));
+                setAllJobs(res.data);
+            } catch (error) {
+                console.error("Error while fetching data:", error);
+            }
+        };
+        fetchJobsData();
+        fetchUsersData();
+    }, [])
 
     const userNavigation = [
         { name: 'My Profile', link: `/profile/${user?._id}` },
@@ -233,10 +271,17 @@ export default function PrimarySearchAppBar() {
 
         </Menu>
     );
-    
-    const handleChange = (value)=>{
+
+    const handleChange = (value) => {
         setInput(value);
-        const filteredResult = allUsers.filter(user => {
+        const filteredResult = location.pathname === "/jobs" ? allJobs.filter(job => {
+            return (
+                value &&
+                job &&
+                job.title &&
+                job.title.toLowerCase().includes(value.toLowerCase())
+            )
+        }) : allUsers.filter(user => {
             const name = user?.name?.first + " " + user?.name?.last;
             return (
                 value &&
@@ -263,7 +308,7 @@ export default function PrimarySearchAppBar() {
                     >
                         <img src={logo} alt="Logo" className={classes.logoImage} />
                     </Typography>
-                    <Search>
+                    <Search ref={searchInputRef}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -271,10 +316,11 @@ export default function PrimarySearchAppBar() {
                             placeholder="Search…"
                             inputProps={{ "aria-label": "search" }}
                             value={input}
-                            onChange={(e)=>handleChange(e.target.value)}
-                            onBlur={()=> setSearchResults([])}
+                            onChange={(e) => handleChange(e.target.value)}
+                            // onBlur={() => setBlur(true)}
+                            onFocus={() => setBlur(false)}
                         />
-                        <SearchList results={searchResults} setSearchResults = {setSearchResults} setInput = {setInput} />
+                        {!blur && <SearchList results={searchResults} setSearchResults={setSearchResults} setInput={setInput} />}
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box
@@ -304,7 +350,7 @@ export default function PrimarySearchAppBar() {
                                 color="inherit"
                             >
                                 {/* <Badge badgeContent={4} color="error"> */}
-                                    <PeopleAltIcon />
+                                <PeopleAltIcon />
                                 {/* </Badge> */}
                             </IconButton>
                         </Link>
@@ -316,7 +362,7 @@ export default function PrimarySearchAppBar() {
                                     color="inherit"
                                 >
                                     {/* <Badge badgeContent={4} color="error"> */}
-                                        <WorkIcon />
+                                    <WorkIcon />
                                     {/* </Badge> */}
                                 </IconButton>
                             </Link>
@@ -328,7 +374,7 @@ export default function PrimarySearchAppBar() {
                                 color="inherit"
                             >
                                 {/* <Badge badgeContent={4} color="error"> */}
-                                    <MailIcon />
+                                <MailIcon />
                                 {/* </Badge> */}
                             </IconButton>
                         </Link>
@@ -339,7 +385,7 @@ export default function PrimarySearchAppBar() {
                                 color="inherit"
                             >
                                 {/* <Badge badgeContent={17} color="error"> */}
-                                    <NotificationsIcon />
+                                <NotificationsIcon />
                                 {/* </Badge> */}
                             </IconButton>
                         </Link>

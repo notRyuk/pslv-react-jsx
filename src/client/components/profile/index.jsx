@@ -156,7 +156,7 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", session.user._id))
+    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
     // console.log(jobData)
 
     return (
@@ -426,7 +426,7 @@ const ProfileComponent = ({
                                         {tempUser?.data?.profile?.education?.length > 0 ? tempUser?.data?.profile?.education?.map(ed => (
                                             <div style={{ fontSize: '12px', borderBottom: "1px solid white" }}>
                                                 <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                                                    {ed.institute.name}
+                                                    {ed?.institute?.name}
                                                 </div>
                                                 <div>
                                                     Joined in {ed?.joined} <span style={{ fontSize: '15px' }}>•</span> Education Type : {ed?.type}
@@ -468,7 +468,7 @@ const ProfileComponent = ({
                                     {tempUser?.data?.profile?.skills?.length > 0 ? (
                                         tempUser?.data?.profile?.skills?.map((skill, index) => (
                                             <div key={index} className="skill-main">
-                                                <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{skill.name}</div>
+                                                <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{skill?.name}</div>
                                             </div>
                                         ))
                                     ) : (
