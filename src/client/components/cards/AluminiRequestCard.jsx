@@ -5,26 +5,39 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { selectSession } from '../auth/authSlice'
 import tempImage from "@client/assets/images/profile.png"
+import { toast } from 'react-toastify'
 
 const AluminiRequestCard = (props) => {
     const acceptRequestUrl = basePath + urls.request.alumni.replace(':request', props.cr?._id).replace(':status', "accept")
     const ignoreRequestUrl = basePath + urls.request.alumni.replace(':request', props.cr?._id).replace(':status', "reject")
     const session = useSelector(selectSession);
     const clickHandler = async () => {
-        const data = await axios.put(acceptRequestUrl, {}, {
+        const res = await axios.put(acceptRequestUrl, {}, {
             headers: {
                 authorization: `Bearer ${session.token}`,
             }
         })
+        if(res?.status === 200){
+            toast.success("Request accepted Successfully")
+        }
+        else{
+            toast.error("Something went wrong!!")
+        }
         props.requestMutate()
     }
     const ignoreHandler = async () => {
         try {
-            const response = await axios.put(ignoreRequestUrl, {}, {
+            const res = await axios.put(ignoreRequestUrl, {}, {
                 headers: {
                     authorization: `Bearer ${session.token}`,
                 }
             });
+            if(res?.status === 200){
+                toast.warning("Ignored Request Successfully")
+            }
+            else{
+                toast.error("Something went wrong!!")
+            }
             props.requestMutate();
         } catch (error) {
             console.error("Error deleting connection request:", error);

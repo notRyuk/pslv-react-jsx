@@ -45,7 +45,7 @@ app.post("/create",
         });
         if(!jobApplication)
             return res.status(404).json(handler.error(handler.STATUS_404));
-        return res.status(201).json(handler.success(jobApplication));
+        return res.status(200).json(handler.success(jobApplication));
     }
 );
 

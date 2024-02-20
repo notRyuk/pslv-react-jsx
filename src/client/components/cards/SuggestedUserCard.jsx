@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { selectSession } from '../auth/authSlice'
 import axios from 'axios'
 import tempImage from "@client/assets/images/profile.png"
+import { toast } from 'react-toastify'
 
 const SuggestedUserCard = (props) => {
     const sendRequestUrl = basePath + urls.request.create
@@ -19,6 +20,12 @@ const SuggestedUserCard = (props) => {
                 "Content-Type": 'multipart/form-data',
             }
         })
+        if(res?.status === 200){
+            toast.success("Sent Request Successfully")
+        }
+        else{
+            toast.error("Something went wrong!!")
+        }
         props.suggestMutate()
         props.requestMutate()
     }

@@ -5,27 +5,40 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { selectSession } from '../auth/authSlice'
 import tempImage from "@client/assets/images/profile.png"
+import { toast } from 'react-toastify'
 
 const RequestedUser = (props) => {
     const acceptRequestUrl = basePath + urls.request.acceptMutual.replace(':request', props.cr?._id)
     const ignoreRequestUrl = basePath + urls.request.ignore.replace(':request', props.cr?._id)
     const session = useSelector(selectSession)
     const clickHandler = async () => {
-        const data = await axios.put(acceptRequestUrl, {}, {
+        const res = await axios.put(acceptRequestUrl, {}, {
             headers: {
                 authorization: `Bearer ${session.token}`,
             }
         })
+        if(res?.status === 200){
+            toast.success("Request accepted Successfully")
+        }
+        else{
+            toast.error("Something went wrong!!")
+        }
         props.connectionMutate()
         props.requestMutate()
     }
     const ignoreHandler = async () => {
         try {
-            const response = await axios.delete(ignoreRequestUrl, {
+            const res = await axios.delete(ignoreRequestUrl, {
                 headers: {
                     authorization: `Bearer ${session.token}`,
                 }
             });
+            if(res?.status === 200){
+                toast.warning("Ignored Request Successfully")
+            }
+            else{
+                toast.error("Something went wrong!!")
+            }
             props.requestMutate();
             props.suggestMutate();
         } catch (error) {

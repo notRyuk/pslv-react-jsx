@@ -27,6 +27,7 @@ export default {
         },
         fetchAll: "/user/get-all",
         update: "/user/update",
+        updateProfilePhoto: "/user/updateProfilePhoto",
         getLoggedInUser: "/user"
     },
     skills: "/skills",

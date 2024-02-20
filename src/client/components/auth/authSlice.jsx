@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { checkUser, createUser, signOut, updateLoggedInUser } from "./authAPI";
 import { updateUser } from "./user/userAPI";
+import { toast } from "react-toastify";
 
 const initialState = {
   isUserCreated: false,
@@ -43,7 +44,9 @@ export const checkUserAsync = createAsyncThunk(
   async (loginInfo) => {
     const response = await checkUser(loginInfo);
     // The value we return becomes the `fulfilled` action payload
-    // console.log(response);
+    if(response?.status === "success"){
+      toast.success("Logged In Successfully")
+    }
     return response.data;
   }
 );
@@ -52,6 +55,12 @@ export const signOutAsync = createAsyncThunk(
   'user/signOut',
   async (loginInfo) => {
     const response = await signOut(loginInfo);
+    if(response?.data === "success"){
+      toast.success("Logged Out Successfully")
+    }
+    else{
+      toast.error("Something went wrong!!")
+    }
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -70,6 +79,11 @@ export const authSlice = createSlice({
         state.status = "idle";
         state.createdUser = action.payload;
         state.isUserCreated = true;
+        toast.success("Account Created Successfully")
+      })
+      .addCase(createUserAsync.rejected, (state, action) => {
+        state.status = "idle"
+        toast.error("Something went wrong")
       })
       .addCase(checkUserAsync.pending, (state) => {
         state.status = "loading";
@@ -84,6 +98,7 @@ export const authSlice = createSlice({
       .addCase(checkUserAsync.rejected, (state, action) => {
         state.status = "idle";
         state.error = action.error;
+        toast.error("Wrong Credentials")
       })
       .addCase(updateUserAsync.pending, (state) => {
         state.status = 'loading';
@@ -102,7 +117,7 @@ export const authSlice = createSlice({
       .addCase(signOutAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(signOutAsync.fulfilled, (state, action) => {
+      .addCase(signOutAsync.fulfilled, (state) => {
         state.status = 'idle';
         localStorage.removeItem("session")
         state.loggedInUser = null;

@@ -8,13 +8,14 @@ import { selectSession } from '../auth/authSlice';
 import Loading from '../loading';
 import { useGetter, usePutter } from '../../hooks/fetcher';
 import Footer from '../footer';
-import Modal from '../modal';
+import CustomModal from '../modal';
 import { Autocomplete, Chip, Box, TextField, FormControl, InputLabel, Select, MenuItem, FormControlLabel, RadioGroup, Radio } from '@mui/material';
 import LaunchIcon from '@mui/icons-material/Launch';
 import { FormLabel, Stack } from 'react-bootstrap';
 import SubmitModal from '../submitModal';
 import { useFormik } from "formik"
 import tempImage from "@client/assets/images/profile.png"
+import { toast } from 'react-toastify';
 
 const ProfileComponent = ({
     user,
@@ -63,6 +64,12 @@ const ProfileComponent = ({
                 authorization: `Bearer ${session?.token}`
             }
         })
+        if (res?.status === 200) {
+            toast.success("Added Skill Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         if (res?.data) {
             setShowSkillModal(false)
             setChangedSkill("")
@@ -84,6 +91,12 @@ const ProfileComponent = ({
                 "Content-Type": 'multipart/form-data'
             }
         })
+        if (res?.status === 200 || res?.status === "success") {
+            toast.success("Added achievement Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         if (res?.data) {
             setShowAchievementModal(false)
             setDescription("")
@@ -111,6 +124,12 @@ const ProfileComponent = ({
                 authorization: `Bearer ${session?.token}`
             }
         })
+        if (res?.status === 200) {
+            toast.success("Added Address Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         if (res?.data) {
             setShowAddressModal(false)
             tempUserMutate()
@@ -127,6 +146,12 @@ const ProfileComponent = ({
                 authorization: `Bearer ${session.token}`
             },
         });
+        if (res?.status === 200) {
+            toast.success("Applied for alumni Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         connectionDataMutate();
         // console.log(data);
     };
@@ -152,11 +177,24 @@ const ProfileComponent = ({
                 authorization: `Bearer ${session?.token}`
             }
         })
+        if (res?.status === 200) {
+            toast.success("Added Education Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         if (res.data) {
             tempUserMutate()
         }
     }
     const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
+    const formatDate = (inputDate) => {
+        const date = new Date(inputDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
     // console.log(jobData)
     return (
         <>
@@ -301,7 +339,7 @@ const ProfileComponent = ({
                                 {/* Apply for Alumni Form (conditionally rendered) */}
                                 {tempUser?.data?.role === 'student' && connectionData?.data?.length === 0 && tempUser?.data?._id === session.user._id && (
                                     <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle"
-                                        style={{position:"absolute", bottom: "1rem", right: "1rem"}}
+                                        style={{ position: "absolute", bottom: "1rem", right: "1rem" }}
                                     >
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </Link>
@@ -369,7 +407,7 @@ const ProfileComponent = ({
                             </div>
                         </div> */}
 
-                        {/* About Modal */}
+                        {/* About CustomModal */}
                         <div className={`modal profileModal fade ${showAboutModal ? 'show' : ''}`} id="aboutModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true">
                             <div className="modal-dialog">
                                 <div className="modal-content">
@@ -442,7 +480,7 @@ const ProfileComponent = ({
                                                     {ed?.institute?.name}
                                                 </div>
                                                 <div>
-                                                    Joined in {ed?.joined} <span style={{ fontSize: '15px' }}>•</span> Education Type : {ed?.type}
+                                                    Joined in {formatDate(ed?.joined)} <span style={{ fontSize: '15px' }}>•</span> Education Type : {ed?.type}
                                                 </div>
                                                 <div style={{ paddingTop: '7px' }}></div>
                                                 {/* Add any additional information about education */}
@@ -596,8 +634,7 @@ const ProfileComponent = ({
                     </div>
                 </div>
             </SubmitModal>
-
-            <Modal
+            <CustomModal
                 open={showSkillModal}
                 setOpen={setShowSkillModal}
                 title={"Add Skill"}
@@ -611,8 +648,8 @@ const ProfileComponent = ({
                     )}
                     onChange={(_, value) => setChangedSkill(value)}
                 />
-            </Modal>
-            <Modal
+            </CustomModal>
+            <CustomModal
                 open={showEducationModal}
                 setOpen={setShowEducationModal}
                 title={"Add Education"}
@@ -685,14 +722,14 @@ const ProfileComponent = ({
                         />
                     </FormControl>
                 </Stack>
-            </Modal>
+            </CustomModal>
             <SubmitModal
                 open={showAchievementModal}
                 setOpen={setShowAchievementModal}
                 title={"Add Achievements"}
                 handleSubmit={handleAddAchievement}
             >
-                <Box component="form" noValidate sx={{ mt: 2, color: 'white' }} className='formContainer' padding={'1rem'}>
+                <Box noValidate sx={{ mt: 2, color: 'white' }} className='formContainer' padding={'1rem'}>
                     <Stack direction={'column'}>
                         <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
                             <TextField

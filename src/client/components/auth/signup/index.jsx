@@ -23,6 +23,7 @@ import { selectCreatedUser } from '../authSlice';
 import { useGetter } from '../../../hooks/fetcher';
 import urls,{ basePath } from '../../../../utils/urls';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function SignUp() {
   const [credential, setCredential] = useState({})
@@ -49,9 +50,11 @@ export default function SignUp() {
       })
       setCredentialAdded(true)
       setError("")
+      toast.success("Credentials Added Successfully")
     }
     else{
       setError("This Email has been already taken!!")
+      toast.error("This Email has been already taken!!")
     }
     
   };
@@ -150,9 +153,9 @@ export default function SignUp() {
           checked={selectedValue === 'admin'}
           onChange={handleChange}
         /> */}
-              {error.length > 0 && <Typography variant="body2" color="error">
+              {/* {error.length > 0 && <Typography variant="body2" color="error">
               {error}
-              </Typography>}
+              </Typography>} */}
               <Button
                 type="submit"
                 fullWidth

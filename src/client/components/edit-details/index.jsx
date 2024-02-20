@@ -6,10 +6,11 @@ import { useTheme } from '@mui/material/styles';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConnectedWorld from '../../assets/images/connected-world.png';
-import {selectSession, updateLoggedInUserAsync } from '../auth/authSlice';
+import { selectSession, updateLoggedInUserAsync } from '../auth/authSlice';
 import { basePath } from '../../../utils/urls';
 import { usePutter, useGetter } from '../../hooks/fetcher';
 import urls from '../../../utils/urls';
+import { toast } from 'react-toastify';
 
 const GetUserDetails = () => {
   const session = useSelector(selectSession)
@@ -65,7 +66,7 @@ const GetUserDetails = () => {
   };
 
   const clickHandler = async () => {
-    await updateUser({
+    const res = await updateUser({
       name: {
         first: firstname,
         last: lastname
@@ -74,12 +75,24 @@ const GetUserDetails = () => {
       bio,
       dob
     })
+    if (res?.status === "success") {
+      toast.success("Edited Personal Details Successfully")
+    }
+    else {
+      toast.error("Something went wrong!!")
+    }
     dispatch(updateLoggedInUserAsync())
   }
 
   const addressHandler = async (e) => {
     e.preventDefault();
-    await updateAddress(formData)
+    const res = await updateAddress(formData)
+    if (res?.status === "success") {
+      toast.success("Address Details Edited Successfully")
+    }
+    else {
+      toast.error("Something went wrong!!")
+    }
   }
 
   // useEffect(() => {
