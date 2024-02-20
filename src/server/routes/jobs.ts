@@ -3,12 +3,19 @@ import { verifyToken, verifyParams } from "@server/middleware/verify"
 import Job from "@server/models/job"
 import { Router } from "express"
 import { getValue } from "@utils/object"
+import IUser from "@types_/user"
 
 const app = Router()
 const handler = new JobHandler()
 
 app.get("/", verifyToken(), async (_, res) => {
-    const jobs = await Job.find().populate({ path: "company" }).populate({ path: "from" }).exec() || []
+    const {session} = res.locals
+    const userId = (session.user as IUser)._id
+    const currentTimestamp = Date.now();
+    const jobs = await Job.find({
+        endsAt: { $gte: currentTimestamp },
+        from: { $ne: userId }
+    }).populate({ path: "company" }).populate({ path: "from" }).exec() || [];
     return res.status(200).send(jobs)
 })
 

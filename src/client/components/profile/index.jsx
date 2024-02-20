@@ -6,7 +6,7 @@ import axios from 'axios';
 import urls, { serverPath, basePath } from '@utils/urls';
 import { selectSession } from '../auth/authSlice';
 import Loading from '../loading';
-import { useGetter, usePoster } from '../../hooks/fetcher';
+import { useGetter, usePutter } from '../../hooks/fetcher';
 import Footer from '../footer';
 import Modal from '../modal';
 import { Autocomplete, Chip, Box, TextField, FormControl, InputLabel, Select, MenuItem, FormControlLabel, RadioGroup, Radio } from '@mui/material';
@@ -69,8 +69,9 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-    const handleFileChange = (e) => {
-        setFiles(e.target.files);
+    const handleFileChange = (event) => {
+        // setFiles(e.target.files);
+        const data = new FormData(event.currentTarget);
     };
     const handleAddAchievement = async (e) => {
         e.preventDefault()
@@ -157,7 +158,6 @@ const ProfileComponent = ({
     }
     const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
     // console.log(jobData)
-
     return (
         <>
             {isLoading ? <Loading></Loading> :
@@ -177,8 +177,20 @@ const ProfileComponent = ({
                             }
 
                             {/* Profile Information */}
-                            <div className="profileInfo">
+                            <div className="profileInfo tempProfile">
                                 <img src={tempUser?.data?.profilePhoto ? serverPath + tempUser?.data?.profilePhoto : tempImage} alt="profileImg" className="profileImg" />
+                                {tempUser?.data?._id === session?.user?._id && <>
+                                    <input
+                                        type="file"
+                                        id="profilePhotoInput"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        style={{ display: 'none' }}
+                                    />
+                                    <span className="material-symbols-rounded profile-edit-button" onClick={() => document.getElementById('profilePhotoInput').click()}>
+                                        edit
+                                    </span>
+                                </>}
                             </div>
                             {/* <p>{fetchedUser.email}</p> */}
                             {/* Profile Details */}
@@ -288,7 +300,9 @@ const ProfileComponent = ({
                                 </div>
                                 {/* Apply for Alumni Form (conditionally rendered) */}
                                 {tempUser?.data?.role === 'student' && connectionData?.data?.length === 0 && tempUser?.data?._id === session.user._id && (
-                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle">
+                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle"
+                                        style={{position:"absolute", bottom: "1rem", right: "1rem"}}
+                                    >
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </Link>
                                 )}

@@ -21,6 +21,14 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
     const session = useSelector(selectSession);
     const [currentSkills, setCurrentSkills] = useState([]);
 
+    const formatDate = (inputDate) => {
+        const date = new Date(inputDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
     const handleAddSkill = async () => {
         const res = await axios.put(
             basePath + urls.skill.create,
@@ -320,7 +328,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                     </div>
                                     {/* <div className="posted-time">Skills: {job.skills}</div> */}
                                     <div className="posted-time">Experience Years: {job.experienceYears}</div>
-                                    <div className="posted-time">Apply Before: {job.endsAt}</div>
+                                    <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                     {/* <div
                                         style={{
                                             display: "flex",
@@ -468,7 +476,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                         </div>
                                         {/* <div className="posted-time">Skills: {job.skills}</div> */}
                                         <div className="posted-time">Experience Years: {job.experienceYears}</div>
-                                        <div className="posted-time">Apply Before: {job.endsAt}</div>
+                                        <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                         {/* <div
                                             style={{
                                                 display: "flex",
