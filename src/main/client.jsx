@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { PersistGate } from 'reduxjs-toolkit-persist/integration/react'
 import './Global.scss'
+import SocketProvider from '@client/context/socket'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <Router />
+            <SocketProvider>
+              <Router />
+            </SocketProvider>
           </PersistGate>
         </Provider>
       </ThemeProvider>
