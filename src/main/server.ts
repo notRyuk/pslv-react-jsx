@@ -19,8 +19,8 @@ const server = createServer(app)
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "*",
-        credentials: false
+        origin: "http://localhost:5173",
+        credentials: true
     }
 })
 const createRateLimit = () => rateLimit({
@@ -40,7 +40,10 @@ const createRateLimit = () => rateLimit({
 
 app.set("io", io)
 
-app.use(cors())
+app.use(cors({
+    origin: ["http://localhost:5173"],
+    credentials: true
+}))
 app.use(requestIP())
 app.use(createRateLimit())
 app.use(compression())

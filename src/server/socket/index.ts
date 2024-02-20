@@ -8,6 +8,7 @@ import { Payload } from "@types_/user/session";
 import Session from "@server/models/user/session";
 import IUser from "@types_/user";
 import { Request } from "express";
+import logger from "@server/logger/winston";
 
 const handler = new ErrorHandler("socket")
 
@@ -30,11 +31,11 @@ const mountParticipantStoppedTypingEvent = (socket: Socket) => {
     });
 };
 
-export const initializeSocketIO = (io: Server) => {
+export const initializeSocketIO = (io: Server): Server => {
     return io.on("connection", async (socket: Socket) => {
         try {
             const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
-            let token = cookies?.accessToken; // get the accessToken
+            let token = cookies?.accessToken;
             if (!token) {
                 token = socket.handshake.auth?.token;
             }
@@ -43,7 +44,7 @@ export const initializeSocketIO = (io: Server) => {
                 return handler.error("Invalid Token")
             }
             const decodedToken = jwt.verify(token, JWT_SECRET) as Payload;
-            const session = await Session.findById(decodedToken?._id).populate("user")
+            const session = await Session.findOne({ token }).populate("user")
             if (!session) {
                 handler.error(handler.STATUS_404)
             }
@@ -51,7 +52,7 @@ export const initializeSocketIO = (io: Server) => {
             (socket as any).user = user;
             socket.join(user._id.toString());
             socket.emit(ChatEvent.CONNECTED_EVENT);
-            console.log("User connected 🗼. userId: ", user._id.toString());
+            logger.info("User connected 🗼. userId: ".concat(user._id.toString()));
             mountJoinChatEvent(socket);
             mountParticipantTypingEvent(socket);
             mountParticipantStoppedTypingEvent(socket);

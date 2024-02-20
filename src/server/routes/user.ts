@@ -10,9 +10,12 @@ import IConnectionRequest from "@types_/user/connection-request";
 import { getValue } from "@utils/object";
 import { Request, Response, Router } from "express";
 import ISession from "@types_/user/session";
+import Multer from "multer"
+import { downloadFile } from "@utils/file";
 
 const app = Router()
 const handler = new UserHandler()
+const multer = Multer()
 
 app.get("/all-users", verifyToken(), async (_, res) => {
     const { session } = res.locals
@@ -47,8 +50,6 @@ app.get("/all-users", verifyToken(), async (_, res) => {
         []
     );
     const allUserIds = Array.from(new Set([...connectionRequestUserIds, ...connectionUserIds]));
-    // console.log(connectionUserIds);
-
     const allUsers = await User.find({
         _id: { $nin: [(session.user as IUser)._id, ...allUserIds] },
     });
@@ -130,7 +131,6 @@ app.put(
         }
         for (const key of (keys as string[])) {
             user.set(key, getValue(keys, values, key))
-
         }
         const updatedUser = await user.save()
         if (!updatedUser) {
@@ -140,13 +140,43 @@ app.put(
     }
 )
 
-app.get("/", verifyToken(), async(_, res)=>{
+app.get("/", verifyToken(), async (_, res) => {
     const { session } = res.locals
     const user = await User.findById(((session as ISession).user as IUser)._id)
-    if(!user) {
-        return res.status(404).send(handler.error(handler.MISSING_AUTH_HEADER))
+    if (!user) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
     }
     return res.status(200).send(handler.success(user))
 })
+
+app.put(
+    "/updateProfilePhoto",
+    verifyToken(),
+    multer.single("profile"),
+    async (req, res) => {
+        const { session } = res.locals
+        const user = await User.findById((session.user as IUser)._id)
+        if (!user) {
+            return res.status(404).send(handler.error(handler.STATUS_404))
+        }
+        const file = req.file as Express.Multer.File
+        if(!file) {
+            return res.status(200).send(handler.success("Nothing to update!"))
+        }
+        if(!["image/png", "image/jpeg"].includes(file.mimetype)) {
+            return res.status(404).send(handler.STATUS_404+" Invalid File type!")
+        }
+        const profilePhoto = await downloadFile("profilePhoto." + file.originalname.split(".").pop(), user._id.toString(), file.buffer)
+        if(!profilePhoto) {
+            return res.status(404).send(handler.STATUS_404)
+        }
+        user.set("profilePhoto", profilePhoto)
+        const updatedUser = await user.save()
+        if (!updatedUser) {
+            return res.status(404).send(handler.error(handler.STATUS_404))
+        }
+        return res.status(200).send(handler.success(updatedUser))
+    }
+)
 
 export default app
