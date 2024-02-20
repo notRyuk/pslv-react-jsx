@@ -118,7 +118,6 @@ export default function Institute() {
 
     const session = useSelector(selectSession)
     const handleFormSubmit = async () => {
-        console.log(formData)
         const res = await axios.post(basePath+urls.institute.create, formData, {
             headers: {
                 authorization: `Bearer ${session?.token}`

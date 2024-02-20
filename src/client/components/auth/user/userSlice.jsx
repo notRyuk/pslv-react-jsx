@@ -8,6 +8,7 @@ import {
 const initialState = {
   status: 'idle',
   userInfo: null,
+  jobs: [],
   users: [] // this info will be used in case of detailed user info, while auth will
   // only be used for loggedInUser id etc checks
 };
@@ -35,7 +36,6 @@ export const fetchUserByIdAsync = createAsyncThunk(
   async (id) => {
     const response = await fetchUserById(id);
     // The value we return becomes the `fulfilled` action payload
-    // console.log(response.data);
     return response.data;
   }
 );
@@ -55,6 +55,9 @@ export const userSlice = createSlice({
   reducers: {
    getAllUsers: (state, action) => {
     state.users = action.payload;
+   },
+   getAllJobs: (state, action)=>{
+    state.jobs = action.payload;
    }
   },
   extraReducers: (builder) => {
@@ -91,7 +94,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const {getAllUsers} = userSlice.actions;
+export const {getAllUsers, getAllJobs} = userSlice.actions;
 
 // export const selectUserOrders = (state) => state.user.userOrders;
 export const selectUserInfo = (state) => state.user.userInfo;

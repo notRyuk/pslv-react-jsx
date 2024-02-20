@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { checkUser, createUser, signOut } from "./authAPI";
+import { checkUser, createUser, signOut, updateLoggedInUser } from "./authAPI";
 import { updateUser } from "./user/userAPI";
 
 const initialState = {
   isUserCreated: false,
   loggedInUser: JSON.parse(localStorage.getItem('session')) || null,
+  updatedLoggedInUser: null,
   createdUser: null,
   status: "idle",
   error: null,
@@ -15,7 +16,6 @@ export const createUserAsync = createAsyncThunk(
   async (userData) => {
     const response = await createUser(userData);
     // The value we return becomes the `fulfilled` action payload
-    console.log(response);
     return response.data;
   }
 );
@@ -29,6 +29,14 @@ export const updateUserAsync = createAsyncThunk(
   }
 );
 
+export const updateLoggedInUserAsync = createAsyncThunk(
+  'user/updateLoggedInuser',
+  async()=>{
+    const res = await updateLoggedInUser();
+    // console.log(res.data);
+    return res.data;
+  }
+)
 
 export const checkUserAsync = createAsyncThunk(
   "user/checkUser",
@@ -84,6 +92,13 @@ export const authSlice = createSlice({
         state.status = 'idle';
         state.createdUser = action.payload;
       })
+      .addCase(updateLoggedInUserAsync.pending,(state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateLoggedInUserAsync.fulfilled, (state, action)=>{
+        state.status = "idle";
+        state.updatedLoggedInUser = action.payload;
+      })
       .addCase(signOutAsync.pending, (state) => {
         state.status = 'loading';
       })
@@ -91,16 +106,17 @@ export const authSlice = createSlice({
         state.status = 'idle';
         localStorage.removeItem("session")
         state.loggedInUser = null;
+        state.updatedLoggedInUser = null
       })
+
   },
 });
 
-export const selectLoggedInUser = (state) => state.auth.loggedInUser?.user;
+export const selectLoggedInUser = (state) => state.auth.updatedLoggedInUser || state.auth.loggedInUser?.user;
 export const selectSession = (state) => state.auth.loggedInUser;
 export const selectCreatedUser = (state) => state.auth.createdUser;
 export const selectError = (state) => state.auth.error;
 export const selectUserCreated = (state) => state.auth.isUserCreated;
-
 export const selectLoginStatus = (state) => state.auth.status;
 
 // export const { } = authSlice.actions;

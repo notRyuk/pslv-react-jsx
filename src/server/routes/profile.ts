@@ -6,6 +6,7 @@ import User from "@server/models/user";
 import Profile from "@server/models/user/profile";
 import IUser from "@types_/user";
 import ISession from "@types_/user/session";
+import IProfile from "@types_/user/profile";
 import { getValue } from "@utils/object";
 import { Router } from "express";
 
@@ -18,7 +19,6 @@ app.post("/create", verifyToken(), verifyBody(["role"]), async (req, res) => {
     if(!user) {
         return res.status(404).send(handler.error(handler.MISSING_AUTH_HEADER))
     }
-    console.log(values[0])
     const address = await Address.create(req.body?.address)
     let profile =  new Profile({
         address: address._id
@@ -72,34 +72,64 @@ app.put("/add-skill", verifyToken(), verifyBody(["skill"]), async (_, res) => {
     return res.status(200).send(handler.success(updatedProfile))
 })
 
-
-
-app.put("/:id", verifyToken(), verifyBody([]), async (req, res) => {
-    let profile = await Profile.findById(req.params.id)
+app.get('/getAddress', verifyToken(), async(_, res)=>{
+    const { session } = res.locals
+    const profileId = (session.user as IUser).profile
+    if(!profileId) {
+        return res.status(404).send(handler.error("Profile id not found! Please create the profile"))
+    }
+    const profile = await Profile.findById(profileId)
     if(!profile) {
+        return res.status(404).send(handler.error("User profile not found! Please create the profile"))
+    }
+    const addressId = (profile as IProfile).address
+    const address = await Address.findById(addressId)
+    if(!address) {
+        return res.status(404).send(handler.error("User address not found! Please create the profile"))
+    }
+    return res.status(200).send(handler.success(address))
+})
+
+app.put("/updateAddress", verifyToken(), verifyBody([]), async (_, res) => {
+    const { keys, values, session } = res.locals
+    const profileId = (session.user as IUser).profile
+    if(!profileId) {
+        return res.status(404).send(handler.error("Profile id not found! Please create the profile"))
+    }
+    const profile = await Profile.findById(profileId)
+    if(!profile) {
+        return res.status(404).send(handler.error("User profile not found! Please create the profile"))
+    }
+    const addressId = (profile as IProfile).address
+    const address = await Address.findById(addressId)
+    if(!address) {
+        return res.status(404).send(handler.error("User address not found! Please create the profile"))
+    }
+    for(const key of keys as string[]){
+        address.set(key, getValue(keys, values, key))
+    }
+    const updatedAddress = await address.save();
+    if (!updatedAddress) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    // return res.status(200).send(handler.success(updatedAddress))
+    // if(keys.includes("skills")) {
+    //     profile.set("skills", getValue(keys, values, "skills"))
+    // }
+    // if(keys.includes("workExperience")) {
+    //     profile.set("workExperience", getValue(keys, values, "workExperience"))
+    // }
+    // if(keys.includes("education")) {
+    //     profile.set("education", getValue(keys, values, "education"))
+    // }
+    // if(keys.includes("achievements")) {
+    //     profile.set("achievements", getValue(keys, values, "achievements"))
+    // }
+    const updatedProfile = await profile.save()
+    if(!updatedProfile) {
         return res.status(400).send(handler.error(handler.STATUS_404))
     }
-    const { keys, values } = res.locals
-    if(keys.includes("education")) {
-        profile.set("education", getValue(keys, values, "education"))
-    }
-    if(keys.includes("achievements")) {
-        profile.set("achievements", getValue(keys, values, "achievements"))
-    }
-    if(keys.includes("address")) {
-        profile.set("address", req.body?.address)
-    }
-    if(keys.includes("skills")) {
-        profile.set("skills", getValue(keys, values, "skills"))
-    }
-    if(keys.includes("workExperience")) {
-        profile.set("workExperience", getValue(keys, values, "workExperience"))
-    }
-    profile = await profile.save()
-    if(!profile) {
-        return res.status(400).send(handler.error(handler.STATUS_404))
-    }
-    return res.status(200).send(handler.success(profile))
+    return res.status(200).send(handler.success(updatedProfile))
 })
 
 app.delete("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {

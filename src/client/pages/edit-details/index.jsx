@@ -20,9 +20,9 @@ const Index = () => {
   );
 };
 
-export const layout = {
-  hasFooter: false,
-  hasHeader: false
-}
+// export const layout = {
+//   hasFooter: false,
+//   hasHeader: false
+// }
 
 export default Index;

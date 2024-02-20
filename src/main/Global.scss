@@ -559,7 +559,7 @@ a:hover {
 }
 
 .suggestedCard {
-  box-shadow: 4px 4px 5px 1px #000000;
+  box-shadow: 1px 1px 20px 0px black;
 }
 
 /* event */
@@ -606,7 +606,7 @@ a:hover {
   margin: 2% 1%;
   max-width: 30%;
   background-color: #1b2730;
-  box-shadow: 4px 4px 5px 1px #000000;
+  box-shadow: 1px 1px 20px 0px black;
   border-radius: 10px;
 }
 
@@ -701,7 +701,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
-  box-shadow: -4px 4px 5px 1px #000000;
+  box-shadow: 1px 1px 20px 0px black;
   height: 600px;
 }
 
@@ -758,7 +758,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   font-family: Arial, sans-serif;
-  box-shadow: -4px 4px 5px 1px #000000;
+  box-shadow: 1px 1px 20px 0px black;
 }
 
 #chat-header {
@@ -1182,7 +1182,7 @@ a:hover {
   text-align: center;
   padding: 24px;
   background-color: #1b2730;
-  box-shadow: -4px 4px 5px 1px black;
+  box-shadow: 1px 1px 20px 0px black;
   color: white;
 }
 
@@ -1323,7 +1323,7 @@ a:hover {
   padding: 0.5rem 0.25rem;
   display: flex;
   border-radius: 7px;
-  box-shadow: 4px 4px 5px 1px #000000;
+  box-shadow: 1px 1px 20px 0px black;
 }
 
 .notification--card--heading p {

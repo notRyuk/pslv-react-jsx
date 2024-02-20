@@ -20,7 +20,6 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
     const [skills, setSkills] = useState([]);
     const session = useSelector(selectSession);
     const [currentSkills, setCurrentSkills] = useState([]);
-    // console.log(jobData);
 
     const handleAddSkill = async () => {
         const res = await axios.put(
@@ -33,7 +32,6 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
             }
         );
         if (res?.data) {
-            console.log(res?.data);
             setShowSkillModal(false);
             setChangedSkill("");
             tempUserMutate();
@@ -55,7 +53,6 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
         const data = structuredClone(formData)
         data.company = company
         data.skills = currentSkills.map(e => e._id)
-        console.log(data);
         // for(const entry of data.entries()){
         //     console.log(entry);
         // }
@@ -185,7 +182,6 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        onChange={(e) => console.log(e.target.value)}
                                     />
                                 )}
                                 value={changedSkill}

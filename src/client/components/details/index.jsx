@@ -24,14 +24,12 @@ export default function Details(props) {
     data.append("email", props.credential.email)
     data.append("password", props.credential.password)
     data.append("role", props.credential.role)
-    console.log(data)
     dispatch(createUserAsync(data))
   };
 
   return (
     <>
       {isUserCreated && <Navigate to="/signin" replace={true}></Navigate>}
-      {/* {console.log(`${'details' in user}`)} */}
       <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box

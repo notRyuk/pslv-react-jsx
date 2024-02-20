@@ -33,7 +33,6 @@ export default function SignUp() {
   const user = useSelector(selectCreatedUser);
   const [selectedValue, setSelectedValue] = useState('student');
   // const {data: userData} = useGetter(basePath+urls.auth.getUserByEmail.replace(":email", "hello@gmail.com"))
-  // console.log(userData);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

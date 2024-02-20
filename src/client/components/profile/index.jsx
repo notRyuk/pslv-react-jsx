@@ -145,7 +145,6 @@ const ProfileComponent = ({
 
     const { values: formData, resetForm, handleChange: handleChangeFormData } = form
     const handleAddEducation = async (e) => {
-        console.log(formData)
         setShowEducationModal(false)
         const res = await axios.post(basePath + urls.education.create, formData, {
             headers: {
@@ -156,7 +155,7 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", session.user._id))
+    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
     // console.log(jobData)
 
     return (
@@ -169,13 +168,13 @@ const ProfileComponent = ({
                         <div className="card profileCard-profile">
                             {/* Cover and Edit Button */}
                             <div className="cover"></div>
-                            {/* {
+                            {
                                 tempUser?.data?._id === session.user._id && (
                                     <Link to="/edit-details">
                                         <span className="material-symbols-rounded cover-edit">edit</span>
                                     </Link>
                                 )
-                            } */}
+                            }
 
                             {/* Profile Information */}
                             <div className="profileInfo">
@@ -423,10 +422,10 @@ const ProfileComponent = ({
                                 <div className="education-container">
                                     <div className="education-main" style={{ flexDirection: "column" }}>
                                         {/* <img src="/images/college.png" height="100px" width="100px" alt="college-logo" /> */}
-                                        {tempUser?.data?.profile?.education?.length > 0 ? tempUser?.data?.profile?.education?.map(ed => (
-                                            <div style={{ fontSize: '12px', borderBottom: "1px solid white" }}>
+                                        {tempUser?.data?.profile?.education?.length > 0 ? tempUser?.data?.profile?.education?.map((ed, id) => (
+                                            <div style={{ fontSize: '12px', borderBottom: "1px solid white" }} key={id}>
                                                 <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                                                    {ed.institute.name}
+                                                    {ed?.institute?.name}
                                                 </div>
                                                 <div>
                                                     Joined in {ed?.joined} <span style={{ fontSize: '15px' }}>•</span> Education Type : {ed?.type}
@@ -468,7 +467,7 @@ const ProfileComponent = ({
                                     {tempUser?.data?.profile?.skills?.length > 0 ? (
                                         tempUser?.data?.profile?.skills?.map((skill, index) => (
                                             <div key={index} className="skill-main">
-                                                <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{skill.name}</div>
+                                                <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{skill?.name}</div>
                                             </div>
                                         ))
                                     ) : (
@@ -522,35 +521,6 @@ const ProfileComponent = ({
 
                     {/* Right Container */}
                     <div className="container-right content">
-                        {/* <div className="card left-group" style={{ color: '#cacaca' }}>
-                    <h6>Connect with more people.....</h6>
-                    {users.map((reqUser) => (
-                        <form key={requser?.user} action="/api/connection/create" method="post">
-                            <div className="card left-group" style={{ color: '#cacaca' }}>
-                                <h6>Connect with more people.....</h6>
-                                {users.map((reqUser, index) => (
-                                    <form key={index} action="/api/connection/create" method="post">
-                                        <div className="connectSuggestion">
-                                            <Link to={`/profile/${requser?.user}`}>
-                                                <div className="connectProfile">
-                                                    <img src={requser?.imageUrl} alt="personImg" />
-                                                    <div className="connectInfo">
-                                                        <strong>{requser?.firstname} {requser?.lastname}</strong>
-                                                        <small>{requser?.bio}</small>
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                            <input type="hidden" name="from" value={user?.user} />
-                                            <input type="hidden" name="to" value={requser?.user} />
-                                            <input type="hidden" name="type" value="MUTUAL" />
-                                            <button type="submit">Connect</button>
-                                        </div>
-                                    </form>
-                                ))}
-                            </div>
-                        </form>
-                    ))}
-                </div> */}
                         {
                             (others || Object.keys(tempUser?.data).includes("profile")) ? <></> : <button className='btn btn-primary btn-outline' onClick={() => setShowAddressModal(true)}>Complete Your Profile</button>
                         }

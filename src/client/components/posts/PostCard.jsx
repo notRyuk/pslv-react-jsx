@@ -39,7 +39,6 @@ const PostCard = (props) => {
                     authorization: `Bearer ${session.token}`,
                 },
             });
-            console.log(res);
         } catch (error) {
             console.error("Error while sending comment:", error);
         }

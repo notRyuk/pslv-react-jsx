@@ -25,7 +25,6 @@ const AluminiRequestCard = (props) => {
                     authorization: `Bearer ${session.token}`,
                 }
             });
-            // console.log(response.data);
             props.requestMutate();
         } catch (error) {
             console.error("Error deleting connection request:", error);
