@@ -295,7 +295,7 @@ export default function PrimarySearchAppBar() {
     }
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && location.pathname.includes("/jobs")) {
             navigate(`/jobs-filter-results/${input}`);
             setBlur(true)
         }
@@ -330,7 +330,7 @@ export default function PrimarySearchAppBar() {
                             onFocus={() => setBlur(false)}
                             onKeyDown={handleKeyDown}
                         />
-                        {!blur && <SearchList results={searchResults} setSearchResults={setSearchResults} setInput={setInput} setBlur={setBlur} />}
+                        {!blur && !location.pathname.includes("/jobs") && <SearchList results={searchResults} setSearchResults={setSearchResults} setInput={setInput} setBlur={setBlur} />}
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box

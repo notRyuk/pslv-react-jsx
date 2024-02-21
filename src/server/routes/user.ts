@@ -105,7 +105,8 @@ app.put("/promote/:user/:role", verifyToken(), verifyAdmin(), verifyParams(["use
 })
 
 app.get('/get-all', verifyToken(), async (_, res) => {
-    const users = await User.find();
+    const { session } = res.locals
+    const users = await User.find({ _id: { $ne: (session.user as IUser)._id } });
     if (!users) {
         return res.status(404).json(handler.error(handler.STATUS_404))
     }
