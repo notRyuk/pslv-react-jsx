@@ -28,14 +28,15 @@ app.get("/:id", verifyToken(), verifyParams(["id"]),async (_, res) => {
 })
 
 // Search jobs by title
-app.get("/search", verifyToken(), async (req, res) => {
-    const { title } = req.query;
+app.get("/search/:title", verifyToken(), verifyParams(["title"]), async (req, res) => {
+    const { keys, values } = res.locals;
+    const title = getValue(keys, values, "title")
     if (!title) {
         return res.status(400).json(handler.error(handler.STATUS_404));
     }
     const jobs = await Job.find({
         title: { $regex: new RegExp(title?.toString(), "i") }, // Case-insensitive search
-    }).populate("company");
+    }).populate({ path: "company" }).populate({ path: "from" }).exec() || [];
     
     if (!jobs) {
         return res.status(404).send(handler.error(handler.STATUS_404))

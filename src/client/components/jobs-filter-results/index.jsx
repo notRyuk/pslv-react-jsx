@@ -1,100 +1,36 @@
 import React from 'react';
 import Footer from '../footer';
+import { Link, useParams } from 'react-router-dom';
+import { basePath, serverPath } from '../../../utils/urls';
+import urls from '../../../utils/urls';
+import { useGetter } from '../../hooks/fetcher';
+import { useSelector } from "react-redux";
+import { selectSession } from "../auth/authSlice";
+import tempImage from "@client/assets/images/profile.png";
 
 export default function JobsFilter({ style }) {
-    // Sample data for demonstration
-    const filterResults = [
-        {
-            _id: 1,
-            from: {
-                profilePhoto: 'profile1.jpg',
-                name: { first: 'John', last: 'Doe' },
-                bio: 'Front-end Developer',
-            },
-            title: 'Front-end Developer',
-            description: 'Exciting front-end development position',
-            company: { name: 'TechCo' },
-            experienceYears: 3,
-            endsAt: '2024-03-01',
-        },
-        {
-            _id: 1,
-            from: {
-                profilePhoto: 'profile1.jpg',
-                name: { first: 'John', last: 'Doe' },
-                bio: 'Front-end Developer',
-            },
-            title: 'Front-end Developer',
-            description: 'Exciting front-end development position',
-            company: { name: 'TechCo' },
-            experienceYears: 3,
-            endsAt: '2024-03-01',
-        },
-        {
-            _id: 1,
-            from: {
-                profilePhoto: 'profile1.jpg',
-                name: { first: 'John', last: 'Doe' },
-                bio: 'Front-end Developer',
-            },
-            title: 'Front-end Developer',
-            description: 'Exciting front-end development position',
-            company: { name: 'TechCo' },
-            experienceYears: 3,
-            endsAt: '2024-03-01',
-        },
-        {
-            _id: 1,
-            from: {
-                profilePhoto: 'profile1.jpg',
-                name: { first: 'John', last: 'Doe' },
-                bio: 'Front-end Developer',
-            },
-            title: 'Front-end Developer',
-            description: 'Exciting front-end development position',
-            company: { name: 'TechCo' },
-            experienceYears: 3,
-            endsAt: '2024-03-01',
-        },
-        {
-            _id: 1,
-            from: {
-                profilePhoto: 'profile1.jpg',
-                name: { first: 'John', last: 'Doe' },
-                bio: 'Front-end Developer',
-            },
-            title: 'Front-end Developer',
-            description: 'Exciting front-end development position',
-            company: { name: 'TechCo' },
-            experienceYears: 3,
-            endsAt: '2024-03-01',
-        },
-        {
-            _id: 1,
-            from: {
-                profilePhoto: 'profile1.jpg',
-                name: { first: 'John', last: 'Doe' },
-                bio: 'Front-end Developer',
-            },
-            title: 'Front-end Developer',
-            description: 'Exciting front-end development position',
-            company: { name: 'TechCo' },
-            experienceYears: 3,
-            endsAt: '2024-03-01',
-        }
-        
-    ];
+    const session = useSelector(selectSession)
+    const params = useParams();
+    console.log(params.title)
+    const { data: filterResults, mutate: filterMutate } = useGetter(basePath + urls.job.searchByTitle.replace(":title", params.title))
 
+    const formatDate = (inputDate) => {
+        const date = new Date(inputDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
     return (
         <>
 
-            <div className="row" style={{marginTop: "1.5rem", padding: "3%" }}>
-                <div className="col-9 p-4" style={{backgroundColor:"#1b2730", borderRadius:"10px"}}>
+            <div className="row" style={{ marginTop: "1.5rem", padding: "3%" }}>
+                <div className="col-9 p-4" style={{ backgroundColor: "#1b2730", borderRadius: "10px" }}>
                     <h3 className=' ms-2'>Filtered Results</h3>
                     <hr />
                     <hr />
                     <div className="job-cards-container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(30%, 1fr))", gap: "20px" }}>
-                        {filterResults?.map((job) => (
+                        {filterResults?.data.length ? filterResults?.data?.map((job) => (
                             <div className="card m-2" key={job._id} style={{ boxShadow: "1px 1px 20px 0px black" }}>
                                 <div className="userProfile">
                                     <div className="profileImgPost">
@@ -134,7 +70,7 @@ export default function JobsFilter({ style }) {
                                     <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                 </div>
                             </div>
-                        ))}
+                        )) : <h1>No Jobs found</h1>}
                     </div>
                 </div>
                 <div className="col-3"><Footer /></div>
@@ -142,13 +78,3 @@ export default function JobsFilter({ style }) {
         </>
     );
 }
-
-// Function to format date (you may need to implement this)
-function formatDate(date) {
-    // Implement date formatting logic as needed
-    return date;
-}
-
-// Assuming serverPath and tempImage are defined somewhere in your code
-const serverPath = 'https://example.com/';
-const tempImage = 'temp-image.jpg';
