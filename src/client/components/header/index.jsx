@@ -32,6 +32,7 @@ import { SearchList } from "./SearchList";
 import axios from "axios";
 import { basePath } from "../../../utils/urls";
 import urls from "../../../utils/urls";
+import { useNavigate } from 'react-router-dom';
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -73,7 +74,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
 
@@ -292,6 +293,14 @@ export default function PrimarySearchAppBar() {
         })
         setSearchResults(filteredResult)
     }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            navigate(`/jobs-filter-results/${input}`);
+            setBlur(true)
+        }
+    };
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             {!blur && input && <div className={classes.backdropCreated} />}
@@ -318,10 +327,10 @@ export default function PrimarySearchAppBar() {
                             inputProps={{ "aria-label": "search" }}
                             value={input}
                             onChange={(e) => handleChange(e.target.value)}
-                            // onBlur={() => setBlur(true)}
                             onFocus={() => setBlur(false)}
+                            onKeyDown={handleKeyDown}
                         />
-                        {!blur && <SearchList results={searchResults} setSearchResults={setSearchResults} setInput={setInput} setBlur = {setBlur}/>}
+                        {!blur && <SearchList results={searchResults} setSearchResults={setSearchResults} setInput={setInput} setBlur={setBlur} />}
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box
