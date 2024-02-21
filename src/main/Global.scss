@@ -1688,6 +1688,20 @@ a:hover {
   gap: 3rem;
 } 
 
+.tempProfile{
+  position: relative;
+}
+
+.profile-edit-button{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 1.2rem;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 // div.container--main--index > h1#heading-text {
 // 	position: relative;
 // }

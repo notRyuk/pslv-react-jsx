@@ -6,7 +6,7 @@ import {
     Button
 } from "@mui/material"
 
-export default function Modal({ children, handleSubmit, open, setOpen, title, buttonType }) {
+export default function CustomModal({ children, handleSubmit, open, setOpen, title, buttonType }) {
     const handleClose = () => setOpen(false)
     return (
         <Dialog

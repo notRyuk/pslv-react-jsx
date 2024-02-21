@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { selectSession, selectLoggedInUser } from "@client/components/auth/authSlice";
 import axios from "axios";
 import tempImage from "@client/assets/images/profile.png"
+import { toast } from 'react-toastify';
 
 const PostCard = (props) => {
     const [likeInteract, setLikeIneract] = useState([])
@@ -39,6 +40,12 @@ const PostCard = (props) => {
                     authorization: `Bearer ${session.token}`,
                 },
             });
+            if (res?.status === 200) {
+                toast.success("Commented Successfully")
+            }
+            else {
+                toast.error("Something went wrong!!")
+            }
         } catch (error) {
             console.error("Error while sending comment:", error);
         }

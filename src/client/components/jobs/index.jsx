@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { selectSession } from "../auth/authSlice";
 import styles from "./styles.module.scss";
 import tempImage from "@client/assets/images/profile.png"
+import { toast } from "react-toastify";
 
 const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
     const [company, setCompany] = useState("");
@@ -21,6 +22,14 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
     const session = useSelector(selectSession);
     const [currentSkills, setCurrentSkills] = useState([]);
 
+    const formatDate = (inputDate) => {
+        const date = new Date(inputDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
     const handleAddSkill = async () => {
         const res = await axios.put(
             basePath + urls.skill.create,
@@ -31,18 +40,13 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                 },
             }
         );
-        if (res?.data) {
-            setShowSkillModal(false);
-            setChangedSkill("");
-            tempUserMutate();
-        }
     };
     const initial = {
         title: "",
         company: "",
         description: "",
-        endsAt: -1,
-        experienceYears: 0
+        endsAt: "",
+        experienceYears: ""
     }
     const [formData, setFormData] = useState(initial)
 
@@ -61,6 +65,15 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                 authorization: `Bearer ${session?.token}`
             }
         })
+        if(res?.status === 200){
+            setFormData(initial)
+            setCompany("");       // Reset company field
+            setCurrentSkills([]);
+            toast.success("Job Posted Successfully")
+        }
+        else{
+            toast.error("Something went wrong!!")
+        }
         jobMutate()
     }
 
@@ -144,10 +157,12 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                     <TextField
                                         name="company"
                                         {...params}
+                                        value={company}
                                         onChange={(e) => setCompany(e.target.value)}
                                     />
                                 )}
                                 onChange={(_, value) => setCompany(value)}
+                                value={company}
                             />
 
                             <label className="jobLabel" htmlFor="job-description">
@@ -229,6 +244,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                 type="date"
                                 id="job-location"
                                 name="endsAt"
+                                value={formData.endsAt}
                                 onChange={handleChangeFormData}
                                 required
                             />
@@ -241,6 +257,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                 type="number"
                                 id="job-salary"
                                 name="experienceYears"
+                                value={formData.experienceYears}
                                 onChange={handleChangeFormData}
                                 required
 
@@ -320,7 +337,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                     </div>
                                     {/* <div className="posted-time">Skills: {job.skills}</div> */}
                                     <div className="posted-time">Experience Years: {job.experienceYears}</div>
-                                    <div className="posted-time">Apply Before: {job.endsAt}</div>
+                                    <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                     {/* <div
                                         style={{
                                             display: "flex",
@@ -468,7 +485,7 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                         </div>
                                         {/* <div className="posted-time">Skills: {job.skills}</div> */}
                                         <div className="posted-time">Experience Years: {job.experienceYears}</div>
-                                        <div className="posted-time">Apply Before: {job.endsAt}</div>
+                                        <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                         {/* <div
                                             style={{
                                                 display: "flex",

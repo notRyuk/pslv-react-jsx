@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import urls, { basePath } from '../../../utils/urls';
 import { useGetter } from '../../hooks/fetcher';
 import { selectSession } from '../auth/authSlice';
+import { toast } from 'react-toastify';
 
 
 const EditNewsModal = ({ show, handleClose, newsData, session }) => {
@@ -20,6 +21,12 @@ const EditNewsModal = ({ show, handleClose, newsData, session }) => {
                 authorization: `Bearer ${session.token}`
             }
         })
+        if (res?.status === 200) {
+            toast.success("Edited News Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         if (res?.data) {
             handleClose();
         }
@@ -31,6 +38,12 @@ const EditNewsModal = ({ show, handleClose, newsData, session }) => {
                 authorization: `Bearer ${session.token}`
             }
         })
+        if (res?.status === 200) {
+            toast.warning("Deleted News Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         if (res?.data) {
             handleClose();
         }
@@ -106,10 +119,10 @@ const NewsCard = () => {
 
     };
 
-    const handleAddNews = (e) => {
+    const handleAddNews = async (e) => {
         e.preventDefault()
         const data = new FormData(e.currentTarget)
-        const res = axios.post(newsCreateUrl, {
+        const res = await axios.post(newsCreateUrl, {
             "title": data.get("title"),
             "description": data.get("description") || ""
         }, {
@@ -117,6 +130,12 @@ const NewsCard = () => {
                 authorization: `Bearer ${session.token}`
             }
         })
+        if (res?.status === 200) {
+            toast.success("Added News Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         handleAddModalClose();
     };
 

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { serverPath } from '../../../utils/urls';
 import { selectLoggedInUser, selectSession } from '../auth/authSlice';
+import { toast } from "react-toastify";
 
 const PostOptions = ({ isPostChanged, setIsPostChanged }) => {
     const tempUser = useSelector(selectLoggedInUser);
@@ -27,6 +28,12 @@ const PostOptions = ({ isPostChanged, setIsPostChanged }) => {
                 authorization: `Bearer ${session.token}`
             },
         });
+        if (res?.status === 200) {
+            toast.success("Posted Photo Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         setPostCaption('');
         setPostImages([]);
         setIsPostChanged(!isPostChanged);
@@ -41,6 +48,12 @@ const PostOptions = ({ isPostChanged, setIsPostChanged }) => {
                 authorization: `Bearer ${session.token}`
             },
         });
+        if (res?.status === 200) {
+            toast.success("Added article Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
         setPostCaption('');
         setIsPostChanged(!isPostChanged);
     }

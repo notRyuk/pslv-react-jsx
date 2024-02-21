@@ -107,9 +107,9 @@ export default function SignIn() {
                 },
               }}
             />
-            <Typography variant="body2" color="error">
+            {/* <Typography variant="body2" color="error">
               {error && error.message}
-            </Typography>
+            </Typography> */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}

@@ -6,19 +6,20 @@ import { useTheme } from '@mui/material/styles';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConnectedWorld from '../../assets/images/connected-world.png';
-import { selectLoggedInUser, selectSession, updateLoggedInUserAsync } from '../auth/authSlice';
+import { selectSession, updateLoggedInUserAsync } from '../auth/authSlice';
 import { basePath } from '../../../utils/urls';
 import { usePutter, useGetter } from '../../hooks/fetcher';
 import urls from '../../../utils/urls';
+import { toast } from 'react-toastify';
 
 const GetUserDetails = () => {
-  const loggedInUser = useSelector(selectLoggedInUser);
   const session = useSelector(selectSession)
   const dispatch = useDispatch()
 
   const { data: updatedUser, trigger: updateUser } = usePutter(basePath + urls.user.update)
   const { data: updatedAddress, trigger: updateAddress } = usePutter(basePath + urls.user.address.update)
   const { data: addressData, mutate: addressMutate } = useGetter(basePath + urls.user.address.get)
+  const { data: loggedInUser, mutate: loggedInUserMutate } = useGetter(basePath + urls.user.profile.get.replace(':id', session?.user?._id))
 
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -37,11 +38,11 @@ const GetUserDetails = () => {
   };
 
   useEffect(() => {
-    setFirstname(loggedInUser?.name.first)
-    setLastname(loggedInUser?.name.last)
-    setDob(formatDate(loggedInUser?.dob))
-    setPhone(loggedInUser?.phone)
-    setBio(loggedInUser?.bio)
+    setFirstname(loggedInUser?.data?.name.first)
+    setLastname(loggedInUser?.data?.name.last)
+    setDob(formatDate(loggedInUser?.data?.dob))
+    setPhone(loggedInUser?.data?.phone)
+    setBio(loggedInUser?.data?.bio)
     setFormData({
       name: addressData?.data.name,
       buildingName: addressData?.data.buildingName,
@@ -65,7 +66,7 @@ const GetUserDetails = () => {
   };
 
   const clickHandler = async () => {
-    await updateUser({
+    const res = await updateUser({
       name: {
         first: firstname,
         last: lastname
@@ -74,12 +75,24 @@ const GetUserDetails = () => {
       bio,
       dob
     })
+    if (res?.status === "success") {
+      toast.success("Edited Personal Details Successfully")
+    }
+    else {
+      toast.error("Something went wrong!!")
+    }
     dispatch(updateLoggedInUserAsync())
   }
 
   const addressHandler = async (e) => {
     e.preventDefault();
-    await updateAddress(formData)
+    const res = await updateAddress(formData)
+    if (res?.status === "success") {
+      toast.success("Address Details Edited Successfully")
+    }
+    else {
+      toast.error("Something went wrong!!")
+    }
   }
 
   // useEffect(() => {
@@ -167,7 +180,7 @@ const GetUserDetails = () => {
             </form>
           ) : null}
 
-          {Object.keys(loggedInUser).includes("profile") && activeStep === 1 ? (
+          {Object.keys(loggedInUser?.data).includes("profile") && activeStep === 1 ? (
             <form id="detailForm" onSubmit={addressHandler} style={{ width: "100%" }}>
               <h2>Address Details</h2>
               <div className="twoInput">
@@ -220,7 +233,7 @@ const GetUserDetails = () => {
           ) : null}
         </div>
       </section>
-      <MobileStepper
+      {Object.keys(loggedInUser?.data).includes("profile") && <MobileStepper
         variant="progress"
         steps={2}
         position="static"
@@ -246,7 +259,7 @@ const GetUserDetails = () => {
             Back
           </Button>
         }
-      />
+      />}
     </main>
   );
 };

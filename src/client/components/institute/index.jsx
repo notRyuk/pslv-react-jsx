@@ -16,6 +16,7 @@ import { useFormik, FormikProvider } from "formik";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectSession } from "../auth/authSlice";
+import { toast } from "react-toastify";
 
 
 export default function Institute() {
@@ -23,11 +24,17 @@ export default function Institute() {
     const deleteHandler = async (id) => {
         const deleteInstituteUrl = basePath + urls.institute.delete.replace(":id", id)
         try {
-            const response = await axios.delete(deleteInstituteUrl, {
+            const res = await axios.delete(deleteInstituteUrl, {
                 headers: {
                     authorization: `Bearer ${session.token}`,
                 }
             });
+            if (res?.status === 200) {
+                toast.warning("Deleted Institute Successfully")
+            }
+            else {
+                toast.error("Something went wrong!!")
+            }
             mutateInstituteData();
         } catch (error) {
             console.error("Error deleting Institute :", error);
@@ -97,7 +104,7 @@ export default function Institute() {
         value: ""
     }
     const [otherHandle, setOtherHandle] = useState(initialState)
-    const handleChangeOtherHandle = (e) => setOtherHandle(prev => ({...prev, [e.target.name]: e.target.value}))
+    const handleChangeOtherHandle = (e) => setOtherHandle(prev => ({ ...prev, [e.target.name]: e.target.value }))
     const handleAddSocial = () => {
         const currentForm = structuredClone(formData)
         const otherHandles = currentForm.contact.social.others.map(e => e[0]) || []
@@ -118,15 +125,21 @@ export default function Institute() {
 
     const session = useSelector(selectSession)
     const handleFormSubmit = async () => {
-        const res = await axios.post(basePath+urls.institute.create, formData, {
+        const res = await axios.post(basePath + urls.institute.create, formData, {
             headers: {
                 authorization: `Bearer ${session?.token}`
             }
         })
-        if(res.data) {
+        if (res?.status === 200) {
+            toast.success("Added Institute Successfully")
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
+        if (res.data) {
             resetForm()
             mutateInstituteData()
-        } 
+        }
     }
 
     return (
@@ -177,7 +190,7 @@ export default function Institute() {
                                     >
                                         <Typography variant="body1">{e?.name}</Typography>
                                     </Paper>
-                                    <IconButton color="primary" aria-label="add to shopping cart" onClick={()=>{deleteHandler(e?._id)}}>
+                                    <IconButton color="primary" aria-label="add to shopping cart" onClick={() => { deleteHandler(e?._id) }}>
                                         <DeleteIcon sx={{ color: "red" }} />
                                     </IconButton>
                                 </Box>
