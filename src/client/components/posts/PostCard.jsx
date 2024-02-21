@@ -7,6 +7,8 @@ import { selectSession, selectLoggedInUser } from "@client/components/auth/authS
 import axios from "axios";
 import tempImage from "@client/assets/images/profile.png"
 import { toast } from 'react-toastify';
+import { IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const PostCard = (props) => {
     const [likeInteract, setLikeIneract] = useState([])
@@ -75,6 +77,21 @@ const PostCard = (props) => {
             setCommentIneract(res.data)
         })()
     }, [isCommentChanged])
+
+    const deleteHandler = async()=>{
+        const res = await axios.delete(basePath+urls.post.delete.replace(":id", props?.post?._id), {
+            headers: {
+                authorization: `Bearer ${session.token}`
+            },
+        })
+        if(res?.status === 200){
+            toast.warning("Post Deleted Successfully")
+            props?.postMutate();
+        }
+        else{
+            toast.error("Something went wrong")
+        }
+    }
     return (
         <>
             {/* {console.log(props.post)} */}
@@ -87,6 +104,11 @@ const PostCard = (props) => {
                         <h5>{props.post?.user.name.first} {props.post?.user.name.last}</h5>
                         <p>{props.post?.user.bio}</p>
                     </div>
+                    {props?.delete && 
+                        <IconButton sx={{position:"absolute", top: "0.5rem", right: "1rem"}} color="primary" aria-label="add to shopping cart" onClick={() => { deleteHandler(props?.post?._id) }}>
+                            <DeleteIcon sx={{ color: "#E74C3C" }} />
+                        </IconButton>
+                    }
                 </div>
                 <div className="caption">
                     <p>{props.post?.content.text}</p>

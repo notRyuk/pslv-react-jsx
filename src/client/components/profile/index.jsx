@@ -16,6 +16,8 @@ import SubmitModal from '../submitModal';
 import { useFormik } from "formik"
 import tempImage from "@client/assets/images/profile.png"
 import { toast } from 'react-toastify';
+import ConnectionType from './ConnectionType';
+import PostCard from '../posts/PostCard';
 
 const ProfileComponent = ({
     user,
@@ -239,7 +241,7 @@ const ProfileComponent = ({
                                     <div className="edit-title">
                                         <h3>
                                             {tempUser?.data?.name?.first} {tempUser?.data?.name?.last}
-                                            <Chip label={tempUser?.data?.role[0].toUpper} />
+                                            <Chip sx={{background: "white", color: "black", margin: "0 1rem"}} label={tempUser?.data?.role.toUpperCase()} />
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
@@ -344,6 +346,7 @@ const ProfileComponent = ({
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </Link>
                                 )}
+                                {others && <ConnectionType userId = {params.id} />}
                                 {/* ... */}
                             </div>
                         </div>
@@ -567,8 +570,9 @@ const ProfileComponent = ({
                                 </div>
                             </div>
                         </> : <></>}
-
-
+                        {!others && postData?.data.map((post, id)=> <PostCard key = {id} post = {post} delete={true} postMutate={postMutate}/>)}
+                        {/* {console.log(postData?.data)} */}
+                        
                     </div>
 
                     {/* Right Container */}
