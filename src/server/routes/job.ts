@@ -1,4 +1,5 @@
 import JobHandler from "@handlers/job";
+import logger from "@server/logger/winston";
 import { verifyBody, verifyToken } from "@server/middleware/verify";
 import Job from "@server/models/job";
 import Company from "@server/models/job/company";
@@ -21,16 +22,14 @@ app.post("/create",
         if(!company) {
             return res.status(404).send(handler.error(handler.STATUS_404))
         }
-        console.log(req.body.skills);
-        
-        const job = await Job.create({
+        const __job = new Job({
             from: (session.user as IUser)._id,
             title: getValue(keys, values, "title"),
             description: getValue(keys, values, "description"),
             company,
             experienceYears: getValue(keys, values, "experienceYears"),
             ...(keys.includes("skills") && {
-                skills: req.body.skills
+                skills: req.body.skills 
             }),
             ...(keys.includes("endsAt") && getValue(keys, values, "endsAt") && getValue(keys, values, "endsAt").length && {
                 endsAt: getValue(keys, values, "endsAt")
@@ -39,6 +38,8 @@ app.post("/create",
                 isCompleted: getValue(keys, values, "isCompleted")
             })
         });
+        __job.set("skills", req.body.skills)
+        const job = await __job.save()
         if (!job)
             return res.status(400).json(handler.error(handler.STATUS_404));
         return res.status(200).json(handler.success(job));
