@@ -78,17 +78,17 @@ const PostCard = (props) => {
         })()
     }, [isCommentChanged])
 
-    const deleteHandler = async()=>{
-        const res = await axios.delete(basePath+urls.post.delete.replace(":id", props?.post?._id), {
+    const deleteHandler = async () => {
+        const res = await axios.delete(basePath + urls.post.delete.replace(":id", props?.post?._id), {
             headers: {
                 authorization: `Bearer ${session.token}`
             },
         })
-        if(res?.status === 200){
+        if (res?.status === 200) {
             toast.warning("Post Deleted Successfully")
             props?.postMutate();
         }
-        else{
+        else {
             toast.error("Something went wrong")
         }
     }
@@ -104,9 +104,9 @@ const PostCard = (props) => {
                         <h5>{props.post?.user.name.first} {props.post?.user.name.last}</h5>
                         <p>{props.post?.user.bio}</p>
                     </div>
-                    {props?.delete && 
-                        <IconButton sx={{position:"absolute", top: "0.5rem", right: "1rem"}} color="primary" aria-label="add to shopping cart" onClick={() => { deleteHandler(props?.post?._id) }}>
-                            <DeleteIcon sx={{ color: "#E74C3C" }} />
+                    {props?.delete &&
+                        <IconButton sx={{ position: "absolute", top: "0.5rem", right: "1rem" }} color="primary" aria-label="add to shopping cart" onClick={() => { deleteHandler(props?.post?._id) }}>
+                            <DeleteIcon sx={{ color: "#E74C3C", fontSize: "2rem" }} />
                         </IconButton>
                     }
                 </div>
