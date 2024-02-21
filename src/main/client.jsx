@@ -32,7 +32,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 theme="light"
                 transition:Bounce
               /> */}
-              <ToastContainer />
+              <ToastContainer theme="dark"/>
             </SocketProvider>
           </PersistGate>
         </Provider>
