@@ -20,7 +20,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <SocketProvider>
               <Router />
               <ToastContainer theme="dark"/>
-              <ToastContainer />
             </SocketProvider>
           </PersistGate>
         </Provider>
