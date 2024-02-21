@@ -97,6 +97,7 @@ app.get("/:post/interactions/:type", verifyToken(), verifyParams(["post"]), asyn
 
 app.delete("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     const { keys, values } = res.locals
+    await Interaction.deleteMany({ post: getValue(keys, values, "id") });
     const post = await Post.findByIdAndDelete(getValue(keys, values, "id"))
     if (!post) {
         return res.status(404).send(handler.error(handler.STATUS_404))
