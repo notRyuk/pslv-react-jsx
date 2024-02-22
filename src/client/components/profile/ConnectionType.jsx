@@ -7,6 +7,7 @@ import urls, { basePath } from '../../../utils/urls';
 import { useGetter } from '../../hooks/fetcher';
 import { selectSession } from '../auth/authSlice';
 import CheckIcon from '@mui/icons-material/Check';
+import { toast } from 'react-toastify';
 
 const ConnectionType = (props) => {
     const session = useSelector(selectSession)
@@ -20,6 +21,7 @@ const ConnectionType = (props) => {
     const [isFriend, setIsFriend] = useState(false);
     const [isSuggestion, setIsSuggestion] = useState(false);
     const [hasRequested, setHasRequested] = useState(false);
+    const [request, setRequest] = useState({});
     useEffect(()=>{
         let flag1 = false;
         connectedUser?.data.forEach(eachUser => {
@@ -35,24 +37,61 @@ const ConnectionType = (props) => {
             }
         })
         setIsSuggestion(flag2)
+        let req = {};
         let flag3 = false;
         connectionRequests?.data.forEach(cr => {
             if(cr?.from._id === props.userId){
-                flag3 = true;
+                req = cr
+                flag3 = true
             }
         })
         setHasRequested(flag3)
+        setRequest(req)
     }, [connectedUser, suggestedUser, connectionRequests])
-
+    const acceptRequestUrl = basePath + urls.request.acceptMutual.replace(':request', request?._id)
+    const requestAcceptHadler = async () => {
+        const res = await axios.put(acceptRequestUrl, {}, {
+            headers: {
+                authorization: `Bearer ${session.token}`,
+            }
+        })
+        if(res?.status === 200){
+            toast.success("Request accepted Successfully")
+        }
+        else{
+            toast.error("Something went wrong!!")
+        }
+        connectionMutate()
+        requestMutate()
+    }
+    const sendRequestUrl = basePath + urls.request.create
+    const clickHandler = async () => {
+        const data = new FormData()
+        data.append("to", props.userId)
+        data.append("type", "Mutual")
+        const res = await axios.post(sendRequestUrl, data, {
+            headers: {
+                authorization: `Bearer ${session.token}`,
+                "Content-Type": 'multipart/form-data',
+            }
+        })
+        if(res?.status === 200){
+            toast.success("Sent Request Successfully")
+        }
+        else{
+            toast.error("Something went wrong!!")
+        }
+        suggestMutate()
+    }
   return (
         <>
-            {isSuggestion && <Button variant="contained" endIcon={<PersonAddIcon />} className={classes.connectionType}>
+            {isSuggestion && !isFriend && !hasRequested && <Button variant="contained" endIcon={<PersonAddIcon />} className={classes.connectionType} onClick={clickHandler} >
                 Connect
             </Button>}
-            {isFriend && <Button variant="contained" endIcon={<CheckIcon />} className={classes.connectionType}>
+            {isFriend && !isSuggestion && !hasRequested && <Button variant="contained" endIcon={<CheckIcon />} className={classes.connectionType}>
                 Connection
             </Button>}
-            {hasRequested && <Button variant="contained" endIcon={<PersonAddIcon />} className={classes.connectionType}>
+            {hasRequested && !isSuggestion && !isFriend && <Button variant="contained" endIcon={<PersonAddIcon />} className={classes.connectionType} onClick={requestAcceptHadler}>
                 Accept
             </Button>}
             {!isSuggestion && !isFriend && !hasRequested && <Button variant="contained" endIcon={<CheckIcon />} className={classes.connectionType}>
