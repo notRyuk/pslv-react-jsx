@@ -21,7 +21,7 @@ app.get("/", verifyToken(), async (_, res) => {
 
 app.get("/:id", verifyToken(), verifyParams(["id"]),async (_, res) => {
     const { keys, values } = res.locals;
-    const job = await Job.find({ from: getValue(keys, values, "id") })
+    const job = await Job.find({ from: getValue(keys, values, "id") }).populate({ path: "company" }).populate({ path: "from" }).populate({ path: "skills" }).exec() || [];
     if (!job)
         return res.status(404).json(handler.error(handler.STATUS_404));
     return res.status(200).json(handler.success(job));

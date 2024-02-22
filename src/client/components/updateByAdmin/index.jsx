@@ -1,51 +1,54 @@
 import React from "react";
 import "./style.css";
-import Footer from "../../components/footer";
+import profile from "@client/assets/images/profile.png";
 import { Typography } from "@mui/material"
+import { useGetter } from "../../hooks/fetcher";
+import urls, { basePath, serverPath } from "../../../utils/urls";
 
 const AdminUserUpdate = () => {
-  const users = [
-    {
-      id: 1,
-      email: "abc@gmail.com",
-      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-      username: "Cityville",
-      phone: "8899665533",
-      role: "Student"
-    },
-    {
-      id: 1,
-      email: "abc@gmail.com",
-      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-      username: "Cityville",
-      phone: "8899665533",
-      role: "Student"
-    },
-    {
-      id: 1,
-      email: "abc@gmail.com",
-      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-      username: "Cityville",
-      phone: "8899665533",
-      role: "Student"
-    },
-    {
-      id: 1,
-      email: "abc@gmail.com",
-      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-      username: "Cityville",
-      phone: "8899665533",
-      role: "Student"
-    },
-    {
-      id: 1,
-      email: "abc@gmail.com",
-      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-      username: "Cityville",
-      phone: "8899665533",
-      role: "Student"
-    },
-  ];
+  const {data : users, userMutate : userMutate} = useGetter(basePath + urls.user.fetchAll)
+  // const users = [
+  //   {
+  //     id: 1,
+  //     email: "abc@gmail.com",
+  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+  //     username: "Cityville",
+  //     phone: "8899665533",
+  //     role: "Student"
+  //   },
+  //   {
+  //     id: 1,
+  //     email: "abc@gmail.com",
+  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+  //     username: "Cityville",
+  //     phone: "8899665533",
+  //     role: "Student"
+  //   },
+  //   {
+  //     id: 1,
+  //     email: "abc@gmail.com",
+  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+  //     username: "Cityville",
+  //     phone: "8899665533",
+  //     role: "Student"
+  //   },
+  //   {
+  //     id: 1,
+  //     email: "abc@gmail.com",
+  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+  //     username: "Cityville",
+  //     phone: "8899665533",
+  //     role: "Student"
+  //   },
+  //   {
+  //     id: 1,
+  //     email: "abc@gmail.com",
+  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+  //     username: "Cityville",
+  //     phone: "8899665533",
+  //     role: "Student"
+  //   },
+  // ];
   return (
     <div className="row">
       <div className="col-1"></div>
@@ -71,7 +74,7 @@ const AdminUserUpdate = () => {
                 <thead>
                   <tr>
                     <th>SNo.</th>
-                    <th>User</th>
+                    {/* <th>User</th> */}
                     <th>Profile Image</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -81,16 +84,16 @@ const AdminUserUpdate = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user) => (
-                    <tr key={user.id}>
-                      <td>{user.id}</td>
+                  {users?.data.map((user, id) => (
+                    <tr key={id}>
+                      <td>{id + 1}</td>
                       <td>
                         {" "}
                         <span className="profileImg">
-                          <img src={user.profileImage} alt="Profile" />
+                          <img src={user?.profilePhoto ? serverPath + user?.profilePhoto : profile} alt="Profile" />
                         </span>
                       </td>
-                      <td>{user.username}</td>
+                      <td>{user.name.first} {user.name.last}</td>
                       <td>{user.email}</td>
                       <td>{user.phone}</td>
                       <td>{user.role}</td>

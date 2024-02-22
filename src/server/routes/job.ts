@@ -1,6 +1,6 @@
 import JobHandler from "@handlers/job";
 import logger from "@server/logger/winston";
-import { verifyBody, verifyToken } from "@server/middleware/verify";
+import { verifyBody, verifyToken, verifyParams } from "@server/middleware/verify";
 import Job from "@server/models/job";
 import Company from "@server/models/job/company";
 import IUser from "@types_/user";
@@ -45,5 +45,14 @@ app.post("/create",
         return res.status(200).json(handler.success(job));
     }
 )
+
+app.delete("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
+    const { keys, values } = res.locals
+    const job = await Job.findByIdAndDelete(getValue(keys, values, "id"))
+    if (!job) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    return res.status(200).send(handler.success(job))
+})
 
 export default app

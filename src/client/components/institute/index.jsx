@@ -30,7 +30,7 @@ export default function Institute() {
                 }
             });
             if (res?.status === 200) {
-                toast.warning("Deleted Institute Successfully")
+                toast.error("Deleted Institute Successfully")
             }
             else {
                 toast.error("Something went wrong!!")

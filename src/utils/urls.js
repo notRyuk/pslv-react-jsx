@@ -65,6 +65,7 @@ export default {
     },
     job: {
         create: "/job/create",
+        delete: "/job/:id",
         findAll: "/jobs",
         findById: "/jobs/:id",
         application: {
