@@ -4,51 +4,28 @@ import profile from "@client/assets/images/profile.png";
 import { Typography } from "@mui/material"
 import { useGetter } from "../../hooks/fetcher";
 import urls, { basePath, serverPath } from "../../../utils/urls";
+import axios from "axios";
+import { selectSession } from "../auth/authSlice";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const AdminUserUpdate = () => {
+  const session = useSelector(selectSession);
   const {data : users, userMutate : userMutate} = useGetter(basePath + urls.user.fetchAll)
-  // const users = [
-  //   {
-  //     id: 1,
-  //     email: "abc@gmail.com",
-  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-  //     username: "Cityville",
-  //     phone: "8899665533",
-  //     role: "Student"
-  //   },
-  //   {
-  //     id: 1,
-  //     email: "abc@gmail.com",
-  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-  //     username: "Cityville",
-  //     phone: "8899665533",
-  //     role: "Student"
-  //   },
-  //   {
-  //     id: 1,
-  //     email: "abc@gmail.com",
-  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-  //     username: "Cityville",
-  //     phone: "8899665533",
-  //     role: "Student"
-  //   },
-  //   {
-  //     id: 1,
-  //     email: "abc@gmail.com",
-  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-  //     username: "Cityville",
-  //     phone: "8899665533",
-  //     role: "Student"
-  //   },
-  //   {
-  //     id: 1,
-  //     email: "abc@gmail.com",
-  //     profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
-  //     username: "Cityville",
-  //     phone: "8899665533",
-  //     role: "Student"
-  //   },
-  // ];
+  const deleteHandler = async(userId)=> {
+    const res = await axios.delete(basePath + urls.user.delete.replace(":id", userId), {
+      headers: {
+        authorization: `Bearer ${session.token}`
+      }
+    })
+    if(res?.status === 200){
+      toast.warning("Deleted user successfully")
+      userMutate();
+    }
+    else{
+      toast.error("Something went wrong!!")
+    }
+  }
   return (
     <div className="row">
       <div className="col-1"></div>
@@ -74,13 +51,13 @@ const AdminUserUpdate = () => {
                 <thead>
                   <tr>
                     <th>SNo.</th>
-                    {/* <th>User</th> */}
-                    <th>Profile Image</th>
+                    <th>User</th>
+                    {/* <th>Profile Image</th> */}
                     <th>Name</th>
                     <th>Email</th>
                     <th>Contact</th>
                     <th>Role</th>
-                    <th>Delete</th>
+                    <th>Remove</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -98,7 +75,7 @@ const AdminUserUpdate = () => {
                       <td>{user.phone}</td>
                       <td>{user.role}</td>
                       <td>
-                        <button>
+                        <button onClick={()=>{deleteHandler(user?._id)}}>
                           <i
                             className="material-icons"
                             style={{ color: "white" }}

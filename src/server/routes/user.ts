@@ -12,6 +12,12 @@ import { Request, Response, Router } from "express";
 import ISession from "@types_/user/session";
 import Multer from "multer"
 import { downloadFile } from "@utils/file";
+import Post from "@server/models/feed/post";
+import Interaction from "@server/models/feed/interaction";
+import Profile from "@server/models/user/profile";
+import Education from "@server/models/user/education";
+import Achievement from "@server/models/achievement";
+import Address from "@server/models/address";
 
 const app = Router()
 const handler = new UserHandler()
@@ -179,5 +185,37 @@ app.put(
         return res.status(200).send(handler.success(updatedUser))
     }
 )
+
+app.delete("/:id", verifyToken(),verifyAdmin(), verifyParams(["id"]), async (_, res) => {
+    const { keys, values } = res.locals
+    const userId = getValue(keys, values, "id")
+    await Interaction.deleteMany({ user: userId });
+    await Post.deleteMany({ user: userId });
+    const user = await User.findById(userId);
+    if (user && user.profile) {
+        const profileId = user.profile;
+        const deletedProfile = await Profile.findByIdAndDelete(profileId);
+        if (!deletedProfile) {
+            return res.status(404).send(handler.error(handler.STATUS_404));
+        }
+        await Education.deleteMany({ _id: { $in: deletedProfile.education } });
+        await Achievement.deleteMany({ _id: { $in: deletedProfile.achievements } });
+        await Address.findByIdAndDelete(deletedProfile.address);
+    }
+    await ConnectionRequest.deleteMany({
+        $or: [
+            { from: userId },
+            { to: userId }
+        ]
+    });
+    await Connection.deleteMany({
+        users: userId
+    });
+    const deletedUser = await User.findByIdAndDelete(userId)
+    if (!deletedUser) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    return res.status(200).send(handler.success(deletedUser))
+})
 
 export default app

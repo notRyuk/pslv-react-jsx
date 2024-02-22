@@ -28,7 +28,8 @@ export default {
         fetchAll: "/user/get-all",
         update: "/user/update",
         updateProfilePhoto: "/user/updateProfilePhoto",
-        getLoggedInUser: "/user"
+        getLoggedInUser: "/user",
+        delete: "/user/:id"
     },
     skills: "/skills",
     skill: {

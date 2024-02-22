@@ -32,11 +32,11 @@ export default function UserJob() {
                 authorization: `Bearer ${session.token}`
             }
         })
-        if(res?.status === 200){
+        if (res?.status === 200) {
             toast.error("Deleted Job Successfully")
             filterMutate();
         }
-        else{
+        else {
             toast.error("Something went wrong!!")
         }
     }
@@ -90,9 +90,11 @@ export default function UserJob() {
                                     <div className="posted-time">Experience Years: {job.experienceYears}</div>
                                     <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                 </div>
-                                <IconButton sx={{ position: "absolute", bottom: "0.5rem", right: "1rem" }} color="primary" aria-label="add to shopping cart" onClick={() => {deleteHandler(job?._id)}}>
-                                    <DeleteIcon sx={{ color: "#E74C3C", fontSize: "2rem" }} />
-                                </IconButton>
+                                {
+                                    session?.user?._id === params.id && <IconButton sx={{ position: "absolute", bottom: "0.5rem", right: "1rem" }} color="primary" aria-label="add to shopping cart" onClick={() => { deleteHandler(job?._id) }}>
+                                        <DeleteIcon sx={{ color: "#E74C3C", fontSize: "2rem" }} />
+                                    </IconButton>
+                                }
                             </div>
                         )) : <h1>No Jobs found</h1>}
                     </div>
