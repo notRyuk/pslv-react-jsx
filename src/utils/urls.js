@@ -70,7 +70,8 @@ export default {
         application: {
             create: "/job-application/create",
             findByJob: "/job-applications/job/:job"
-        }
+        },
+        searchByTitle: "/jobs/search/:title"
     },
     news: {
         create: "/news/create",

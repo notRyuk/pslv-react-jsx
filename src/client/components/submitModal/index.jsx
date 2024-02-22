@@ -1,9 +1,9 @@
 import {
+    Button,
     Dialog,
-    DialogTitle,
-    DialogContent,
     DialogActions,
-    Button
+    DialogContent,
+    DialogTitle
 } from "@mui/material"
 
 export default function SubmitModal({ children, handleSubmit, open, setOpen, title }) {

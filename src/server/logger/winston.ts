@@ -30,7 +30,9 @@ const logger = winston.createLogger({
         winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
     ),
     transports: [
-        new winston.transports.Console(),
+        new winston.transports.Console({
+            silent: true
+        }),
         new winston.transports.File({
             maxsize: 5*1024*1024,
             filename: path.join(
@@ -45,7 +47,8 @@ const logger = winston.createLogger({
             format: winston.format.combine(
                 winston.format.timestamp({ format: "DD MMM, YYYY - HH:mm:ss:ms" }),
                 winston.format.json({
-                    maximumDepth: 4
+                    maximumDepth: 4,
+                    maximumBreadth: 500
                 })
             )
         })

@@ -10,11 +10,13 @@ import { useNavigate } from "react-router-dom";
 import Institute from "@client/components/institute";
 import NewsCard from "../../../components/cards/newsCard";
 import AlumniRequest from "../../../components/alumni-request";
+import AdminPost from "../../../components/posts/admin-posts";
 
 const panels = {
     "Institutes": <Institute />,
     "Alumni Approval": <AlumniRequest></AlumniRequest>,
-    "Update News": <NewsCard></NewsCard>
+    "Update News": <NewsCard></NewsCard>,
+    "Manage Posts": <AdminPost></AdminPost>
 }
 
 export default function Page() {

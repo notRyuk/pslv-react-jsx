@@ -12,6 +12,7 @@ export enum Models {
 
     // message
     message = "message",
+    chat = "chat",
 
     // connection
     connectionRequest = "connection-request",

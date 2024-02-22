@@ -1,21 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import companyImg from "../../assets/images/company.png";
-import axios from 'axios';
-import urls, { serverPath, basePath } from '@utils/urls';
-import { selectSession } from '../auth/authSlice';
-import Loading from '../loading';
-import { useGetter, usePutter } from '../../hooks/fetcher';
-import Footer from '../footer';
-import CustomModal from '../modal';
-import { Autocomplete, Chip, Box, TextField, FormControl, InputLabel, Select, MenuItem, FormControlLabel, RadioGroup, Radio } from '@mui/material';
+import tempImage from "@client/assets/images/profile.png";
 import LaunchIcon from '@mui/icons-material/Launch';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import {
+    Autocomplete,
+    Box,
+    Chip,
+    FormControl,
+    FormControlLabel,
+    ImageList,
+    ImageListItem,
+    InputLabel,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    Select,
+    TextField
+} from '@mui/material';
+import urls, { basePath, serverPath } from '@utils/urls';
+import axios from 'axios';
+import { useFormik } from "formik";
+import React, { useEffect, useState } from 'react';
 import { FormLabel, Stack } from 'react-bootstrap';
-import SubmitModal from '../submitModal';
-import { useFormik } from "formik"
-import tempImage from "@client/assets/images/profile.png"
+import { useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import companyImg from "../../assets/images/company.png";
+import { useGetter, usePutter } from '@client/hooks/fetcher';
+import { selectSession } from '../auth/authSlice';
+import Footer from '../footer';
+import Loading from '../loading';
+import CustomModal from '../modal';
+import SubmitModal from '../submitModal';
+import { MuiFileInput } from "mui-file-input";
+import ConnectionType from './ConnectionType';
+import PostCard from '../posts/PostCard';
 
 const ProfileComponent = ({
     user,
@@ -76,8 +94,10 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
+    const [profilePhotoModelOpen, setProfilePhotoModalOpen] = useState(false)
     const handleFileChange = (event) => {
         // setFiles(e.target.files);
+        console.log("hello")
         const data = new FormData(event.currentTarget);
     };
     const handleAddAchievement = async (e) => {
@@ -166,6 +186,49 @@ const ProfileComponent = ({
             }
         }
     })
+    const { 
+        data: updatedUserData, 
+        trigger: updateProfilePhoto, 
+        isMutating, 
+        error: updatedUserError 
+    } = usePutter(basePath+urls.user.updateProfilePhoto)
+    const [profilePhotoUrl, setProfilePhotoUrl] = useState(
+        tempUser?.data?.profilePhoto ? 
+        serverPath + tempUser?.data?.profilePhoto: 
+        tempImage
+    )
+    const [file, setFile] = useState(null)
+    const handleChange = (newFile) => {
+        setFile(newFile)
+        const fileReader = new FileReader()
+        fileReader.onload = (e) => setProfilePhotoUrl(e.target.result)
+        fileReader.readAsDataURL(newFile)
+    }
+    const handleSubmitProfilePhoto = async () => {
+        if(!file) {
+            toast.error("No file uploaded")
+            return
+        }
+        const formData = new FormData()
+        formData.set("profile", file, file.name)
+        console.log(formData.forEach((v, k) => console.log(k, v)))
+        await updateProfilePhoto(formData)
+    }
+    const handleCloseProfilePhoto = () => {
+        setFile(null)
+        setProfilePhotoModalOpen(false)
+        setProfilePhotoUrl(tempUser?.data?.profilePhoto ? serverPath + tempUser?.data?.profilePhoto : tempImage)
+    }
+    useEffect(() => {
+        handleCloseProfilePhoto()
+        if(updatedUserData) {
+            toast.success("Successfully updated profile photo! It may take some time to update in the overall website")
+        }
+        if(updatedUserError) {
+            toast.error("Error while updating profile photo")
+        }
+    }, [updatedUserData, updatedUserError])
+
 
     const { data: instituteData, mutate: instituteDataMutate } = useGetter(basePath + urls.institute.findAll)
 
@@ -194,11 +257,12 @@ const ProfileComponent = ({
         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
-      };
+    };
     // console.log(jobData)
     return (
         <>
-            {isLoading ? <Loading></Loading> :
+            {isLoading ?
+                <Loading /> :
                 <div className="profileContainer">
                     {/* Main Container */}
                     <div className="container-main">
@@ -218,14 +282,10 @@ const ProfileComponent = ({
                             <div className="profileInfo tempProfile">
                                 <img src={tempUser?.data?.profilePhoto ? serverPath + tempUser?.data?.profilePhoto : tempImage} alt="profileImg" className="profileImg" />
                                 {tempUser?.data?._id === session?.user?._id && <>
-                                    <input
-                                        type="file"
-                                        id="profilePhotoInput"
-                                        accept="image/*"
-                                        onChange={handleFileChange}
-                                        style={{ display: 'none' }}
-                                    />
-                                    <span className="material-symbols-rounded profile-edit-button" onClick={() => document.getElementById('profilePhotoInput').click()}>
+                                    <span
+                                        className="material-symbols-rounded profile-edit-button"
+                                        onClick={() => setProfilePhotoModalOpen(true)}
+                                    >
                                         edit
                                     </span>
                                 </>}
@@ -239,7 +299,7 @@ const ProfileComponent = ({
                                     <div className="edit-title">
                                         <h3>
                                             {tempUser?.data?.name?.first} {tempUser?.data?.name?.last}
-                                            <Chip label={tempUser?.data?.role[0].toUpper} />
+                                            <Chip sx={{background: "white", color: "black", margin: "0 1rem"}} label={tempUser?.data?.role.toUpperCase()} />
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
@@ -344,6 +404,7 @@ const ProfileComponent = ({
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </Link>
                                 )}
+                                {others && <ConnectionType userId = {params.id} />}
                                 {/* ... */}
                             </div>
                         </div>
@@ -567,8 +628,9 @@ const ProfileComponent = ({
                                 </div>
                             </div>
                         </> : <></>}
-
-
+                        {!others && postData?.data.map((post, id)=> <PostCard key = {id} post = {post} delete={true} postMutate={postMutate}/>)}
+                        {/* {console.log(postData?.data)} */}
+                        
                     </div>
 
                     {/* Right Container */}
@@ -819,6 +881,36 @@ const ProfileComponent = ({
                     </Stack>
                 </Box>
             </SubmitModal>
+            <CustomModal
+                open={profilePhotoModelOpen}
+                setOpen={setProfilePhotoModalOpen}
+                title={"Change Profile Photo"}
+                handleSubmit={handleSubmitProfilePhoto}
+                handleClose={handleCloseProfilePhoto}
+            >
+                <Stack direction="column">
+                    <ImageList cols={3}>
+                        <ImageListItem />
+                        <ImageListItem>
+                            <img
+                                src={profilePhotoUrl}
+                                alt="profile-photo"
+                            />
+                        </ImageListItem>
+                        <ImageListItem />
+                    </ImageList>
+                    <MuiFileInput
+                        value={file}
+                        onChange={handleChange}
+                        InputProps={{
+                            inputProps: {
+                                accept: "image/jpeg,image/png"
+                            },
+                            startAdornment: <AddPhotoAlternateIcon />
+                        }}
+                    />
+                </Stack>
+            </CustomModal>
         </>
     );
 };
