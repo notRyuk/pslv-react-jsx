@@ -72,6 +72,8 @@ const AdminUserUpdate = () => {
                   <tr>
                     <th>SNo.</th>
                     <th>User</th>
+                    <th>Profile Image</th>
+                    <th>Name</th>
                     <th>Email</th>
                     <th>Contact</th>
                     <th>Role</th>
@@ -83,11 +85,12 @@ const AdminUserUpdate = () => {
                     <tr key={user.id}>
                       <td>{user.id}</td>
                       <td>
+                        {" "}
                         <span className="profileImg">
                           <img src={user.profileImage} alt="Profile" />
                         </span>
-                        {user.username}
                       </td>
+                      <td>{user.username}</td>
                       <td>{user.email}</td>
                       <td>{user.phone}</td>
                       <td>{user.role}</td>

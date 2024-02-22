@@ -15,7 +15,7 @@ app.get("/", verifyToken(), async (_, res) => {
     const jobs = await Job.find({
         endsAt: { $gte: currentTimestamp },
         from: { $ne: userId }
-    }).populate({ path: "company" }).populate({ path: "from" }).exec() || [];
+    }).populate({ path: "company" }).populate({ path: "from" }).populate({ path: "skills" }).exec() || [];
     return res.status(200).send(jobs)
 })
 
@@ -36,7 +36,7 @@ app.get("/search/:title", verifyToken(), verifyParams(["title"]), async (req, re
     }
     const jobs = await Job.find({
         title: { $regex: new RegExp(title?.toString(), "i") }, // Case-insensitive search
-    }).populate({ path: "company" }).populate({ path: "from" }).exec() || [];
+    }).populate({ path: "company" }).populate({ path: "from" }).populate({ path: "skills" }).exec() || [];
     
     if (!jobs) {
         return res.status(404).send(handler.error(handler.STATUS_404))
