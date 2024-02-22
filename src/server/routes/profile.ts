@@ -112,19 +112,6 @@ app.put("/updateAddress", verifyToken(), verifyBody([]), async (_, res) => {
     if (!updatedAddress) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
-    // return res.status(200).send(handler.success(updatedAddress))
-    // if(keys.includes("skills")) {
-    //     profile.set("skills", getValue(keys, values, "skills"))
-    // }
-    // if(keys.includes("workExperience")) {
-    //     profile.set("workExperience", getValue(keys, values, "workExperience"))
-    // }
-    // if(keys.includes("education")) {
-    //     profile.set("education", getValue(keys, values, "education"))
-    // }
-    // if(keys.includes("achievements")) {
-    //     profile.set("achievements", getValue(keys, values, "achievements"))
-    // }
     const updatedProfile = await profile.save()
     if(!updatedProfile) {
         return res.status(400).send(handler.error(handler.STATUS_404))
