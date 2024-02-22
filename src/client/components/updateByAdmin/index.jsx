@@ -1,38 +1,81 @@
 import React from "react";
 import "./style.css";
 import Footer from "../../components/footer";
+import { Typography } from "@mui/material"
 
-const Index = ({ users }) => {
+const AdminUserUpdate = () => {
+  const users = [
+    {
+      id: 1,
+      email: "abc@gmail.com",
+      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+      username: "Cityville",
+      phone: "8899665533",
+      role: "Student"
+    },
+    {
+      id: 1,
+      email: "abc@gmail.com",
+      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+      username: "Cityville",
+      phone: "8899665533",
+      role: "Student"
+    },
+    {
+      id: 1,
+      email: "abc@gmail.com",
+      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+      username: "Cityville",
+      phone: "8899665533",
+      role: "Student"
+    },
+    {
+      id: 1,
+      email: "abc@gmail.com",
+      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+      username: "Cityville",
+      phone: "8899665533",
+      role: "Student"
+    },
+    {
+      id: 1,
+      email: "abc@gmail.com",
+      profileImage: "https://sapnokamatlab.co.in/wp-content/uploads/2023/08/Sher.webp",
+      username: "Cityville",
+      phone: "8899665533",
+      role: "Student"
+    },
+  ];
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "70% 20%",
-        marginTop: "5%",
-      }}
-    >
-      <div className="container mt-4">
-        <section className="main mt-4">
+    <div className="row">
+      <div className="col-1"></div>
+      <div className="col-10 p-4" style={{ background: "#1b2730", borderRadius: "10px" }}>
+        <section className="main">
           <div className="main-top">
-            <h1
-              style={{
-                color: "White",
-              }}
-            >
-              Users
-            </h1>
+            <Typography>
+              <p
+                style={{
+                  color: "White",
+                  fontSize: "2.5rem",
+                  fontWeight: "600",
+                  marginBottom: "0.3rem"
+                }}
+              >
+                Manage Users
+              </p>
+            </Typography>
           </div>
-          <section className="attendance">
+          <section className="attendance" style={{ boxShadow: "1px 1px 20px 0px black", borderRadius: "10px" }}>
             <div className="attendance-list">
               <table className="tablebg">
                 <thead>
                   <tr>
                     <th>SNo.</th>
-                    <th>Name</th>
+                    <th>User</th>
                     <th>Email</th>
                     <th>Contact</th>
                     <th>Role</th>
-                    <th>Update</th>
+                    <th>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -66,9 +109,13 @@ const Index = ({ users }) => {
           </section>
         </section>
       </div>
-      <Footer />
+      {/* <div className="col-4">
+        <Typography>
+          <Footer />
+        </Typography>
+      </div> */}
     </div>
   );
 };
 
-export default Index;
+export default AdminUserUpdate;
