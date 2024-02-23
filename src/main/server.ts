@@ -56,7 +56,7 @@ app.use("/static/files", express.static(join(__dirname, "..", "..", "public")))
 
 app.use((err: Error, _: Request, res: Response) => {
     console.error(err.stack);
-    res.status(404).send('Internal Server Error');
+    res.status(500).send('Internal Server Error');
 });
 
 mongoose.connect(DB_URL)
