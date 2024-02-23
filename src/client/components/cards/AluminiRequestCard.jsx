@@ -33,7 +33,7 @@ const AluminiRequestCard = (props) => {
                 }
             });
             if(res?.status === 200){
-                toast.warning("Ignored Request Successfully")
+                toast.error("Ignored Request Successfully")
             }
             else{
                 toast.error("Something went wrong!!")

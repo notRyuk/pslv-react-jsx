@@ -313,30 +313,17 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                         >
                                             {job.title} ({job.description})
                                         </div>
-                                        {/* <div
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                gap: "2rem",
-                                                fontSize: "18px",
-                                            }}
-                                        >
-                                            <span className="material-symbols-rounded job-icon job-visibility">
-                                                visibility_off
-                                            </span>
-                                            <span className="material-symbols-rounded job-icon">
-                                                bookmark
-                                            </span>
-                                        </div> */}
                                     </div>
                                     <div className="company-name">
-                                        AT{" "}
+                                        At{" "}
                                         <span style={{ fontWeight: "bold" }}>
                                             {job.company.name}
                                         </span>
                                     </div>
                                     {/* <div className="posted-time">Skills: {job.skills}</div> */}
+                                    <div>Skills Required : {job?.skills.map((eachSkill, i) => <Chip variant="outlined" key={i} label={eachSkill?.name} />)}</div>
                                     <div className="posted-time">Experience Years: {job.experienceYears}</div>
+
                                     <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                     {/* <div
                                         style={{
@@ -478,12 +465,13 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                             </div> */}
                                         </div>
                                         <div className="company-name">
-                                            AT{" "}
+                                            At{" "}
                                             <span style={{ fontWeight: "bold" }}>
                                                 {job.company.name}
                                             </span>
                                         </div>
                                         {/* <div className="posted-time">Skills: {job.skills}</div> */}
+                                        <div>Skills Required : {job?.skills.map((eachSkill, i) => <Chip variant="outlined" key={i} label={eachSkill?.name} />)}</div>
                                         <div className="posted-time">Experience Years: {job.experienceYears}</div>
                                         <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                         {/* <div

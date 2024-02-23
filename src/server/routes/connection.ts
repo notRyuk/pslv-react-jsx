@@ -1,7 +1,9 @@
 import ConnectionHandler from "@handlers/user/connection";
-import { verifyToken } from "@server/middleware/verify";
+import { verifyToken, verifyParams } from "@server/middleware/verify";
 import Connection from "@server/models/user/connection";
 import { Router } from "express";
+import { getValue } from "@utils/object";
+import IUser from "@types_/user";
 
 const app = Router();
 const handler = new ConnectionHandler();
@@ -55,6 +57,20 @@ app.delete("/:id", verifyToken(), async (req, res) => {
         return res.status(404).send(handler.error(handler.STATUS_404));
     }
     return res.status(200).send(handler.success(connection));
+});
+
+app.delete("/delete/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
+    const {session, keys, values} = res.locals;
+    const loggedInUserId = (session?.user as IUser)._id
+    const targetUserId = getValue(keys, values, "id")
+
+    const connection = await Connection.deleteOne(
+        { users: { $all: [loggedInUserId, targetUserId] } },
+    );
+    if (!connection) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    return res.status(200).send(handler.success(connection))
 });
 
 export default app;

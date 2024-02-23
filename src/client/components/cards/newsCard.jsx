@@ -39,7 +39,7 @@ const EditNewsModal = ({ show, handleClose, newsData, session }) => {
             }
         })
         if (res?.status === 200) {
-            toast.warning("Deleted News Successfully")
+            toast.error("Deleted News Successfully")
         }
         else {
             toast.error("Something went wrong!!")

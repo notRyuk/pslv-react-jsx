@@ -28,7 +28,8 @@ export default {
         fetchAll: "/user/get-all",
         update: "/user/update",
         updateProfilePhoto: "/user/updateProfilePhoto",
-        getLoggedInUser: "/user"
+        getLoggedInUser: "/user",
+        delete: "/user/:id"
     },
     skills: "/skills",
     skill: {
@@ -57,7 +58,8 @@ export default {
         findByType: "/connection-request/:type"
     },
     connections: {
-        getByUser: "/connections/:user"
+        getByUser: "/connections/:user",
+        delete: "/connection/delete/:id"
     },
     company: {
         create: "/company/create",
@@ -65,6 +67,7 @@ export default {
     },
     job: {
         create: "/job/create",
+        delete: "/job/:id",
         findAll: "/jobs",
         findById: "/jobs/:id",
         application: {

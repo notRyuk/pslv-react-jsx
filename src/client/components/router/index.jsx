@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import Loading from "../loading";
 import Head from "./head";
+import ErrorComponent from "../error";
 
 export default function Router() {
     const slots = import.meta.glob("@client/pages/**/*.jsx", { eager: true })
@@ -37,6 +38,7 @@ export default function Router() {
         ))
         // }
     }
+    pages.push(<Route path="*" element={<ErrorComponent/>} />)
     return (
         <Routes>
             {pages}

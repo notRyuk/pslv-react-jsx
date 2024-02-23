@@ -5,12 +5,18 @@ import { basePath, serverPath } from '../../../utils/urls';
 import urls from '../../../utils/urls';
 import { useGetter } from '../../hooks/fetcher';
 import tempImage from "@client/assets/images/profile.png";
-import { Chip } from '@mui/material';
+import { Chip, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
+import { selectSession } from '../auth/authSlice';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-export default function JobsFilter() {
+
+export default function UserJob() {
+    const session = useSelector(selectSession)
     const params = useParams();
-    console.log(params.title)
-    const { data: filterResults, mutate: filterMutate } = useGetter(basePath + urls.job.searchByTitle.replace(":title", params.title))
+    const { data: filterResults, mutate: filterMutate } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
 
     const formatDate = (inputDate) => {
         const date = new Date(inputDate);
@@ -19,13 +25,29 @@ export default function JobsFilter() {
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
+    const deleteHandler = async (id) => {
+        const res = await axios.delete(basePath + urls.job.delete.replace(":id", id), {
+            headers: {
+                authorization: `Bearer ${session.token}`
+            }
+        })
+        if (res?.status === 200) {
+            toast.error("Deleted Job Successfully")
+            filterMutate();
+        }
+        else {
+            toast.error("Something went wrong!!")
+        }
+    }
+
     return (
         <>
 
-            <div className="row" style={{ marginTop: "2rem", padding: "3%", overflow: "hidden"}}>
+            <div className="row" style={{ marginTop: "2rem", padding: "3%", overflow: "hidden" }}>
                 <div className="col-9 p-4" style={{ backgroundColor: "#1b2730", borderRadius: "10px" }}>
-                    <h3 className=' ms-2'>Filtered Results</h3>
-                    <hr style={{marginTop:"0.5rem"}}/>
+                    <h3 className=' ms-2'>Jobs Posted</h3>
+                    <hr style={{ marginTop: "0.5rem" }} />
                     {/* <hr /> */}
                     <div className="job-cards-container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(30%, 1fr))", gap: "20px" }}>
                         {filterResults?.data.length ? filterResults?.data?.map((job) => (
@@ -68,6 +90,11 @@ export default function JobsFilter() {
                                     <div className="posted-time">Experience Years: {job.experienceYears}</div>
                                     <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
                                 </div>
+                                {
+                                    session?.user?._id === params.id && <IconButton sx={{ position: "absolute", bottom: "0.5rem", right: "1rem" }} color="primary" aria-label="add to shopping cart" onClick={() => { deleteHandler(job?._id) }}>
+                                        <DeleteIcon sx={{ color: "#E74C3C", fontSize: "2rem" }} />
+                                    </IconButton>
+                                }
                             </div>
                         )) : <h1>No Jobs found</h1>}
                     </div>

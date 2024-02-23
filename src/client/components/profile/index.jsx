@@ -186,16 +186,16 @@ const ProfileComponent = ({
             }
         }
     })
-    const { 
-        data: updatedUserData, 
-        trigger: updateProfilePhoto, 
-        isMutating, 
-        error: updatedUserError 
-    } = usePutter(basePath+urls.user.updateProfilePhoto)
+    const {
+        data: updatedUserData,
+        trigger: updateProfilePhoto,
+        isMutating,
+        error: updatedUserError
+    } = usePutter(basePath + urls.user.updateProfilePhoto)
     const [profilePhotoUrl, setProfilePhotoUrl] = useState(
-        tempUser?.data?.profilePhoto ? 
-        serverPath + tempUser?.data?.profilePhoto: 
-        tempImage
+        tempUser?.data?.profilePhoto ?
+            serverPath + tempUser?.data?.profilePhoto :
+            tempImage
     )
     const [file, setFile] = useState(null)
     const handleChange = (newFile) => {
@@ -205,7 +205,7 @@ const ProfileComponent = ({
         fileReader.readAsDataURL(newFile)
     }
     const handleSubmitProfilePhoto = async () => {
-        if(!file) {
+        if (!file) {
             toast.error("No file uploaded")
             return
         }
@@ -221,10 +221,10 @@ const ProfileComponent = ({
     }
     useEffect(() => {
         handleCloseProfilePhoto()
-        if(updatedUserData) {
+        if (updatedUserData) {
             toast.success("Successfully updated profile photo! It may take some time to update in the overall website")
         }
-        if(updatedUserError) {
+        if (updatedUserError) {
             toast.error("Error while updating profile photo")
         }
     }, [updatedUserData, updatedUserError])
@@ -299,7 +299,7 @@ const ProfileComponent = ({
                                     <div className="edit-title">
                                         <h3>
                                             {tempUser?.data?.name?.first} {tempUser?.data?.name?.last}
-                                            <Chip sx={{background: "white", color: "black", margin: "0 1rem"}} label={tempUser?.data?.role.toUpperCase()} />
+                                            <Chip sx={{ background: "white", color: "black", margin: "0 1rem" }} label={tempUser?.data?.role.toUpperCase()} />
                                         </h3>
                                     </div>
                                     {/* Personal Description */}
@@ -391,9 +391,11 @@ const ProfileComponent = ({
 
                                     {/* Additional Info for Alumni */}
                                     {tempUser?.data?.role === 'alumni' && (
-                                        <p className="connection-info">
-                                            {jobData?.data?.length} Jobs posted
-                                        </p>
+                                        <Link to={`/userJob/${params.id}`}>
+                                            <p className="connection-info">
+                                                {jobData?.data?.length} Jobs posted
+                                            </p>
+                                        </Link>
                                     )}
                                 </div>
                                 {/* Apply for Alumni Form (conditionally rendered) */}
@@ -404,7 +406,7 @@ const ProfileComponent = ({
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </Link>
                                 )}
-                                {others && <ConnectionType userId = {params.id} />}
+                                {others && <ConnectionType userId={params.id} />}
                                 {/* ... */}
                             </div>
                         </div>
@@ -628,9 +630,9 @@ const ProfileComponent = ({
                                 </div>
                             </div>
                         </> : <></>}
-                        {!others && postData?.data.map((post, id)=> <PostCard key = {id} post = {post} delete={true} postMutate={postMutate}/>)}
+                        {!others && postData?.data.map((post, id) => <PostCard key={id} post={post} delete={true} postMutate={postMutate} />)}
                         {/* {console.log(postData?.data)} */}
-                        
+
                     </div>
 
                     {/* Right Container */}

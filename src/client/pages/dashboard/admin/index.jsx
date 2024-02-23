@@ -11,12 +11,14 @@ import Institute from "@client/components/institute";
 import NewsCard from "../../../components/cards/newsCard";
 import AlumniRequest from "../../../components/alumni-request";
 import AdminPost from "../../../components/posts/admin-posts";
+import AdminUserUpdate from "../../../components/updateByAdmin";
 
 const panels = {
     "Institutes": <Institute />,
     "Alumni Approval": <AlumniRequest></AlumniRequest>,
     "Update News": <NewsCard></NewsCard>,
-    "Manage Posts": <AdminPost></AdminPost>
+    "Manage Posts": <AdminPost></AdminPost>,
+    "Manage Users": <AdminUserUpdate></AdminUserUpdate>
 }
 
 export default function Page() {

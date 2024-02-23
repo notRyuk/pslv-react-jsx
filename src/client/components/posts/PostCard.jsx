@@ -85,7 +85,7 @@ const PostCard = (props) => {
             },
         })
         if (res?.status === 200) {
-            toast.warning("Post Deleted Successfully")
+            toast.error("Post Deleted Successfully")
             props?.postMutate();
         }
         else {
