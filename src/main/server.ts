@@ -6,7 +6,7 @@ import apiRouter from "@server/routes"
 import { initializeSocketIO } from "@server/socket"
 import compression from "compression"
 import cors from "cors"
-import express, { Request } from "express"
+import express, { Request, Response, NextFunction } from "express"
 import { ValueDeterminingMiddleware, rateLimit } from "express-rate-limit"
 import { createServer } from "http"
 import mongoose from "mongoose"
@@ -54,6 +54,10 @@ app.use(loggerMw)
 app.use("/api", apiRouter)
 app.use("/static/files", express.static(join(__dirname, "..", "..", "public")))
 
+app.use((err: Error, _: Request, res: Response) => {
+    console.error(err.stack);
+    res.status(404).send('Internal Server Error');
+});
 
 mongoose.connect(DB_URL)
     .then(() => {

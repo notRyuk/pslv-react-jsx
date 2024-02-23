@@ -19,19 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <PersistGate loading={null} persistor={persistor}>
             <SocketProvider>
               <Router />
-              {/* <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition:Bounce
-              /> */}
               <ToastContainer theme="dark"/>
             </SocketProvider>
           </PersistGate>

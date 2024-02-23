@@ -58,7 +58,8 @@ export default {
         findByType: "/connection-request/:type"
     },
     connections: {
-        getByUser: "/connections/:user"
+        getByUser: "/connections/:user",
+        delete: "/connection/delete/:id"
     },
     company: {
         create: "/company/create",
