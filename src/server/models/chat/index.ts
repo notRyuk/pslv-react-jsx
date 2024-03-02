@@ -1,5 +1,6 @@
 import IChat from "@types_/chat";
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
+import { Models } from "@utils/models";
 
 const chatSchema = new Schema<IChat>({
     name: String,
@@ -13,6 +14,9 @@ const chatSchema = new Schema<IChat>({
     },
     members: [{
         type: Schema.Types.ObjectId,
-        ref: "user"
+        ref: Models.user
     }]
 })
+
+const Chat = model(Models.chat, chatSchema)
+export default Chat;

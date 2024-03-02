@@ -3,7 +3,7 @@ import { DB_URL, PORT } from "@server/config"
 import loggerMw from "@server/logger"
 import logger from "@server/logger/winston"
 import apiRouter from "@server/routes"
-import { initializeSocketIO } from "@server/socket"
+// import { initializeSocketIO } from "@server/socket"
 import compression from "compression"
 import cors from "cors"
 import express, { Request, Response, NextFunction } from "express"
@@ -13,6 +13,7 @@ import mongoose from "mongoose"
 import { join } from "path"
 import { mw as requestIP } from "request-ip"
 import { Server } from "socket.io"
+import { initializeSocketIOTest } from "@server/socket/testingSocket"
 
 const app = express()
 const server = createServer(app)
@@ -61,7 +62,7 @@ app.use((err: Error, _: Request, res: Response) => {
 
 mongoose.connect(DB_URL)
     .then(() => {
-        initializeSocketIO(io)
+        initializeSocketIOTest(io)
         logger.info("Connected to the database")
         server.listen(PORT, () => {
             logger.info(`App listening on port: ${PORT}`)

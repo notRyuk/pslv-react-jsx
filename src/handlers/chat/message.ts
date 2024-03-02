@@ -1,5 +1,5 @@
 import { ErrorHandler } from "@handlers/error";
-import IMessage from "@types_/user/message";
+import IMessage from "@types_/chat/message";
 import { Models } from "@utils/models";
 
 export default class MessageHandler extends ErrorHandler<IMessage> {

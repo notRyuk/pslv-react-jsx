@@ -9,7 +9,12 @@ export const SearchResult = ({ result, setSearchResults, setInput, setBlur }) =>
     const navigate = useNavigate();
     const location = useLocation();
     const handleClick = () => {
-        if(location.pathname !== "/jobs") navigate(`/profile/${result?._id}`)
+        if(location.pathname !== "/jobs"){
+            if(location.pathname.includes('/chat')){
+                navigate(`/chat?userId=${result?._id}`)
+            }
+            else navigate(`/profile/${result?._id}`)
+        }
         setInput("");
         setSearchResults([]);
         setBlur(true)

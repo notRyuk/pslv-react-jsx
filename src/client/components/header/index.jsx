@@ -377,7 +377,7 @@ export default function PrimarySearchAppBar() {
                                 </IconButton>
                             </Link>
                         )}
-                        <Link to={'/messages'}>
+                        <Link to={'/chat'}>
                             <IconButton
                                 size="large"
                                 aria-label="show 4 new mails"
