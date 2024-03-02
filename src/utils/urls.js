@@ -95,5 +95,11 @@ export default {
     },
     education: {
         create: "/education/create"
+    },
+    report: {
+        create: "/reported-user/create",
+        getAll: "/reported-user",
+        getById: "/reported-user/:id",
+        deleteById: "/reported-user/delete/:id"
     }
 }

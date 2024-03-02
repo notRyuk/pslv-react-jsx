@@ -5,6 +5,7 @@ export enum Models {
     session = "session",
     education = "education",
     profile = "profile",
+    reportedUser = "reported-user",
 
     institute = "institute",
     course = "institute-course",
