@@ -4,6 +4,7 @@ import { getValue } from "@utils/object";
 import { Router } from "express";
 import Chat from "@server/models/chat";
 import ChatHandler from "@handlers/chat";
+import User from "@server/models/user";
 
 const app = Router();
 
@@ -20,7 +21,15 @@ app.post("/", verifyToken(), verifyBody(required), async(_, res)=>{
     if(!newChat){
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
-    return res.status(200).send(handler.success(newChat))
+    const tempUser = await User.findById(otherUser)
+    if(!tempUser){
+        return res.status(404).send("User not Found!!")
+    }
+    const resData = {
+        _id: newChat._id,
+        members: [session.user, tempUser]
+    }
+    return res.status(200).send(handler.success(resData))
 })
 
 app.get("/find", verifyToken(), async(_, res)=>{
@@ -43,7 +52,7 @@ app.get("/find/:userId", verifyToken(), verifyParams(["userId"]), async(_, res)=
         members: { $all: [userId, otherUserId] },
     }).populate([
         { path: "members" },
-    ]).exec() || [];
+    ]).exec() || {};    
     if(!chat){
         return res.status(404).send(handler.error(handler.STATUS_404))
     }

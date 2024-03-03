@@ -22,6 +22,39 @@ const Chat = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [sendMessage, setSendMessage] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
+  const [isChatChanged, setIsChatChanged] = useState(false)
+  useEffect(()=>{
+    const getChat = async()=>{
+      try{
+        const { data } = await axios.get(basePath + urls.chat.findChat.replace(":userId", userId), {
+            headers: {
+                authorization: `Bearer ${session.token}`
+            }
+        });
+        if(Object.keys(data.data).length !== 0){
+          setCurrentChat(data.data)
+          return;
+        }
+        else{
+          const res = await axios.post(basePath + urls.chat.create, {user : userId}, {
+              headers: {
+                  authorization: `Bearer ${session.token}`
+              }
+          })
+
+          if(res?.data?.data){
+            setCurrentChat(res?.data?.data)
+            setIsChatChanged(!isChatChanged)
+          }
+        }
+      }
+      catch(error){
+        console.log(error);
+      }
+    }
+    if(userId !== null) getChat();
+  }, [userId])
+
   // Get the chat in chat section
   useEffect(() => {
     const getChats = async () => {
@@ -37,7 +70,7 @@ const Chat = () => {
       }
     };
     getChats();
-  }, [user._id]);
+  }, [user._id, isChatChanged]);
 
   // Connect to Socket.io
   useEffect(() => {

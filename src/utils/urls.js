@@ -105,7 +105,7 @@ export default {
     chat: {
         create: "/chat",
         userChat: "/chat/find",
-        findChat: "/chat/:userId"
+        findChat: "/chat/find/:userId"
     },
     message: {
         create: "/message",
