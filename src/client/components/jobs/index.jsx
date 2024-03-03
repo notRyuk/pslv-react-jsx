@@ -1,16 +1,19 @@
 import React, { useState } from "react";
-import companyImg from "../../assets/images/company.png";
 import jobHuntImg from "../../assets/images/job-hunt.svg";
 import { useGetter } from "@client/hooks/fetcher.js";
 import urls, { serverPath, basePath } from "../../../utils/urls";
-import { Autocomplete, Chip, TextField } from "@mui/material";
+import { Autocomplete, Chip, IconButton, TextField } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectSession } from "../auth/authSlice";
 import styles from "./styles.module.scss";
 import tempImage from "@client/assets/images/profile.png"
 import { toast } from "react-toastify";
+import SendIcon from '@mui/icons-material/Send';
+import { useNavigate } from "react-router-dom";
 
 const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
+    const navigate = useNavigate();
+
     const [company, setCompany] = useState("");
     const companyUrl = basePath + urls.company.findAll;
     const jobGetUrl = basePath + urls.job.findAll;
@@ -79,38 +82,6 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
 
     return (
         <main className="job-container">
-            {/* <div
-                className="container-left"
-                style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-            >
-                {session?.user?.role === "alumni" ? (
-                    <div className="card">
-                        <h2>{jobs.length} Jobs Posted</h2>
-                    </div>
-                ) : (
-                    <div
-                        className="card"
-                        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-                    >
-                        <h3>Alumni Lists.....</h3>
-                        {alumnis.map((reqUser) => (
-                            <div className="connectSuggestion" key={reqUser.user}>
-                                <a href={`/profile/${reqUser.user}`}>
-                                    <div className="connectProfile">
-                                        <img src={reqUser.imageUrl} alt="personImg" />
-                                        <div className="connectInfo">
-                                            <strong>
-                                                {reqUser.firstname} {reqUser.lastname}
-                                            </strong>
-                                            <small>{reqUser.bio}</small>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div> */}
             <div className="container-main">
                 {session?.user.role === "alumni" ? (
                     <div className="card">
@@ -325,22 +296,11 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                     <div className="posted-time">Experience Years: {job.experienceYears}</div>
 
                                     <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
-                                    {/* <div
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            paddingTop: "5px",
-                                            gap: "4px",
-                                        }}
-                                    >
-                                        <span
-                                            className="material-symbols-rounded job-icon"
-                                            style={{ color: "orange", fontSize: "25px" }}
-                                        >
-                                            star
-                                        </span>
-                                        <div>Actively Hiring</div>
-                                    </div> */}
+                                    {
+                                        <IconButton sx={{ position: "absolute", bottom: "0.5rem", right: "1rem" }} color="primary" aria-label="add to shopping cart" onClick={() => {navigate(`/chat?userId=${job?.from?._id}`)}}>
+                                            <SendIcon sx={{ color: "#3297d1", fontSize: "2rem" }} />
+                                        </IconButton>
+                                    }
                                 </div>
                             </div>
                         ))}
@@ -474,22 +434,11 @@ const JobContainer = ({ usermain, jobs, alumnis, csrfToken, allJobs }) => {
                                         <div>Skills Required : {job?.skills.map((eachSkill, i) => <Chip variant="outlined" key={i} label={eachSkill?.name} />)}</div>
                                         <div className="posted-time">Experience Years: {job.experienceYears}</div>
                                         <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
-                                        {/* <div
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                paddingTop: "5px",
-                                                gap: "4px",
-                                            }}
-                                        >
-                                            <span
-                                                className="material-symbols-rounded job-icon"
-                                                style={{ color: "orange", fontSize: "25px" }}
-                                            >
-                                                star
-                                            </span>
-                                            <div>Actively Hiring</div>
-                                        </div> */}
+                                        {
+                                            <IconButton sx={{ position: "absolute", bottom: "0.5rem", right: "1rem" }} color="primary" aria-label="add to shopping cart" onClick={() => {navigate(`/chat?userId=${job?.from?._id}`)}}>
+                                                <SendIcon sx={{ color: "#3297d1", fontSize: "2rem" }} />
+                                            </IconButton>
+                                        }
                                     </div>
                                 </div>
                             ))}
