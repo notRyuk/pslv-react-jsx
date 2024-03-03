@@ -13,7 +13,7 @@ import mongoose from "mongoose"
 import { join } from "path"
 import { mw as requestIP } from "request-ip"
 import { Server } from "socket.io"
-import { initializeSocketIOTest } from "@server/socket/testingSocket"
+import { initializeSocketIOTest } from "@server/socket/socket"
 
 const app = express()
 const server = createServer(app)
