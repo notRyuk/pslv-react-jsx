@@ -5,7 +5,8 @@ import { basePath, serverPath } from '../../../utils/urls';
 import urls from '../../../utils/urls';
 import { useGetter } from '../../hooks/fetcher';
 import tempImage from "@client/assets/images/profile.png";
-import { Chip } from '@mui/material';
+import { Chip, IconButton } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 export default function JobsFilter() {
     const params = useParams();
@@ -22,12 +23,13 @@ export default function JobsFilter() {
     return (
         <>
 
-            <div className="row" style={{ marginTop: "2rem", padding: "3%", overflow: "hidden"}}>
-                <div className="col-9 p-4" style={{ backgroundColor: "#1b2730", borderRadius: "10px" }}>
+            <div className="profileContainer" style={{ marginTop: "2rem", padding: "3%"}}>
+                <div className="container-main">
+                <div className="p-4" style={{ backgroundColor: "#1b2730", borderRadius: "10px" }}>
                     <h3 className=' ms-2'>Filtered Results</h3>
                     <hr style={{marginTop:"0.5rem"}}/>
                     {/* <hr /> */}
-                    <div className="job-cards-container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(30%, 1fr))", gap: "20px" }}>
+                    <div className="job-cards-container" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                         {filterResults?.data.length ? filterResults?.data?.map((job) => (
                             <div className="card m-2" key={job._id} style={{ boxShadow: "1px 1px 20px 0px black" }}>
                                 <div className="userProfile">
@@ -67,12 +69,20 @@ export default function JobsFilter() {
                                     <div>Skills Required : {job?.skills.map((eachSkill, i) => <Chip variant="outlined" key={i} label={eachSkill?.name} />)}</div>
                                     <div className="posted-time">Experience Years: {job.experienceYears}</div>
                                     <div className="posted-time">Apply Before: {formatDate(job.endsAt)}</div>
+                                    {
+                                        <IconButton sx={{ position: "absolute", bottom: "0.5rem", right: "1rem" }} color="primary" aria-label="add to shopping cart" onClick={() => {navigate(`/chat?userId=${job?.from?._id}`)}}>
+                                            <SendIcon sx={{ color: "#3297d1", fontSize: "2rem" }} />
+                                        </IconButton>
+                                    }
                                 </div>
                             </div>
                         )) : <h1>No Jobs found</h1>}
                     </div>
                 </div>
-                <div className="col-3"><Footer /></div>
+                </div>
+                <div className="container-right content">
+                        <Footer></Footer>
+                    </div>
             </div>
         </>
     );

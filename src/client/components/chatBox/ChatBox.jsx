@@ -8,12 +8,13 @@ import urls, { basePath, serverPath } from "../../../utils/urls";
 import { useSelector } from "react-redux";
 import { selectSession } from "../auth/authSlice";
 import tempImage from "@client/assets/images/profile.png";
+import Loading from "../loading";
 
 const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-
+  const [loading, setLoading] = useState(true)
   const session = useSelector(selectSession);
 
   const handleChange = (newMessage) => {
@@ -27,6 +28,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
         (member) => member._id !== currentUser
       );
       setUserData(memberDetails);
+      setLoading(true)
     }
   }, [chat, currentUser]);
 
@@ -45,6 +47,9 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
         setMessages(data.data);
       } catch (error) {
         console.log(error);
+      }
+      finally{
+        setLoading(false)
       }
     };
 
@@ -131,7 +136,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
             </div>
             {/* chat-body */}
             <div className="chat-body">
-              {messages?.length > 0 ? (
+              {loading ? <Loading /> : messages?.length > 0 ? (
                 messages.map((message, id) => (
                   <>
                     <div
@@ -149,7 +154,9 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
                   </>
                 ))
               ) : (
-                <h1>No Messages Found</h1>
+                <span className="chatbox-empty-message">
+                  No messages found!!
+                </span>
               )}
             </div>
             {/* chat-sender */}

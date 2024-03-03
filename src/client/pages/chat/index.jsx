@@ -9,6 +9,7 @@ import { io } from "socket.io-client";
 import { selectLoggedInUser, selectSession } from "../../components/auth/authSlice";
 import axios from "axios";
 import urls, { basePath } from "../../../utils/urls";
+import Loading from "../../components/loading";
 
 const Chat = () => {
   const location = useLocation()
@@ -22,7 +23,8 @@ const Chat = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [sendMessage, setSendMessage] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
-  const [isChatChanged, setIsChatChanged] = useState(false)
+  const [isChatChanged, setIsChatChanged] = useState(false);
+  const [loading, setLoading] = useState(true)
   useEffect(()=>{
     const getChat = async()=>{
       try{
@@ -45,6 +47,7 @@ const Chat = () => {
           if(res?.data?.data){
             setCurrentChat(res?.data?.data)
             setIsChatChanged(!isChatChanged)
+            setLoading(true)
           }
         }
       }
@@ -67,6 +70,8 @@ const Chat = () => {
         setChats(data.data);
       } catch (error) {
         console.log(error);
+      } finally{
+        setLoading(false)
       }
     };
     getChats();
@@ -113,7 +118,7 @@ const Chat = () => {
         <div className="Chat-container">
           <h2>Chats</h2>
           <div className="Chat-list">
-            {chats.length > 0 ? chats.map((chat, id) => (
+            {loading ? <Loading /> : chats.length > 0 ? chats.map((chat, id) => (
               <div
                 key={id}
                 onClick={() => {
@@ -126,7 +131,9 @@ const Chat = () => {
                   online={checkOnlineStatus(chat)}
                 />
               </div>
-            )): <h1>No Chats found</h1>}
+            )): <span>
+                  No chats found!!
+                </span>}
           </div>
         </div>
       </div>
