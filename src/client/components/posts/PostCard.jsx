@@ -189,19 +189,22 @@ const PostCard = (props) => {
           style={{ color: "black" }}
         >
           <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
+            <div
+              className="modal-content"
+              style={{ backgroundColor: "rgb(27, 39, 48)" }}
+            >
+              <div className="modal-header" style={{ color: "#fff" }}>
                 <h5 className="modal-title" id="exampleModalLabel">
                   {likeInteract.length} Likes
                 </h5>
                 <button
                   type="button"
-                  className="btn-close"
+                  className="btn-close btn-close-white"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 ></button>
               </div>
-              <div className="modal-body">
+              <div className="modal-body"style={{ color: "#fff" }}>
                 <div
                   className="allLikes"
                   style={{ display: "flex", flexDirection: "column" }}
