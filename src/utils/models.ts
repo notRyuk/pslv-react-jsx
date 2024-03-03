@@ -28,6 +28,7 @@ export enum Models {
     interaction = "interaction",
     news = "news",
     post = "post",
+    reportedPost = "reported-post",
 
     // job
     jobApplication = "job-application",

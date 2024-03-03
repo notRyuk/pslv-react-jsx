@@ -31,3 +31,4 @@ dist
 *.local
 *.env.*
 *.env
+package-lock.json

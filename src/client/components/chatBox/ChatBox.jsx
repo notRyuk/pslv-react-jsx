@@ -2,29 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import "./ChatBox.css";
 import { format } from "timeago.js";
-import InputEmoji from 'react-input-emoji'
+import InputEmoji from "react-input-emoji";
 import axios from "axios";
 import urls, { basePath, serverPath } from "../../../utils/urls";
 import { useSelector } from "react-redux";
 import { selectSession } from "../auth/authSlice";
-import tempImage from "@client/assets/images/profile.png"
+import tempImage from "@client/assets/images/profile.png";
 
-const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
+const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-  const session = useSelector(selectSession)
+  const session = useSelector(selectSession);
 
-  const handleChange = (newMessage)=> {
-    setNewMessage(newMessage)
-  }
+  const handleChange = (newMessage) => {
+    setNewMessage(newMessage);
+  };
 
   // fetching data for header
   useEffect(() => {
-    if (chat !== null){
-      const memberDetails = chat.members.find(member => member._id !== currentUser)
-      setUserData(memberDetails)
+    if (chat !== null) {
+      const memberDetails = chat.members.find(
+        (member) => member._id !== currentUser
+      );
+      setUserData(memberDetails);
     }
   }, [chat, currentUser]);
 
@@ -32,11 +34,14 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const { data } = await axios.get(basePath+urls.message.getMessage.replace(":chatId", chat?._id), {
-          headers:{
-            authorization: `Bearer ${session.token}`
+        const { data } = await axios.get(
+          basePath + urls.message.getMessage.replace(":chatId", chat?._id),
+          {
+            headers: {
+              authorization: `Bearer ${session.token}`,
+            },
           }
-        })
+        );
         setMessages(data.data);
       } catch (error) {
         console.log(error);
@@ -46,50 +51,46 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
     if (chat !== null) fetchMessages();
   }, [chat]);
 
-
   // Always scroll to last Message
-  useEffect(()=> {
+  useEffect(() => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
-  },[messages])
-
-
+  }, [messages]);
 
   // Send Message
-  const handleSend = async(e)=> {
-    e.preventDefault()
+  const handleSend = async (e) => {
+    e.preventDefault();
     const message = {
       message: newMessage,
       chatId: chat._id,
-    }
-    const receiver = chat.members.find((member)=>member._id!==currentUser);
+    };
+    const receiver = chat.members.find((member) => member._id !== currentUser);
     // send message to socket server
-    setSendMessage({...message, receiverId: receiver._id})
+    setSendMessage({ ...message, receiverId: receiver._id });
     // send message to database
     try {
-      const { data } = await axios.post(basePath+urls.message.create, message, {
-        headers: {
-          authorization: `Bearer ${session.token}`,
+      const { data } = await axios.post(
+        basePath + urls.message.create,
+        message,
+        {
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
         }
-      });
+      );
       setMessages([...messages, data.data]);
       setNewMessage("");
+    } catch {
+      console.log("error");
     }
-    catch
-    {
-      console.log("error")
+  };
+
+  // Receive Message from parent component
+  useEffect(() => {
+    console.log("Message Arrived: ", receivedMessage);
+    if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+      setMessages([...messages, receivedMessage]);
     }
-  }
-
-// Receive Message from parent component
-useEffect(()=> {
-  console.log("Message Arrived: ", receivedMessage)
-  if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
-    setMessages([...messages, receivedMessage]);
-  }
-
-},[receivedMessage])
-
-
+  }, [receivedMessage]);
 
   const scroll = useRef();
   const imageRef = useRef();
@@ -103,7 +104,11 @@ useEffect(()=> {
               <div className="follower">
                 <div>
                   <img
-                    src={userData?.profilePhoto ? serverPath + userData?.profilePhoto : tempImage}
+                    src={
+                      userData?.profilePhoto
+                        ? serverPath + userData?.profilePhoto
+                        : tempImage
+                    }
                     alt="Profile"
                     className="followerImage"
                     style={{ width: "50px", height: "50px" }}
@@ -125,31 +130,39 @@ useEffect(()=> {
               />
             </div>
             {/* chat-body */}
-            <div className="chat-body" >
-              {messages?.length > 0 ? messages.map((message, id) => (
-                <>
-                  <div ref={scroll}
-                    className={
-                      message.sender === currentUser
-                        ? "message own"
-                        : "message"
-                    }
-                    key={id}
-                  >
-                    <span>{message.message}</span>{" "}
-                    <span>{format(message.createdAt)}</span>
-                  </div>
-                </>
-              )): <h1>No Messages Found</h1>}
+            <div className="chat-body">
+              {messages?.length > 0 ? (
+                messages.map((message, id) => (
+                  <>
+                    <div
+                      ref={scroll}
+                      className={
+                        message.sender === currentUser
+                          ? "message own"
+                          : "message"
+                      }
+                      key={id}
+                    >
+                      <span>{message.message}</span>{" "}
+                      <span>{format(message.createdAt)}</span>
+                    </div>
+                  </>
+                ))
+              ) : (
+                <h1>No Messages Found</h1>
+              )}
             </div>
             {/* chat-sender */}
             <div className="chat-sender">
               <div onClick={() => imageRef.current.click()}>+</div>
-              <InputEmoji
-                value={newMessage}
-                onChange={handleChange}
-              />
-              <div className="send-button button" onClick = {handleSend}>Send</div>
+              <InputEmoji value={newMessage} onChange={handleChange} />
+              <div
+                className="send-button button"
+                onClick={handleSend}
+                style={{ width: "8%", height: "100%", borderRadius: "50px" }}
+              >
+                Send
+              </div>
               {/* <div id="send-btn" onClick={handleSend}>
                 <i className="fa-sharp fa-solid fa-paper-plane"></i> Send
               </div> */}
