@@ -17,6 +17,10 @@ const adminSchema = new Schema<IAdmin>({
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: Models.user
+    },
+    institute: {
+        type: Schema.Types.ObjectId,
+        ref: Models.institute
     }
 })
 
