@@ -316,7 +316,7 @@ export default function PrimarySearchAppBar() {
                             justifyContent: "center",
                         }}
                     >
-                        <Link to="/">
+                        <Link to="/home">
                         <img src={logo} alt="Logo" className={classes.logoImage} />
                         </Link>
                     </Typography>
