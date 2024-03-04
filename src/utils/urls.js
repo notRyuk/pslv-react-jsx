@@ -92,7 +92,8 @@ export default {
         create: "/institute/create",
         delete: "/institute/:id",
         findAll: "/institutes",
-        findById: "/institutes/:id"
+        findById: "/institutes/:id",
+        findWithAdmins: "/admin/institutes"
     },
     education: {
         create: "/education/create"
