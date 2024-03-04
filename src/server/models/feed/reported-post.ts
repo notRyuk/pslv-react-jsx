@@ -11,10 +11,11 @@ const reportedPostSchema = new Schema<IReportedPost>({
         ref: Models.post,
         required: handler.fieldRequired("post")
     }, 
-    by: [{
+    by: {
         type: Schema.Types.ObjectId,
         ref: Models.user
-    }]
+    },
+    reason: String
 })
 
 const ReportedPost = model(Models.reportedPost, reportedPostSchema)

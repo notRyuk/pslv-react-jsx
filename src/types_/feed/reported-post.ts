@@ -4,5 +4,6 @@ import IPost from "./post";
 
 export default interface IReportedPost extends IMongoDocument{
     post : IMongoDocument["_id"]|IPost, 
-    by: (IMongoDocument["_id"]|IUser)[]
+    by: IMongoDocument["_id"]|IUser,
+    reason: string
 }
