@@ -1,5 +1,6 @@
 import ConnectionRequestHandler from "@handlers/user/connection-request";
 import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
+import Institute from "@server/models/institute";
 import Connection from "@server/models/user/connection";
 import ConnectionRequest from "@server/models/user/connection-request";
 import IUser from "@types_/user";
@@ -29,7 +30,17 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
     }
     let url = ""
     const user = (session.user as IUser)._id.toString()
+    const request = new ConnectionRequest({
+        from: user,
+        to: getValue(keys, values, "to"),
+        type: getValue(keys, values, "type")
+    })
     if (getValue(keys, values, "type") === ConnectionTypes.alumniRequest) {
+        const institute = await Institute.findById(getValue(keys, values, "institute"))
+        if(!institute) {
+            return res.status(422).send(handler.error("Institute not found!! Please add the corresponding institute."))
+        }
+        request.set("institute", institute._id)
         const file = req.file
         if(!file) {
             return res.status(422).send(handler.error(handler.fieldInvalid("document", "Alumni Request requires a document to upload type pdf.")))
@@ -38,15 +49,9 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
         const mimeType = originalName.pop()
         const fileName = Hash.create(user + "--" + originalName.join(".")).replace(/\//g, "--")
         url = await downloadFile(`${fileName}.${mimeType}`, user, file!.buffer) as string
+        request.set("document", url)
     }
-    const connectionRequest = await ConnectionRequest.create({
-        from: user,
-        to: getValue(keys, values, "to"),
-        type: getValue(keys, values, "type"),
-        ...(getValue(keys, values, "type") === ConnectionTypes.alumniRequest && {
-            document: url
-        })
-    });
+    const connectionRequest = await request.save()
     if (!connectionRequest) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }

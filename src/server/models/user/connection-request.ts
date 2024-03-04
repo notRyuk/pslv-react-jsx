@@ -25,7 +25,11 @@ const connectionRequestSchema = new Schema<IConnectionRequest>({
         type: Date,
         default: Date.now
     },
-    document: String
+    document: String,
+    institute: {
+        type: Schema.Types.ObjectId,
+        ref: Models.institute
+    }
 })
 
 const ConnectionRequest = model(Models.connectionRequest, connectionRequestSchema)
