@@ -12,8 +12,13 @@ const reportedUserSchema = new Schema<IReportedUser>({
         required: handler.fieldRequired("user")
     }, 
     by: [{
-        type: Schema.Types.ObjectId,
-        ref: Models.user
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: Models.user
+        },
+        reason:{
+            type: String
+        }
     }]
 })
 

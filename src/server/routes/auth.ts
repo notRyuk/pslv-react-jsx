@@ -65,6 +65,8 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
     }
 })
 
+// app.post("/register/institute")
+
 app.post("/login", verifyBody(["email", "password"], handler), async (_, res) => {
     const { keys, values } = res.locals
     const user = await User.findOne({ email: getValue(keys, values, "email") }).populate("admin")
