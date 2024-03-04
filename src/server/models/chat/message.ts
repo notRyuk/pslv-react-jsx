@@ -1,22 +1,18 @@
-import MessageHandler from "@handlers/chat/message";
 import IMessage from "@types_/chat/message";
+import { model, Schema } from "mongoose";
 import { Models } from "@utils/models";
-import { Schema, model } from "mongoose";
 
-const handler = new MessageHandler()
-
-const messageSchema = new Schema<IMessage>({
+const MessageSchema = new Schema<IMessage>({
     chat: {
         type: Schema.Types.ObjectId,
         ref: Models.chat
     },
-    user: {
+    sender: {
         type: Schema.Types.ObjectId,
         ref: Models.user
     },
-    message: {
+    message:{
         type: String,
-        required: handler.fieldRequired("message")
     },
     createdAt: {
         type: Date,
@@ -24,5 +20,5 @@ const messageSchema = new Schema<IMessage>({
     }
 })
 
-const Message = model(Models.chat, messageSchema)
-export default Message
+const Message = model(Models.message, MessageSchema)
+export default Message;

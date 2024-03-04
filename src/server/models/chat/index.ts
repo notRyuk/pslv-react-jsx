@@ -1,9 +1,6 @@
-import ChatHandler from "@handlers/chat";
 import IChat from "@types_/chat";
+import { model, Schema } from "mongoose";
 import { Models } from "@utils/models";
-import { Schema, model } from "mongoose";
-
-const handler = new ChatHandler()
 
 const chatSchema = new Schema<IChat>({
     name: String,
@@ -15,14 +12,11 @@ const chatSchema = new Schema<IChat>({
         type: Boolean,
         default: false
     },
-    members: {
-        type: [{
-            type: Schema.Types.ObjectId,
-            ref: Models.user
-        }],
-        required: handler.fieldRequired("members")
-    }
+    members: [{
+        type: Schema.Types.ObjectId,
+        ref: Models.user
+    }]
 })
 
 const Chat = model(Models.chat, chatSchema)
-export default Chat
+export default Chat;
