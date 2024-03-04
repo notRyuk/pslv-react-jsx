@@ -44,3 +44,10 @@ table thead tr {
   margin-right: 5%;
   border-radius: 50%;
 }
+
+.searchEmail{
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}

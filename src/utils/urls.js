@@ -29,7 +29,8 @@ export default {
         update: "/user/update",
         updateProfilePhoto: "/user/updateProfilePhoto",
         getLoggedInUser: "/user",
-        delete: "/user/:id"
+        delete: "/user/:id",
+        getByRole: "/users/get-role/:role"
     },
     skills: "/skills",
     skill: {
