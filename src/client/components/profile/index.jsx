@@ -34,6 +34,8 @@ import SubmitModal from '../submitModal';
 import { MuiFileInput } from "mui-file-input";
 import ConnectionType from './ConnectionType';
 import PostCard from '../posts/PostCard';
+import Report from "./Report";
+import classes from "./styles.module.scss"
 
 const ProfileComponent = ({
     user,
@@ -56,25 +58,26 @@ const ProfileComponent = ({
     const [info, setInfo] = useState("")
     const [description, setDescription] = useState("")
     const [files, setFiles] = useState([])
-
-    // const [tempUser, setTempUser] = useState({})
-    // const [isLoading, setIsLoading] = useState(true);
     const [others, setOthers] = useState(false)
+    const [profilePhotoModelOpen, setProfilePhotoModalOpen] = useState(false)
+    const [file, setFile] = useState(null)
 
-    function addNewSkill() {
-        skills?.push()
-    }
     const params = useParams()
-    const profileUrl = basePath + urls.user.profile.get.replace(':id', params.id)
     const session = useSelector(selectSession)
 
+    const profileUrl = basePath + urls.user.profile.get.replace(':id', params.id)
     const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", params.id)
     const postUrl = basePath + urls.posts.get.replace(":id", params.id)
+
     const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
     const { data: connectionData, mutate: connectionDataMutate, isLoading: connectionDataIsLoading } = useGetter(basePath + urls.request.findByType.replace(':type', "AlumniRequest"))
     const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
     const { data: skillsData } = useGetter(basePath + urls.skills)
     const [changedSkill, setChangedSkill] = useState("")
+    const { data: tempUser, mutate: tempUserMutate, isLoading } = useGetter(profileUrl)
+    const { data: instituteData, mutate: instituteDataMutate } = useGetter(basePath + urls.institute.findAll)
+    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
+    const { data: reportData, mutate: reportDataMutate } = useGetter(basePath + urls.report.getById.replace(":id", params.id))
 
     const handleAddSkill = async () => {
         const res = await axios.put(basePath + urls.user.profile.addSkill, { skill: changedSkill }, {
@@ -94,12 +97,6 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-    const [profilePhotoModelOpen, setProfilePhotoModalOpen] = useState(false)
-    const handleFileChange = (event) => {
-        // setFiles(e.target.files);
-        console.log("hello")
-        const data = new FormData(event.currentTarget);
-    };
     const handleAddAchievement = async (e) => {
         e.preventDefault()
         const data = new FormData()
@@ -125,8 +122,6 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-
-    const { data: tempUser, mutate: tempUserMutate, isLoading } = useGetter(profileUrl)
 
     useEffect(() => {
         setOthers(session?.user._id !== params.id)
@@ -197,7 +192,6 @@ const ProfileComponent = ({
             serverPath + tempUser?.data?.profilePhoto :
             tempImage
     )
-    const [file, setFile] = useState(null)
     const handleChange = (newFile) => {
         setFile(newFile)
         const fileReader = new FileReader()
@@ -230,8 +224,6 @@ const ProfileComponent = ({
     }, [updatedUserData, updatedUserError])
 
 
-    const { data: instituteData, mutate: instituteDataMutate } = useGetter(basePath + urls.institute.findAll)
-
     const { values: formData, resetForm, handleChange: handleChangeFormData } = form
     const handleAddEducation = async (e) => {
         setShowEducationModal(false)
@@ -250,7 +242,6 @@ const ProfileComponent = ({
             tempUserMutate()
         }
     }
-    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
     const formatDate = (inputDate) => {
         const date = new Date(inputDate);
         const year = date.getFullYear();
@@ -387,16 +378,16 @@ const ProfileComponent = ({
                                     </div>
 
                                     {/* Connection Info */}
-                                    <p className="connection-info">{connectedUser?.data.length} connections</p>
+                                    {/* <p className="connection-info">{connectedUser?.data.length} connections</p> */}
 
                                     {/* Additional Info for Alumni */}
-                                    {tempUser?.data?.role === 'alumni' && (
+                                    {/* {tempUser?.data?.role === 'alumni' && (
                                         <Link to={`/userJob/${params.id}`}>
                                             <p className="connection-info">
                                                 {jobData?.data?.length} Jobs posted
                                             </p>
                                         </Link>
-                                    )}
+                                    )} */}
                                 </div>
                                 {/* Apply for Alumni Form (conditionally rendered) */}
                                 {tempUser?.data?.role === 'student' && connectionData?.data?.length === 0 && tempUser?.data?._id === session.user._id && (
@@ -406,8 +397,10 @@ const ProfileComponent = ({
                                         <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
                                     </Link>
                                 )}
-                                {others && <ConnectionType userId={params.id} />}
-                                {/* ... */}
+                                <div className={classes.bottomRight}>
+                                    {others && <ConnectionType userId={params.id} />}
+                                    {others && reportData?.data.length == 0 && <Report userId={params.id} mutate={reportDataMutate} />}
+                                </div>
                             </div>
                         </div>
 
@@ -431,15 +424,15 @@ const ProfileComponent = ({
                                         <div style={{ fontSize: '12px' }}>Discover your post.</div>
                                     </div>
                                 </div>
-                                {/* <div>
+                                {tempUser?.data.role === "alumni" && <div>
                                     <div>
                                         <span className="material-symbols-rounded">bar_chart</span>
                                     </div>
                                     <div style={{ fontSize: '20px', textDecoration: 'none' }}>
-                                        <Link to={others ? '#' : '/edit-posts'} className="linkStyle">{postImpression} Post impressions</Link>
-                                        <div style={{ fontSize: '12px' }}>Checkout who's engaging with your posts.</div>
+                                        <Link to={others ? '#' : `/userJob/${params.id}`} className="linkStyle">{jobData?.data?.length} Referrals posted</Link>
+                                        <div style={{ fontSize: '12px' }}>Checkout the referrals posted by you.</div>
                                     </div>
-                                </div> */}
+                                </div>}
                                 <div>
                                     <div>
                                         <span className="material-symbols-rounded">group</span>

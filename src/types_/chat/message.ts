@@ -5,7 +5,7 @@ import IChat from ".";
 
 export default interface IMessage extends IMongoDocument {
     chat: IMongoDocument["_id"] | IChat
-    user: IMongoDocument["_id"] | IUser
+    sender: IMongoDocument["_id"] | IUser
     message: string
     createdAt: Time
 }

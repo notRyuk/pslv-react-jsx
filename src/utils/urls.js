@@ -29,7 +29,8 @@ export default {
         update: "/user/update",
         updateProfilePhoto: "/user/updateProfilePhoto",
         getLoggedInUser: "/user",
-        delete: "/user/:id"
+        delete: "/user/:id",
+        getByRole: "/users/get-role/:role"
     },
     skills: "/skills",
     skill: {
@@ -95,5 +96,20 @@ export default {
     },
     education: {
         create: "/education/create"
+    },
+    report: {
+        create: "/reported-user/create",
+        getAll: "/reported-user",
+        getById: "/reported-user/:id",
+        deleteById: "/reported-user/delete/:id"
+    },
+    chat: {
+        create: "/chat",
+        userChat: "/chat/find",
+        findChat: "/chat/find/:userId"
+    },
+    message: {
+        create: "/message",
+        getMessage: "/message/:chatId"
     }
 }

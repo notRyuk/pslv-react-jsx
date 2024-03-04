@@ -12,13 +12,15 @@ import NewsCard from "../../../components/cards/newsCard";
 import AlumniRequest from "../../../components/alumni-request";
 import AdminPost from "../../../components/posts/admin-posts";
 import AdminUserUpdate from "../../../components/updateByAdmin";
+import ReportedUser from "../../../components/reported-user";
 
 const panels = {
     "Institutes": <Institute />,
     "Alumni Approval": <AlumniRequest></AlumniRequest>,
     "Update News": <NewsCard></NewsCard>,
     "Manage Posts": <AdminPost></AdminPost>,
-    "Manage Users": <AdminUserUpdate></AdminUserUpdate>
+    "Manage Users": <AdminUserUpdate></AdminUserUpdate>,
+    "Reported Users": <ReportedUser></ReportedUser>
 }
 
 export default function Page() {

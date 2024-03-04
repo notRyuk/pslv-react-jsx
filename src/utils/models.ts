@@ -5,6 +5,7 @@ export enum Models {
     session = "session",
     education = "education",
     profile = "profile",
+    reportedUser = "reported-user",
 
     institute = "institute",
     course = "institute-course",
@@ -27,6 +28,7 @@ export enum Models {
     interaction = "interaction",
     news = "news",
     post = "post",
+    reportedPost = "reported-post",
 
     // job
     jobApplication = "job-application",

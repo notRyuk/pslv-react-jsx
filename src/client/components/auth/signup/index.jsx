@@ -28,7 +28,12 @@ import { toast } from 'react-toastify';
 export default function SignUp() {
   const [credential, setCredential] = useState({})
   const [credentialAdded, setCredentialAdded] = useState(false)
-  const [error, setError] = useState("")
+  const [email, setEmail] = useState("")
+  const [isEmailValid, setIsEmailValid] = useState(true);
+
+  const handleEmailBlur = () => {
+    setIsEmailValid(email === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+  };
 
   const dispatch = useDispatch();
   const user = useSelector(selectCreatedUser);
@@ -49,11 +54,9 @@ export default function SignUp() {
         role: selectedValue,
       })
       setCredentialAdded(true)
-      setError("")
       toast.success("Credentials Added Successfully")
     }
     else{
-      setError("This Email has been already taken!!")
       toast.error("This Email has been already taken!!")
     }
     
@@ -90,9 +93,16 @@ export default function SignUp() {
                 fullWidth
                 id="email"
                 label="Email Address"
+                type="email"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
+                onBlur={handleEmailBlur}
+                inputProps={{ pattern: '^[^\s@]+@[^\s@]+\.[^\s@]+$' }}
+                error={!isEmailValid}
+                helperText={!isEmailValid ? 'Invalid email address' : ''}
                 sx={{
                   "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
                     borderColor: "white"
@@ -160,6 +170,7 @@ export default function SignUp() {
                 type="submit"
                 fullWidth
                 variant="contained"
+                disabled={!isEmailValid}
                 sx={{
                   mt: 3, mb: 2, "&.MuiButton-root:hover": {
                     borderColor: '#1565c0',

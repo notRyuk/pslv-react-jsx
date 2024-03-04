@@ -26,6 +26,10 @@ import workRouter from "./work"
 import instituteRouter from "./institute"
 import institutesRouter from "./institutes"
 import courseRouter from "./course"
+import reportedUserRouter from "./reported-user"
+import chatRouter from "./chat"
+import messageRouter from "./message"
+import reportedPostRouter from "./reported-post"
 
 const app = Router()
 
@@ -55,5 +59,9 @@ app.use("/work", workRouter)
 app.use("/institute", instituteRouter)
 app.use("/institutes", institutesRouter)
 app.use("/course", courseRouter)
+app.use("/reported-user", reportedUserRouter)
+app.use("/chat", chatRouter)
+app.use("/message", messageRouter)
+app.use("/reported-post", reportedPostRouter)
 
 export default app

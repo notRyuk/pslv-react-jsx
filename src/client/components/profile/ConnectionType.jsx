@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import Button from '@mui/material/Button';
-import classes from "./styles.module.scss"
 import { useSelector } from 'react-redux';
 import urls, { basePath } from '../../../utils/urls';
 import { useGetter } from '../../hooks/fetcher';
@@ -85,16 +84,16 @@ const ConnectionType = (props) => {
     }
   return (
         <>
-            {isSuggestion && !isFriend && !hasRequested && <Button variant="contained" endIcon={<PersonAddIcon />} className={classes.connectionType} onClick={clickHandler} >
+            {isSuggestion && !isFriend && !hasRequested && <Button variant="contained" endIcon={<PersonAddIcon />} onClick={clickHandler} >
                 Connect
             </Button>}
-            {isFriend && !isSuggestion && !hasRequested && <Button variant="contained" endIcon={<CheckIcon />} className={classes.connectionType}>
+            {isFriend && !isSuggestion && !hasRequested && <Button variant="contained" endIcon={<CheckIcon />}>
                 Connection
             </Button>}
-            {hasRequested && !isSuggestion && !isFriend && <Button variant="contained" endIcon={<PersonAddIcon />} className={classes.connectionType} onClick={requestAcceptHadler}>
+            {hasRequested && !isSuggestion && !isFriend && <Button variant="contained" endIcon={<PersonAddIcon />} onClick={requestAcceptHadler}>
                 Accept
             </Button>}
-            {!isSuggestion && !isFriend && !hasRequested && <Button variant="contained" endIcon={<CheckIcon />} className={classes.connectionType}>
+            {!isSuggestion && !isFriend && !hasRequested && <Button variant="contained" endIcon={<CheckIcon />}>
                 Connection Sent
             </Button>}
         </>

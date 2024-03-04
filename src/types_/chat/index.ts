@@ -4,7 +4,7 @@ import IUser from "../user";
 
 export default interface IChat extends IMongoDocument {
     name?: string
-    members: IUser[]
+    members: (IMongoDocument["_id"]|IUser)[]
     isGroup: boolean
     createdAt: Time
 }

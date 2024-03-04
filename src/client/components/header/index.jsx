@@ -316,7 +316,9 @@ export default function PrimarySearchAppBar() {
                             justifyContent: "center",
                         }}
                     >
+                        <Link to="/home">
                         <img src={logo} alt="Logo" className={classes.logoImage} />
+                        </Link>
                     </Typography>
                     <Search ref={searchInputRef}>
                         <SearchIconWrapper>
@@ -377,7 +379,7 @@ export default function PrimarySearchAppBar() {
                                 </IconButton>
                             </Link>
                         )}
-                        <Link to={'/messages'}>
+                        <Link to={'/chat'}>
                             <IconButton
                                 size="large"
                                 aria-label="show 4 new mails"
