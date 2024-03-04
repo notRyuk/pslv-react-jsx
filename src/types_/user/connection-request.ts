@@ -9,10 +9,10 @@ export enum ConnectionTypes {
 }
 
 export default interface IConnectionRequest extends IMongoDocument {
-    from: IMongoDocument["_id"]|IUser
-    to: IMongoDocument["_id"]|IUser
-    type: ConnectionTypes|string
+    from: IMongoDocument["_id"] | IUser
+    to: IMongoDocument["_id"] | IUser
+    type: ConnectionTypes | string
     createdAt: Time
     document?: string
-    institute?: IMongoDocument["_id"]|IInstitute
+    institute?: IMongoDocument["_id"] | IInstitute
 }

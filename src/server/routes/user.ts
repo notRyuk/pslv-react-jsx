@@ -116,6 +116,11 @@ app.put("/promote/:user/:role", verifyToken(), verifyAdmin(), verifyParams(["use
     if (!updatedUser) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
+    institute.set("admin", user._id)
+    const updatedInstitute = await institute.save()
+    if (!updatedInstitute) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
     updatedUser.admin = admin
     return res.status(200).send(handler.success(updatedUser))
 })
