@@ -468,7 +468,7 @@ const ProfileComponent = ({
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel" style={{ color: "black" }}>Add Your Gradesheet</h5>
+                                        <h5 className="modal-title" id="exampleModalLabel" style={{ color: "black" }}>Add Your Gradesheet and college</h5>
                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div className="modal-body">
@@ -477,6 +477,14 @@ const ProfileComponent = ({
                                                 <label htmlFor="exampleInputEmail1" className="form-label" style={{ color: "black" }}>Select file in pdf format</label>
                                                 <input type='file' accept="application/pdf" className='form-control' name='document'></input>
                                             </div>
+                                            {/* <div className="mb-3">
+                                                <label htmlFor="exampleInputEmail1" className="form-label" style={{ color: "black" }}>Select Institute</label>
+                                                <select name="institute" id="institute" className='form-control'>
+                                                    {instituteData?.data?.map((e, ind)=> (
+                                                        <option key={ind} value={e?._id} className='form-control'>{e?.name}</option>
+                                                    ))}
+                                                </select>
+                                            </div> */}
                                             <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Request For Alumni</button>
                                         </form>
                                     </div>
@@ -740,8 +748,8 @@ const ProfileComponent = ({
                             name="institute"
                             onChange={handleChangeFormData}
                         >
-                            {instituteData?.data?.map(e => (
-                                <MenuItem key={e?._id} value={e?._id}>{e?.name}</MenuItem>
+                            {instituteData?.data?.map((e, ind)=> (
+                                <MenuItem key={ind} value={e?._id}>{e?.name}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
