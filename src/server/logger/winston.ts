@@ -31,7 +31,7 @@ const logger = winston.createLogger({
     ),
     transports: [
         new winston.transports.Console({
-            silent: true
+            silent: false
         }),
         new winston.transports.File({
             maxsize: 5*1024*1024,

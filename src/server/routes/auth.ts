@@ -67,7 +67,7 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
 
 app.post("/login", verifyBody(["email", "password"], handler), async (_, res) => {
     const { keys, values } = res.locals
-    const user = await User.findOne({ email: getValue(keys, values, "email") })
+    const user = await User.findOne({ email: getValue(keys, values, "email") }).populate("admin")
     if (!user) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
