@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import urls, { basePath, serverPath } from "@utils/urls";
 import PostCarousel from "./carousel";
@@ -8,10 +8,12 @@ import {
   selectLoggedInUser,
 } from "@client/components/auth/authSlice";
 import axios from "axios";
+// @ts-ignore
 import tempImage from "@client/assets/images/profile.png";
 import { toast } from "react-toastify";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ReportPostButton from "./report";
 
 const PostCard = (props) => {
   const [likeInteract, setLikeIneract] = useState([]);
@@ -147,12 +149,13 @@ const PostCard = (props) => {
               color="primary"
               aria-label="add to shopping cart"
               onClick={() => {
-                deleteHandler(props?.post?._id);
+                deleteHandler();
               }}
             >
               <DeleteIcon sx={{ color: "#E74C3C", fontSize: "2rem" }} />
             </IconButton>
           )}
+          <ReportPostButton post={props.post._id}></ReportPostButton>
         </div>
         <div className="caption">
           <p>{props.post?.content.text}</p>
@@ -183,7 +186,7 @@ const PostCard = (props) => {
         <div
           className="modal fade mt-5"
           id={`likeModal${props.post?._id}`}
-          tabIndex="-1"
+          tabIndex={-1}
           aria-labelledby="articleModalLabel"
           aria-hidden="true"
           style={{ color: "black" }}
@@ -204,7 +207,7 @@ const PostCard = (props) => {
                   aria-label="Close"
                 ></button>
               </div>
-              <div className="modal-body"style={{ color: "#fff" }}>
+              <div className="modal-body" style={{ color: "#fff" }}>
                 <div
                   className="allLikes"
                   style={{ display: "flex", flexDirection: "column" }}
@@ -278,7 +281,7 @@ const PostCard = (props) => {
           <div
             className="modal fade mt-5"
             id={`commentModal${props.post?._id}`}
-            tabIndex="-1"
+            tabIndex={-1}
             aria-labelledby="articleModalLabel"
             aria-hidden="true"
             style={{ color: "black" }}

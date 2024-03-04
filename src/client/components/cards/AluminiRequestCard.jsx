@@ -1,9 +1,9 @@
 import urls, { basePath, serverPath } from '@utils/urls'
 import axios from 'axios'
-import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { selectSession } from '../auth/authSlice'
+// @ts-ignore
 import tempImage from "@client/assets/images/profile.png"
 import { toast } from 'react-toastify'
 

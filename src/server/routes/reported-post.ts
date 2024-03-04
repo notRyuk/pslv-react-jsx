@@ -77,7 +77,7 @@ app.delete("/delete/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), as
         const { keys, values } = res.locals;
         const reportedPostId = getValue(keys, values, "id");
 
-        const deletedPost = await ReportedPost.findOneAndDelete({ _id: reportedPostId });
+        const deletedPost = await ReportedPost.deleteMany({ post: reportedPostId });
 
         if (!deletedPost) {
             return res.status(404).send(handler.error(handler.STATUS_404));

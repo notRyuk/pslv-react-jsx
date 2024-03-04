@@ -1,4 +1,4 @@
-import React from 'react'
+// @ts-ignore
 import classes from "./styles.module.scss"
 import urls, { basePath } from '../../../utils/urls';
 import {usePoster } from '../../hooks/fetcher';

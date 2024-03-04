@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+// @ts-ignore
 import profile from "@client/assets/images/profile.png";
 import { Typography } from "@mui/material"
 import { useGetter } from "../../hooks/fetcher";

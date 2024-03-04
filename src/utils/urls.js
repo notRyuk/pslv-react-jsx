@@ -105,8 +105,8 @@ export default {
     reportedPost: {
         create: "/reported-post/create",
         getAll: "/reported-post",
-        getById: "/reported-user/:id",
-        deleteById: "/reported-user/delete/:id"
+        getById: "/reported-post/:id",
+        deleteById: "/reported-post/delete/:id"
     },
     chat: {
         create: "/chat",
