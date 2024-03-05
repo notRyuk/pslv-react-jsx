@@ -14,20 +14,28 @@ import AdminPost from "../../../components/posts/admin-posts";
 import AdminUserUpdate from "../../../components/updateByAdmin";
 import ReportedUser from "../../../components/reported-user";
 import ReportedPost from "@client/components/posts/reported-post";
+import InstituteAdminHandleuser from "../../../components/updateByAdmin/InstituteAdminHandleUser";
 
 const panels = {
-    "Institutes": <Institute />,
-    "Alumni Approval": <AlumniRequest></AlumniRequest>,
-    "Update News": <NewsCard></NewsCard>,
+    // "Institutes": <Institute />,
+    // "Alumni Approval": <AlumniRequest></AlumniRequest>,
     "Manage Users": <AdminUserUpdate></AdminUserUpdate>,
     "Reported Users": <ReportedUser></ReportedUser>,
-    "Reported Posts": <ReportedPost></ReportedPost>
+    "Reported Posts": <ReportedPost></ReportedPost>,
+    "Update News": <NewsCard></NewsCard>,
+}
+
+const panels2 = {
+    "Alumni Approval": <AlumniRequest></AlumniRequest>,
+    "Manage Users": <InstituteAdminHandleuser></InstituteAdminHandleuser>
+    // "Institutes": <Institute />,
 }
 
 export default function Page() {
-    
     const [value, setValue] = useState(Object.keys(panels)[0])
     const handleChangeValue = (_, _new) => setValue(_new)
+    const [value2, setValue2] = useState(Object.keys(panels2)[0])
+    const handleChangeValue2 = (_, _new) => setValue2(_new)
     const user = useSelector(selectLoggedInUser)
     const navigate = useNavigate()
 
@@ -39,16 +47,7 @@ export default function Page() {
 
     return (
         <Box sx={{ width: '100%', typography: 'h2', marginTop: "4.5rem" }}>
-            {/* <Paper 
-                sx={{
-                    width: "100%", 
-                    typography: 'h2', 
-                    padding: "1rem"
-                }}
-            >
-                <Typography variant="h4">Admin Dashboard</Typography>
-            </Paper> */}
-            <TabContext value={value}>
+            {user?.admin?.role === "system" ? <TabContext value={value}>
                 <Box
                     sx={{
                         borderBottom: 1,
@@ -80,7 +79,40 @@ export default function Page() {
                         {panels[e]}
                     </TabPanel>
                 ))}
-            </TabContext>
+            </TabContext> : <TabContext value={value2}>
+                <Box
+                    sx={{
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        display: 'flex',
+                        justifyContent: "center",
+                    }}
+                >
+                    <TabList
+                        onChange={handleChangeValue2}
+                        sx={{
+                            gap: "1rem",
+                            display: "flex",
+                            flexDirection: "row",
+                            columnGap: "1rem"
+                        }}
+                    >
+                        {Object.keys(panels2).map(e => (
+                            <Tab key={e} label={e} value={e} />
+                        ))}
+                    </TabList>
+                </Box>
+                {Object.keys(panels2).map(e => (
+                    <TabPanel
+                        key={e}
+                        value={e}
+
+                    >
+                        {panels2[e]}
+                    </TabPanel>
+                ))}
+            </TabContext>}
+            
         </Box>
     )
 }

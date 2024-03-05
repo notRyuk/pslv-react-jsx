@@ -62,6 +62,7 @@ const ProfileComponent = ({
     const [others, setOthers] = useState(false)
     const [profilePhotoModelOpen, setProfilePhotoModalOpen] = useState(false)
     const [file, setFile] = useState(null)
+    const [institute, setInstitute] = useState("")
 
     const params = useParams()
     const session = useSelector(selectSession)
@@ -152,8 +153,15 @@ const ProfileComponent = ({
     }
     const handleAlumniSubmit = async (e) => {
         e.preventDefault();
-        const data = new FormData(e.currentTarget);
-        data.append("to", "656de3f2bdcaade9d49d0f4b")
+    const data = new FormData(e.currentTarget);
+        const resp = await axios.get(basePath + urls.institute.findById.replace(':id', institute), {
+            headers: {
+                authorization: `Bearer ${session.token}`
+            },
+        })
+        // console.log(res?.data?.data);
+        data.append("to", resp?.data?.data?.admin?._id)
+        data.append("institute", resp?.data?.data?._id)
         data.append("type", "AlumniRequest")
         const res = await axios.post(basePath + urls.request.create, data, {
             headers: {
@@ -163,11 +171,11 @@ const ProfileComponent = ({
         });
         if (res?.status === 200) {
             toast.success("Applied for alumni Successfully")
+            connectionDataMutate();
         }
         else {
             toast.error("Something went wrong!!")
         }
-        connectionDataMutate();
         // console.log(data);
     };
 
@@ -249,7 +257,7 @@ const ProfileComponent = ({
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
-    console.log(tempUser)
+    // console.log(tempUser)
     return (
         <>
             {isLoading ?
@@ -477,14 +485,15 @@ const ProfileComponent = ({
                                                 <label htmlFor="exampleInputEmail1" className="form-label" style={{ color: "black" }}>Select file in pdf format</label>
                                                 <input type='file' accept="application/pdf" className='form-control' name='document'></input>
                                             </div>
-                                            {/* <div className="mb-3">
+                                            <div className="mb-3">
                                                 <label htmlFor="exampleInputEmail1" className="form-label" style={{ color: "black" }}>Select Institute</label>
-                                                <select name="institute" id="institute" className='form-control'>
+                                                <select id="institute" className='form-control' value={institute} onChange={(e)=>setInstitute(e.target.value)}>
+                                                    <option value="" className='form-control'>Select your institute..</option>
                                                     {instituteData?.data?.map((e, ind)=> (
                                                         <option key={ind} value={e?._id} className='form-control'>{e?.name}</option>
                                                     ))}
                                                 </select>
-                                            </div> */}
+                                            </div>
                                             <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Request For Alumni</button>
                                         </form>
                                     </div>
@@ -518,7 +527,7 @@ const ProfileComponent = ({
                         )}
 
                         {/* Profile Card - Education */}
-                        {Object.keys(tempUser?.data).includes("profile") ? <>
+                        {!Object.keys(tempUser?.data).includes("admin") && Object.keys(tempUser?.data).includes("profile") ? <>
                             <div className="profile-card card">
                                 <div className="about-title section-title">
                                     <div className="about-title section-title">
@@ -557,7 +566,7 @@ const ProfileComponent = ({
 
 
                         {/* Profile Card - Skills */}
-                        {Object.keys(tempUser?.data).includes("profile") ? <>
+                        {!Object.keys(tempUser?.data).includes("admin") && Object.keys(tempUser?.data).includes("profile") ? <>
                             <div className="profile-card card">
                                 {/* Section Title */}
                                 <div className="about-title section-title">
@@ -596,7 +605,7 @@ const ProfileComponent = ({
 
 
                         {/* Profile Card - Achievements */}
-                        {Object.keys(tempUser?.data).includes("profile") ? <>
+                        {!Object.keys(tempUser?.data).includes("admin") && Object.keys(tempUser?.data).includes("profile") ? <>
                             <div className="profile-card card">
                                 <div className="about-title section-title">
                                     <div style={{ fontSize: '22px', fontWeight: 'bold' }}>Achievements</div>

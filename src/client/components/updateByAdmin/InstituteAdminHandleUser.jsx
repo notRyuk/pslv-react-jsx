@@ -11,9 +11,8 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../loading";
 
-const AdminUserUpdate = () => {
+const InstituteAdminHandleuser = () => {
   const session = useSelector(selectSession);
-
   const [input, setInput] = useState("")
   const [role, setRole] = useState("all")
   const [users, setUsers] = useState([])
@@ -22,7 +21,7 @@ const AdminUserUpdate = () => {
   // const {data : usersData, userMutate : userMutate} = useGetter(basePath + urls.user.fetchAll)
 
   const fetchUsers = async()=>{
-    const res = await axios.get(basePath + urls.user.fetchAll, {
+    const res = await axios.get(basePath + urls.user.fetchUsersbyInstitute, {
       headers: {
         authorization: `Bearer ${session.token}`
       }
@@ -119,13 +118,6 @@ const AdminUserUpdate = () => {
                   checked={role === 'alumni'}
                   onChange={handleRole}
                 />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Institute Admin"
-                  value="admin"
-                  checked={role === 'admin'}
-                  onChange={handleRole}
-                />
               </div>
               <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
               <input className="searchEmail" type="text" placeholder="search by email" onChange={(e)=>handleChange(e.target.value)}/>
@@ -191,4 +183,4 @@ const AdminUserUpdate = () => {
   );
 };
 
-export default AdminUserUpdate;
+export default InstituteAdminHandleuser;

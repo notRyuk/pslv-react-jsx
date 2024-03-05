@@ -195,7 +195,7 @@ const ReportedPost = () => {
                                 }}
                                 style={{ color: "white" }}
                               >
-                                <i className="fa-solid fa-eye"></i> View Reports
+                                <i className="fa-solid fa-eye"></i> View Reporters
                               </Link>
                             </div>
                           </td>
