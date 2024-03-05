@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
+// @ts-ignore
 import profile from "@client/assets/images/profile.png";
 import { FormControlLabel, Radio, Typography } from "@mui/material"
 import { useGetter } from "../../hooks/fetcher";

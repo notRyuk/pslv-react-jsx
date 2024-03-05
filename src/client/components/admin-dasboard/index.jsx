@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectLoggedInUser } from '../auth/authSlice';
-import { fetchAllPostsAsync, selectAllPosts, selectPostListStatus } from '../posts/postSlice';
-import { fetchAllUsersAsync, selectAllUsers, selectUserInfoStatus } from '../auth/user/userSlice';
-import RequestedUser from '../cards/RequestedUser';
 import NewsCard from '../cards/newsCard';
 import "./styles.scss";
 import AluminiRequestCard from '../cards/AluminiRequestCard';
 
-const AdminDashboard = ({ role, user, connection, users, posts }) => {
+const AdminDashboard = ({ role}) => {
 
-    const status = "idle"
-    const userInfoStatus = "idle"
     return (
         <>
             {role === 'admin' ? (
@@ -29,20 +20,17 @@ const AdminDashboard = ({ role, user, connection, users, posts }) => {
                         </div>
                     </div>
 
-                    {/* middle container header */}
-
                     <div className="card center-content content" id='center-content'>
                     <h2 className='pb-2' style={{fontWeight:"600", borderBottom:"1px solid white"}}>Student to Alumini Requests</h2>
-                    <AluminiRequestCard user={tempUser}></AluminiRequestCard>
-                    <AluminiRequestCard user={tempUser}></AluminiRequestCard>
-                    <AluminiRequestCard user={tempUser}></AluminiRequestCard>
+                    <AluminiRequestCard ></AluminiRequestCard>
+                    <AluminiRequestCard ></AluminiRequestCard>
+                    <AluminiRequestCard ></AluminiRequestCard>
                     </div>
                     <div className="right-content content" id='right-content'>
                         <div className="card">
                             <h5>Mascot News</h5>
                             <NewsCard></NewsCard>
                             <div className="specialLink">
-                                {/* <Link to="#">Show More</Link> */}
                             </div>
                         </div>
                     </div>

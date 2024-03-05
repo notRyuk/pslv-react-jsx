@@ -120,8 +120,8 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                                             {/* <i className="fa-solid fa-circle me-2" style={{ paddingTop: '9px' }}></i> */}
                                             <div className="row">
                                                 <div className="col">
-                                                    <h4 style={{ color: 'white' }}>{eachNews.title}</h4>
-                                                    <span style={{ flex: 1, color: "gray" }}>
+                                                    <h5 style={{ color: 'white' }}>{eachNews.title}</h5>
+                                                    <span style={{ flex: 1, color: "gray", fontSize:"0.9rem" }}>
                                                         {eachNews.description}
                                                     </span>
                                                 </div>

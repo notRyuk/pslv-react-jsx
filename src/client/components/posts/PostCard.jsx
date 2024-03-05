@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import urls, { basePath, serverPath } from "@utils/urls";
 import PostCarousel from "./carousel";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import {
   selectSession,
   selectLoggedInUser,
 } from "@client/components/auth/authSlice";
 import axios from "axios";
+// @ts-ignore
 import tempImage from "@client/assets/images/profile.png";
 import { toast } from "react-toastify";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ReportPostButton from "./report";
 
 const PostCard = (props) => {
+
+  const location = useLocation();
+  // const [isDashboardAdmin, setIsDashboardAdmin] = useState()
+  const isDashboardAdmin = location.pathname === "/dashboard/admin";
+
   const [likeInteract, setLikeIneract] = useState([]);
   const [isLikeChanged, setIsLikeChanged] = useState(false);
   const [isCommentChanged, setIsCommentChanged] = useState(false);
@@ -24,11 +32,13 @@ const PostCard = (props) => {
     urls.post.interactions
       .replace(":post", props.post._id)
       .replace(":type", "like");
+
   const likeInteractUrl =
     basePath +
     urls.post.interact
       .replace(":post", props.post._id)
       .replace(":type", "like");
+
   const commentInteractionsUrl =
     basePath +
     urls.post.interactions
@@ -123,13 +133,16 @@ const PostCard = (props) => {
   return (
     <>
       {/* {console.log(props.post)} */}
-      <div className="card">
+      <div className={`card m-1 ${isDashboardAdmin ? "mx-auto" : ""
+        }`} style={{
+          width: isDashboardAdmin && window.innerWidth > 1000 ? "768px" : "auto"
+        }}>
         <div className="userProfile">
           <div className="profileImgPost">
             <img
               src={
                 props?.post?.user?.profilePhoto
-                  ? serverPath + props.post?.user.profilePhoto
+                  ? serverPath + props?.post?.user?.profilePhoto
                   : tempImage
               }
               alt="profileImg"
@@ -137,17 +150,20 @@ const PostCard = (props) => {
           </div>
           <div className="userInfo">
             <h5>
-              {props.post?.user.name.first} {props.post?.user.name.last}
+              {props?.post?.user?.name?.first} {props?.post?.user?.name?.last}
             </h5>
-            <p>{props.post?.user.bio}</p>
+            <p>{props?.post?.user?.bio}</p>
+          </div>
+          <div className="ms-auto" style={{ display: "flex", alignItems: "center" }}>
+            {!isDashboardAdmin && <ReportPostButton className="mt-auto" post={props?.post._id}></ReportPostButton>}
           </div>
           {props?.delete && (
             <IconButton
-              sx={{ position: "absolute", top: "0.5rem", right: "1rem" }}
+              sx={{ padding: "0", margin: "0" }}
               color="primary"
               aria-label="add to shopping cart"
               onClick={() => {
-                deleteHandler(props?.post?._id);
+                deleteHandler();
               }}
             >
               <DeleteIcon sx={{ color: "#E74C3C", fontSize: "2rem" }} />
@@ -155,12 +171,12 @@ const PostCard = (props) => {
           )}
         </div>
         <div className="caption">
-          <p>{props.post?.content.text}</p>
+          <p>{props?.post?.content?.text}</p>
         </div>
         {props.post?.content.media.length !== 0 && (
           <PostCarousel images={props.post?.content.media} />
         )}
-        <div
+        {!isDashboardAdmin && <div
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -176,14 +192,14 @@ const PostCard = (props) => {
               {likeInteract.length} Likes
             </Link>
           </div>
-        </div>
+        </div>}
 
         {/* code for the likeModal */}
 
         <div
           className="modal fade mt-5"
           id={`likeModal${props.post?._id}`}
-          tabIndex="-1"
+          tabIndex={-1}
           aria-labelledby="articleModalLabel"
           aria-hidden="true"
           style={{ color: "black" }}
@@ -204,7 +220,7 @@ const PostCard = (props) => {
                   aria-label="Close"
                 ></button>
               </div>
-              <div className="modal-body"style={{ color: "#fff" }}>
+              <div className="modal-body" style={{ color: "#fff" }}>
                 <div
                   className="allLikes"
                   style={{ display: "flex", flexDirection: "column" }}
@@ -248,17 +264,16 @@ const PostCard = (props) => {
           </div>
         </div>
 
-        <div className="actionBar">
+        {!isDashboardAdmin && <div className="actionBar">
           {/* =======================================================implement like api hit ==================================================*/}
           <button className="linkButton" onClick={likeHandler}>
             <i
-              className={`fa-${
-                likeInteract
-                  .map((like) => like?.user._id)
-                  .includes(session?.user._id)
-                  ? "solid"
-                  : "regular"
-              } fa-thumbs-up`}
+              className={`fa-${likeInteract
+                .map((like) => like?.user._id)
+                .includes(session?.user._id)
+                ? "solid"
+                : "regular"
+                } fa-thumbs-up`}
             ></i>{" "}
             Like
           </button>
@@ -278,7 +293,7 @@ const PostCard = (props) => {
           <div
             className="modal fade mt-5"
             id={`commentModal${props.post?._id}`}
-            tabIndex="-1"
+            tabIndex={-1}
             aria-labelledby="articleModalLabel"
             aria-hidden="true"
             style={{ color: "black" }}
@@ -425,7 +440,7 @@ const PostCard = (props) => {
             </button>
           </form>
           {/*===================================================== end ================================================*/}
-        </div>
+        </div>}
       </div>
     </>
   );

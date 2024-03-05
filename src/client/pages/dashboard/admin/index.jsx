@@ -13,14 +13,15 @@ import AlumniRequest from "../../../components/alumni-request";
 import AdminPost from "../../../components/posts/admin-posts";
 import AdminUserUpdate from "../../../components/updateByAdmin";
 import ReportedUser from "../../../components/reported-user";
+import ReportedPost from "@client/components/posts/reported-post";
 
 const panels = {
     "Institutes": <Institute />,
     "Alumni Approval": <AlumniRequest></AlumniRequest>,
     "Update News": <NewsCard></NewsCard>,
-    "Manage Posts": <AdminPost></AdminPost>,
     "Manage Users": <AdminUserUpdate></AdminUserUpdate>,
-    "Reported Users": <ReportedUser></ReportedUser>
+    "Reported Users": <ReportedUser></ReportedUser>,
+    "Reported Posts": <ReportedPost></ReportedPost>
 }
 
 export default function Page() {
