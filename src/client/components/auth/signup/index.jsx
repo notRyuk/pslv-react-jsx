@@ -14,14 +14,14 @@ import Radio from '@mui/material/Radio';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import classes from "./styles.module.scss";
-  
+
 import Hash from '@utils/hashClient';
 
 import { useDispatch, useSelector } from 'react-redux';
 import Details from '../../details';
 import { selectCreatedUser } from '../authSlice';
 import { useGetter } from '../../../hooks/fetcher';
-import urls,{ basePath } from '../../../../utils/urls';
+import urls, { basePath } from '../../../../utils/urls';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -44,8 +44,8 @@ export default function SignUp() {
     const data = new FormData(event.currentTarget);
     const email = data.get('email')
 
-    const res = await axios.get(basePath+urls.auth.getUserByEmail.replace(":email", email))
-    if(!Object.keys(res?.data?.data).includes("email")){
+    const res = await axios.get(basePath + urls.auth.getUserByEmail.replace(":email", email))
+    if (!Object.keys(res?.data?.data).includes("email")) {
       const password = data.get('password')
       const hashed = await Hash.create(password)
       setCredential({
@@ -56,10 +56,9 @@ export default function SignUp() {
       setCredentialAdded(true)
       toast.success("Credentials Added Successfully")
     }
-    else{
+    else {
       toast.error("This Email has been already taken!!")
     }
-    
   };
 
   const handleChange = (event) => {
@@ -67,7 +66,7 @@ export default function SignUp() {
   };
   return (
     <>
-      {credentialAdded && <Details credential={credential}></Details>}
+      {credentialAdded && <Details credential={credential} />}
       {!credentialAdded &&
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -98,7 +97,7 @@ export default function SignUp() {
                 autoComplete="email"
                 autoFocus
                 value={email}
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 onBlur={handleEmailBlur}
                 inputProps={{ pattern: '^[^\s@]+@[^\s@]+\.[^\s@]+$' }}
                 error={!isEmailValid}
@@ -142,20 +141,38 @@ export default function SignUp() {
                   },
                 }}
               />
-              <FormControlLabel
-                control={<Radio />}
-                label="Student"
-                value="student"
-                checked={selectedValue === 'student'}
-                onChange={handleChange}
-              />
-              <FormControlLabel
-                control={<Radio />}
-                label="Alumni"
-                value="alumni"
-                checked={selectedValue === 'alumni'}
-                onChange={handleChange}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingTop: "1rem"
+                }}
+              >
+                <Typography component="h4" variant="h6">
+                  Select your role
+                </Typography>
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Student"
+                  value="student"
+                  checked={selectedValue === 'student'}
+                  onChange={handleChange}
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Alumni"
+                  value="alumni"
+                  checked={selectedValue === 'alumni'}
+                  onChange={handleChange}
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Institute Admin"
+                  value="institute"
+                  checked={selectedValue === 'institute'}
+                  onChange={handleChange}
+                />
+              </div>
               {/* <FormControlLabel
           control={<Radio />}
           label="Admin"

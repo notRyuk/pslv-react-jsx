@@ -2,8 +2,9 @@ import UserHandler from "@handlers/user";
 import { JWT_SECRET, JWT_SESSION_TIMEOUT } from "@server/config";
 import { verifyBody, verifyToken, verifyParams } from "@server/middleware/verify";
 import User from "@server/models/user";
+import Admin from "@server/models/user/admin";
 import Session from "@server/models/user/session";
-import IUser from "@types_/user";
+import IUser, { ProfileRoles } from "@types_/user";
 import { downloadFile } from "@utils/file";
 import Hash from "@utils/hash";
 import { getValue } from "@utils/object";
@@ -37,7 +38,7 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
         email: getValue(keys, values, "email"),
         phone: getValue(keys, values, "phone"),
         password: getValue(keys, values, "password") as string,
-        role: getValue(keys, values, "role"),
+        role: getValue(keys, values, "role") === "institute" ? ProfileRoles.admin : getValue(keys, values, "role"),
         ...(keys.includes("bio") && getValue(keys, values, "bio").length && {
             bio: getValue(keys, values, "bio")
         })
@@ -51,12 +52,24 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
                 user.profilePhoto = profilePhoto
             }
         }
+        let admin = null
+        if (getValue(keys, values, "role") === "institute") {
+            admin = await Admin.create({
+                role: getValue(keys, values, "role"),
+                createdBy: "656de3f2bdcaade9d49d0f4b"
+            })
+            if (!admin) {
+                return res.status(404).send(handler.error(handler.STATUS_404))
+            }
+            user.set("admin", admin._id)
+        }
         user = await user.save()
         const token = jwt.sign({
             user: user._id.toString(),
             createdAt: Date.now()
         }, JWT_SECRET, { expiresIn: JWT_SESSION_TIMEOUT })
         const session = await Session.create({ user: user._id, token })
+        user.admin = admin
         session.user = user
         return res.status(200).send(handler.success(session))
     }
@@ -87,7 +100,7 @@ app.post("/verify", verifyToken(handler), (_, res) => {
     return res.status(200).send(handler.success(res.locals.session))
 })
 
-app.get("/get-user/:email", verifyParams(["email"]),async (_, res) => {
+app.get("/get-user/:email", verifyParams(["email"]), async (_, res) => {
     const { keys, values } = res.locals
     const user = await User.findOne({ email: getValue(keys, values, "email") });
     // if (!user) {
