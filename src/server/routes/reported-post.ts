@@ -72,12 +72,40 @@ app.get("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     }
 });
 
+app.get("/getPost/:post", verifyToken(), verifyParams(["post"]), async (_, res) => {
+    try {
+        const { keys, values, session } = res.locals;
+        const user = (session.user as IUser)._id;
+        const reportedPostId = getValue(keys, values, "post");
+
+        const reportedPosts = await ReportedPost.find({
+            post: reportedPostId
+        }).populate([{ path: "post" }, { path: "by" }]);
+
+        if (!reportedPosts || reportedPosts.length === 0) {
+            return res.status(405).send(handler.error(handler.STATUS_404));
+        }
+
+        const formattedReportedPosts = reportedPosts.map((reportedPost) => ({
+            _id: reportedPost._id,
+            post: reportedPost.post,
+            by: reportedPost.by,
+            reason: reportedPost.reason
+        }));
+
+        return res.status(200).send(handler.success(formattedReportedPosts));
+    } catch (error) {
+        console.error("Error fetching reported posts:", error);
+        return res.status(500).send(handler.error(handler.STATUS_404));
+    }
+});
+
 app.delete("/delete/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), async (_, res) => {
     try {
         const { keys, values } = res.locals;
         const reportedPostId = getValue(keys, values, "id");
 
-        const deletedPost = await ReportedPost.findOneAndDelete({ _id: reportedPostId });
+        const deletedPost = await ReportedPost.deleteMany({ post: reportedPostId });
 
         if (!deletedPost) {
             return res.status(404).send(handler.error(handler.STATUS_404));

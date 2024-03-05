@@ -77,7 +77,6 @@ const ProfileComponent = ({
     const { data: tempUser, mutate: tempUserMutate, isLoading } = useGetter(profileUrl)
     const { data: instituteData, mutate: instituteDataMutate } = useGetter(basePath + urls.institute.findAll)
     const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
-    const { data: reportData, mutate: reportDataMutate } = useGetter(basePath + urls.report.getById.replace(":id", params.id))
 
     const handleAddSkill = async () => {
         const res = await axios.put(basePath + urls.user.profile.addSkill, { skill: changedSkill }, {
@@ -399,7 +398,7 @@ const ProfileComponent = ({
                                 )}
                                 <div className={classes.bottomRight}>
                                     {others && <ConnectionType userId={params.id} />}
-                                    {others && reportData?.data.length == 0 && <Report userId={params.id} mutate={reportDataMutate} />}
+                                    {others && <Report userId={params.id}/>}
                                 </div>
                             </div>
                         </div>
