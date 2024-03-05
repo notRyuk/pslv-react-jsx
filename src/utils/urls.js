@@ -46,7 +46,8 @@ export default {
     },
     posts: {
         get: "/posts/:id",
-        all: "/posts"
+        all: "/posts",
+        getByPostId: "/posts/get-by-postId/:id"
     },
     request: {
         create: "/connection-request/create",
@@ -106,6 +107,7 @@ export default {
         create: "/reported-post/create",
         getAll: "/reported-post",
         getById: "/reported-post/:id",
+        getByPostId: "/reported-post/getPost/:post",
         deleteById: "/reported-post/delete/:id"
     },
     chat: {

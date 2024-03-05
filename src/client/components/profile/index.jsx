@@ -938,7 +938,7 @@ const ProfileComponent = ({
               <></>
             )}
             {!others &&
-              postData?.data.map((post, id) => (
+              postData?.data?.map((post, id) => (
                 <PostCard
                   key={id}
                   post={post}

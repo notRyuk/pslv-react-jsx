@@ -19,7 +19,6 @@ const panels = {
     "Institutes": <Institute />,
     "Alumni Approval": <AlumniRequest></AlumniRequest>,
     "Update News": <NewsCard></NewsCard>,
-    "Manage Posts": <AdminPost></AdminPost>,
     "Manage Users": <AdminUserUpdate></AdminUserUpdate>,
     "Reported Users": <ReportedUser></ReportedUser>,
     "Reported Posts": <ReportedPost></ReportedPost>

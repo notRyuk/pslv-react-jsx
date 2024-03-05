@@ -57,7 +57,7 @@ const PostOptions = ({ isPostChanged, setIsPostChanged }) => {
   };
   return (
     <>
-      <div className="card">
+      <div className="card m-1">
         <div className="postBox">
           <div className="profileImgPost">
             <img
