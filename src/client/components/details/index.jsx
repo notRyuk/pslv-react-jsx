@@ -29,7 +29,12 @@ export default function Details(props) {
 
   return (
     <>
-      {isUserCreated && <Navigate to="/signin" replace={true}></Navigate>}
+      {isUserCreated && (
+        <Navigate
+          to={"/signin"}
+          replace={true}
+        />
+      )}
       <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
@@ -202,6 +207,9 @@ export default function Details(props) {
                         "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
                           borderColor: "white"
                         },
+                      }}
+                      inputProps={{
+                        accept: "image/*"
                       }}
                     />
                   </Stack>

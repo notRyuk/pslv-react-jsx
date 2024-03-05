@@ -39,7 +39,12 @@ export const verifyToken = (
     if(authHeader.length > 3 || !authHeader[0].startsWith("Bearer")) {
         return res.status(422).send(handler.error("Invalid Authorization Header! Please make that authorization type is bearer"))
     }
-    const session = await Session.findOne({token: authHeader[1]}).populate("user")
+    const session = await Session.findOne({token: authHeader[1]}).populate({
+        path: "user",
+        populate: {
+            path: "admin"
+        }
+    })
     if(!session) {
         return res.status(422).send(handler.error("Session not found! Please try to login again."))
     }

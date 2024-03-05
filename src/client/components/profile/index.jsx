@@ -22,7 +22,7 @@ import { useFormik } from "formik";
 import React, { useEffect, useState } from 'react';
 import { FormLabel, Stack } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import companyImg from "../../assets/images/company.png";
 import { useGetter, usePutter } from '@client/hooks/fetcher';
@@ -49,6 +49,7 @@ const ProfileComponent = ({
     interests,
     users,
 }) => {
+    const navigate = useNavigate()
     const [showSkillModal, setShowSkillModal] = useState(false);
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [showAchievementModal, setShowAchievementModal] = useState(false);
@@ -248,7 +249,7 @@ const ProfileComponent = ({
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
-    // console.log(jobData)
+    console.log(tempUser)
     return (
         <>
             {isLoading ?
@@ -398,7 +399,7 @@ const ProfileComponent = ({
                                 )}
                                 <div className={classes.bottomRight}>
                                     {others && <ConnectionType userId={params.id} />}
-                                    {others && <Report userId={params.id}/>}
+                                    {others && <Report userId={params.id} />}
                                 </div>
                             </div>
                         </div>
@@ -637,9 +638,22 @@ const ProfileComponent = ({
 
                     {/* Right Container */}
                     <div className="container-right content">
-                        {
-                            (others || Object.keys(tempUser?.data).includes("profile")) ? <></> : <button className='btn btn-primary btn-outline' onClick={() => setShowAddressModal(true)}>Complete Your Profile</button>
-                        }
+                        {(others || Object.keys(tempUser?.data).includes("profile") || tempUser?.data?.role === "admin") ? <></> : (
+                            <button
+                                className='btn btn-primary btn-outline'
+                                onClick={() => setShowAddressModal(true)}
+                            >
+                                Complete Your Profile
+                            </button>
+                        )}
+                        {(!others && tempUser?.data?.admin && tempUser?.data?.admin?.role === "institute" && !tempUser?.data?.admin?.institute) ? (
+                            <button
+                                className='btn btn-primary btn-outline'
+                                onClick={() => navigate("/institute/create")}
+                            >
+                                Create Institute
+                            </button>
+                        ) : <></>}
                         <Footer></Footer>
                     </div>
                 </div>
@@ -747,7 +761,7 @@ const ProfileComponent = ({
                             name="institute"
                             onChange={handleChangeFormData}
                         >
-                            {instituteData?.data?.map((e, ind)=> (
+                            {instituteData?.data?.map((e, ind) => (
                                 <MenuItem key={ind} value={e?._id}>{e?.name}</MenuItem>
                             ))}
                         </Select>
