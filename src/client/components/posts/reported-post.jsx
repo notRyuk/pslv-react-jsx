@@ -148,7 +148,7 @@ const ReportedPost = () => {
                     marginBottom: "0.3rem"
                   }}
                 >
-                  Manage Users
+                  Reported Posts
                 </p>
               </Typography>
             </div>
@@ -202,7 +202,8 @@ const ReportedPost = () => {
                           <td>
                             <div className="postOptions">
                               <button
-                                className="btn btn-outline-primary me-2"
+                                className="btn"
+                                style={{background: "#808080", outline: "none", border: "none", color: "white"}}
                                 type="button"
                                 onClick={() => ignoreHandler(report)}
                               >
@@ -212,6 +213,7 @@ const ReportedPost = () => {
                               <button
                                 className="btn btn-outline-danger ms-2"
                                 type="button"
+                                style={{background: "#E74C3C", outline: "none", border: "none", color: "white"}}
                                 onClick={() => removeHandler(report)}
                               >
                                 Delete Post
