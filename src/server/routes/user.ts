@@ -18,6 +18,7 @@ import Profile from "@server/models/user/profile";
 import Education from "@server/models/user/education";
 import Achievement from "@server/models/achievement";
 import Address from "@server/models/address";
+import Institute from "@server/models/institute";
 
 const app = Router()
 const handler = new UserHandler()
@@ -94,9 +95,18 @@ app.put("/promote/:user/:role", verifyToken(), verifyAdmin(), verifyParams(["use
     if (!user) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
+    const role = (getValue(keys, values, "role") as string).split(":")
+    if (role.length !== 2 && role[0] !== "institute") {
+        return res.status(404).send(handler.error("Invalid user role."))
+    }
+    const institute = await Institute.findById(role[1])
+    if (!institute) {
+        return res.status(404).send(handler.error("Invalid institute id."))
+    }
     const admin = await Admin.create({
-        role: getValue(keys, values, "role"),
-        createdBy: (session.user as IUser)._id
+        role: role[0],
+        createdBy: (session.user as IUser)._id,
+        institute: institute._id
     })
     if (!admin) {
         return res.status(404).send(handler.error(handler.STATUS_404))
@@ -104,6 +114,11 @@ app.put("/promote/:user/:role", verifyToken(), verifyAdmin(), verifyParams(["use
     user.set("admin", admin._id)
     const updatedUser = await user.save()
     if (!updatedUser) {
+        return res.status(404).send(handler.error(handler.STATUS_404))
+    }
+    institute.set("admin", user._id)
+    const updatedInstitute = await institute.save()
+    if (!updatedInstitute) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
     updatedUser.admin = admin
@@ -167,14 +182,14 @@ app.put(
             return res.status(404).send(handler.error(handler.STATUS_404))
         }
         const file = req.file as Express.Multer.File
-        if(!file) {
+        if (!file) {
             return res.status(200).send(handler.success("Nothing to update!"))
         }
-        if(!["image/png", "image/jpeg"].includes(file.mimetype)) {
-            return res.status(404).send(handler.STATUS_404+" Invalid File type!")
+        if (!["image/png", "image/jpeg"].includes(file.mimetype)) {
+            return res.status(404).send(handler.STATUS_404 + " Invalid File type!")
         }
         const profilePhoto = await downloadFile("profilePhoto." + file.originalname.split(".").pop(), user._id.toString(), file.buffer)
-        if(!profilePhoto) {
+        if (!profilePhoto) {
             return res.status(404).send(handler.STATUS_404)
         }
         user.set("profilePhoto", profilePhoto)
@@ -186,7 +201,7 @@ app.put(
     }
 )
 
-app.delete("/:id", verifyToken(),verifyAdmin(), verifyParams(["id"]), async (_, res) => {
+app.delete("/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), async (_, res) => {
     const { keys, values } = res.locals
     const userId = getValue(keys, values, "id")
     await Interaction.deleteMany({ user: userId });

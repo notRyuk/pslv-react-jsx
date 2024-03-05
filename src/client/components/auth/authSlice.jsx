@@ -121,7 +121,8 @@ export const authSlice = createSlice({
         state.status = 'idle';
         localStorage.removeItem("session")
         state.loggedInUser = null;
-        state.updatedLoggedInUser = null
+        state.updatedLoggedInUser = null;
+        state.createdUser = null;
       })
 
   },

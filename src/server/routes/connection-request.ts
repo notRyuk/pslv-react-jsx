@@ -1,5 +1,7 @@
 import ConnectionRequestHandler from "@handlers/user/connection-request";
 import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
+import Institute from "@server/models/institute";
+import Admin from "@server/models/user/admin";
 import Connection from "@server/models/user/connection";
 import ConnectionRequest from "@server/models/user/connection-request";
 import IUser from "@types_/user";
@@ -29,24 +31,28 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
     }
     let url = ""
     const user = (session.user as IUser)._id.toString()
+    const request = new ConnectionRequest({
+        from: user,
+        to: getValue(keys, values, "to"),
+        type: getValue(keys, values, "type")
+    })
     if (getValue(keys, values, "type") === ConnectionTypes.alumniRequest) {
+        const institute = await Institute.findById(getValue(keys, values, "institute"))
+        if (!institute) {
+            return res.status(422).send(handler.error("Institute not found!! Please add the corresponding institute."))
+        }
+        request.set("institute", institute._id)
         const file = req.file
-        if(!file) {
+        if (!file) {
             return res.status(422).send(handler.error(handler.fieldInvalid("document", "Alumni Request requires a document to upload type pdf.")))
         }
         const originalName = file!.originalname.split(".")
         const mimeType = originalName.pop()
         const fileName = Hash.create(user + "--" + originalName.join(".")).replace(/\//g, "--")
         url = await downloadFile(`${fileName}.${mimeType}`, user, file!.buffer) as string
+        request.set("document", url)
     }
-    const connectionRequest = await ConnectionRequest.create({
-        from: user,
-        to: getValue(keys, values, "to"),
-        type: getValue(keys, values, "type"),
-        ...(getValue(keys, values, "type") === ConnectionTypes.alumniRequest && {
-            document: url
-        })
-    });
+    const connectionRequest = await request.save()
     if (!connectionRequest) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
@@ -73,7 +79,7 @@ app.get("/:type", verifyToken(), verifyParams(["type"]), async (_, res) => {
 // })
 
 
-app.delete("/:request/ignore", verifyToken(),verifyParams(["request"]), async (_, res) => {
+app.delete("/:request/ignore", verifyToken(), verifyParams(["request"]), async (_, res) => {
     const { keys, values } = res.locals
     const connectionRequest = await ConnectionRequest.findByIdAndDelete(getValue(keys, values, "request"))
     if (!connectionRequest) {
@@ -126,7 +132,7 @@ app.put("/:request/mutual/accept", verifyToken(), verifyParams(["request"]), asy
 
 app.get("/", verifyToken(), async (_, res) => {
     const { session } = res.locals
-    const connectionRequests = await ConnectionRequest.find({ to: (session.user as IUser)._id}).populate({
+    const connectionRequests = await ConnectionRequest.find({ to: (session.user as IUser)._id }).populate({
         path: "from",
         select: "-password"
     }).exec()

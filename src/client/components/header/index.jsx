@@ -305,107 +305,96 @@ export default function PrimarySearchAppBar() {
     }
   };
 
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      {!blur && input && <div className={classes.backdropCreated} />}
-      <AppBar
-        position="fixed"
-        className={classes.navbar}
-        sx={{ bgcolor: "primary.dark" }}
-      >
-        <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Link to="/">
-              <img src={logo} alt="Logo" className={classes.logoImage} />
-            </Link>
-          </Typography>
-          <Search ref={searchInputRef}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              value={input}
-              onChange={(e) => handleChange(e.target.value)}
-              onFocus={() => setBlur(false)}
-              onKeyDown={handleKeyDown}
-            />
-            {!blur && !location.pathname.includes("/jobs") && (
-              <SearchList
-                results={searchResults}
-                setSearchResults={setSearchResults}
-                setInput={setInput}
-                setBlur={setBlur}
-              />
-            )}
-          </Search>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box
-            sx={{ display: { xs: "none", md: "flex" } }}
-            className={classes.iconContainer}
-          >
-            <Link to={"/home"}>
-              <IconButton size="large" aria-label="show home" color="inherit">
-                <HomeIcon></HomeIcon>
-              </IconButton>
-            </Link>
-            {Object.keys(user).includes("admin") && (
-              <Link to={"/dashboard/admin"}>
-                <IconButton
-                  size="large"
-                  aria-label="show 4 new mails"
-                  color="inherit"
-                >
-                  <AdminPanelSettingsIcon />
-                </IconButton>
-              </Link>
-            )}
-            <Link to={"/network"}>
-              <IconButton
-                size="large"
-                aria-label="show 4 new connection"
-                color="inherit"
-              >
-                {/* <Badge badgeContent={4} color="error"> */}
-                <PeopleAltIcon />
-                {/* </Badge> */}
-              </IconButton>
-            </Link>
-            {!Object.keys(user).includes("admin") && (
-              <Link to={"/jobs"}>
-                <IconButton
-                  size="large"
-                  aria-label="show 4 new Jobs"
-                  color="inherit"
-                >
-                  {/* <Badge badgeContent={4} color="error"> */}
-                  <WorkIcon />
-                  {/* </Badge> */}
-                </IconButton>
-              </Link>
-            )}
-            <Link to={"/chat"}>
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
-              >
-                {/* <Badge badgeContent={4} color="error"> */}
-                <MailIcon />
-                {/* </Badge> */}
-              </IconButton>
-            </Link>
-            {/* <Link to={'/notifications'}>
+    return (
+        <Box sx={{ flexGrow: 1 }}>
+            {!blur && input && <div className={classes.backdropCreated} />}
+            <AppBar position="fixed" className={classes.navbar} sx={{ bgcolor: 'primary.dark' }}>
+                <Toolbar>
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component="div"
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Link to="/home">
+                        <img src={logo} alt="Logo" className={classes.logoImage} />
+                        </Link>
+                    </Typography>
+                    <Search ref={searchInputRef}>
+                        <SearchIconWrapper>
+                            <SearchIcon />
+                        </SearchIconWrapper>
+                        <StyledInputBase
+                            placeholder="Search…"
+                            inputProps={{ "aria-label": "search" }}
+                            value={input}
+                            onChange={(e) => handleChange(e.target.value)}
+                            onFocus={() => setBlur(false)}
+                            onKeyDown={handleKeyDown}
+                        />
+                        {!blur && !location.pathname.includes("/jobs") && <SearchList results={searchResults} setSearchResults={setSearchResults} setInput={setInput} setBlur={setBlur} />}
+                    </Search>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Box
+                        sx={{ display: { xs: "none", md: "flex" } }}
+                        className={classes.iconContainer}
+                    >
+                        <Link to={'/home'}>
+                            <IconButton size="large" aria-label="show home" color="inherit">
+                                <HomeIcon></HomeIcon>
+                            </IconButton>
+                        </Link>
+                        {Object.keys(user).includes("admin") && (
+                            <Link to={'/dashboard/admin'}>
+                                <IconButton
+                                    size="large"
+                                    aria-label="show 4 new mails"
+                                    color="inherit"
+                                >
+                                    <AdminPanelSettingsIcon />
+                                </IconButton>
+                            </Link>
+                        )}
+                        <Link to={'/network'}>
+                            <IconButton
+                                size="large"
+                                aria-label="show 4 new connection"
+                                color="inherit"
+                            >
+                                {/* <Badge badgeContent={4} color="error"> */}
+                                <PeopleAltIcon />
+                                {/* </Badge> */}
+                            </IconButton>
+                        </Link>
+                        {!Object.keys(user).includes("admin") && (
+                            <Link to={'/jobs'}>
+                                <IconButton
+                                    size="large"
+                                    aria-label="show 4 new Jobs"
+                                    color="inherit"
+                                >
+                                    {/* <Badge badgeContent={4} color="error"> */}
+                                    <WorkIcon />
+                                    {/* </Badge> */}
+                                </IconButton>
+                            </Link>
+                        )}
+                        <Link to={'/chat'}>
+                            <IconButton
+                                size="large"
+                                aria-label="show 4 new mails"
+                                color="inherit"
+                            >
+                                {/* <Badge badgeContent={4} color="error"> */}
+                                <MailIcon />
+                                {/* </Badge> */}
+                            </IconButton>
+                        </Link>
+                        {/* <Link to={'/notifications'}>
                             <IconButton
                                 size="large"
                                 aria-label="show 17 new notifications"

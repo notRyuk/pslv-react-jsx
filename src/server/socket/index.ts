@@ -39,7 +39,6 @@ export const initializeSocketIO = (io: Server): Server => {
             if (!token) {
                 token = socket.handshake.auth?.token;
             }
-
             if (!token) {
                 return handler.error("Invalid Token")
             }
@@ -49,6 +48,9 @@ export const initializeSocketIO = (io: Server): Server => {
                 handler.error(handler.STATUS_404)
             }
             const user = session?.user as IUser
+            if(user._id !== decodedToken.user) {
+                return socket.emit("Invalid User", "The mentioned token does not match the user.")
+            }
             (socket as any).user = user;
             socket.join(user._id.toString());
             socket.emit(ChatEvent.CONNECTED_EVENT);

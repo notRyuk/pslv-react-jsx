@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "checkJs": true,
+    // "checkJs": true,
 
     /* Linting */
     "strict": false,

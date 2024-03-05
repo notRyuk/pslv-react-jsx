@@ -49,60 +49,34 @@ const ProfileComponent = ({
   interests,
   users,
 }) => {
-  const [showSkillModal, setShowSkillModal] = useState(false);
-  const [showAddressModal, setShowAddressModal] = useState(false);
-  const [showAchievementModal, setShowAchievementModal] = useState(false);
-  const [showEducationModal, setShowEducationModal] = useState(false);
-  const [showContactModal, setShowContactModal] = useState(false);
-  const [showAboutModal, setShowAboutModal] = useState(false);
-  const [info, setInfo] = useState("");
-  const [description, setDescription] = useState("");
-  const [files, setFiles] = useState([]);
-  const [others, setOthers] = useState(false);
-  const [profilePhotoModelOpen, setProfilePhotoModalOpen] = useState(false);
-  const [file, setFile] = useState(null);
+    const [showSkillModal, setShowSkillModal] = useState(false);
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [showAchievementModal, setShowAchievementModal] = useState(false);
+    const [showEducationModal, setShowEducationModal] = useState(false);
+    const [showContactModal, setShowContactModal] = useState(false);
+    const [showAboutModal, setShowAboutModal] = useState(false);
+    const [info, setInfo] = useState("")
+    const [description, setDescription] = useState("")
+    const [files, setFiles] = useState([])
+    const [others, setOthers] = useState(false)
+    const [profilePhotoModelOpen, setProfilePhotoModalOpen] = useState(false)
+    const [file, setFile] = useState(null)
 
-  const params = useParams();
-  const session = useSelector(selectSession);
+    const params = useParams()
+    const session = useSelector(selectSession)
 
-  const profileUrl = basePath + urls.user.profile.get.replace(":id", params.id);
-  const connectionsUrl =
-    basePath + urls.connections.getByUser.replace(":user", params.id);
-  const postUrl = basePath + urls.posts.get.replace(":id", params.id);
+    const profileUrl = basePath + urls.user.profile.get.replace(':id', params.id)
+    const connectionsUrl = basePath + urls.connections.getByUser.replace(":user", params.id)
+    const postUrl = basePath + urls.posts.get.replace(":id", params.id)
 
-  const {
-    data: connectedUser,
-    mutate: connectionMutate,
-    isLoading: connectionIsLoading,
-  } = useGetter(connectionsUrl);
-  const {
-    data: connectionData,
-    mutate: connectionDataMutate,
-    isLoading: connectionDataIsLoading,
-  } = useGetter(
-    basePath + urls.request.findByType.replace(":type", "AlumniRequest")
-  );
-  const {
-    data: postData,
-    mutate: postMutate,
-    isLoading: postIsLoading,
-  } = useGetter(postUrl);
-  const { data: skillsData } = useGetter(basePath + urls.skills);
-  const [changedSkill, setChangedSkill] = useState("");
-  const {
-    data: tempUser,
-    mutate: tempUserMutate,
-    isLoading,
-  } = useGetter(profileUrl);
-  const { data: instituteData, mutate: instituteDataMutate } = useGetter(
-    basePath + urls.institute.findAll
-  );
-  const { data: jobData } = useGetter(
-    basePath + urls.job.findById.replace(":id", params.id)
-  );
-  const { data: reportData, mutate: reportDataMutate } = useGetter(
-    basePath + urls.report.getById.replace(":id", params.id)
-  );
+    const { data: connectedUser, mutate: connectionMutate, isLoading: connectionIsLoading } = useGetter(connectionsUrl)
+    const { data: connectionData, mutate: connectionDataMutate, isLoading: connectionDataIsLoading } = useGetter(basePath + urls.request.findByType.replace(':type', "AlumniRequest"))
+    const { data: postData, mutate: postMutate, isLoading: postIsLoading } = useGetter(postUrl)
+    const { data: skillsData } = useGetter(basePath + urls.skills)
+    const [changedSkill, setChangedSkill] = useState("")
+    const { data: tempUser, mutate: tempUserMutate, isLoading } = useGetter(profileUrl)
+    const { data: instituteData, mutate: instituteDataMutate } = useGetter(basePath + urls.institute.findAll)
+    const { data: jobData } = useGetter(basePath + urls.job.findById.replace(":id", params.id))
 
   const handleAddSkill = async () => {
     const res = await axios.put(
@@ -516,35 +490,21 @@ const ProfileComponent = ({
                                             </p>
                                         </Link>
                                     )} */}
-                </div>
-                {/* Apply for Alumni Form (conditionally rendered) */}
-                {tempUser?.data?.role === "student" &&
-                  connectionData?.data?.length === 0 &&
-                  tempUser?.data?._id === session.user._id && (
-                    <Link
-                      to="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#aboutModal"
-                      className="linkStyle"
-                      style={{
-                        position: "absolute",
-                        bottom: "1rem",
-                        right: "1rem",
-                      }}
-                    >
-                      <button className=" btn btn-primary btn-outline">
-                        Apply For Alumni
-                      </button>
-                    </Link>
-                  )}
-                <div className={classes.bottomRight}>
-                  {others && <ConnectionType userId={params.id} />}
-                  {others && reportData?.data.length == 0 && (
-                    <Report userId={params.id} mutate={reportDataMutate} />
-                  )}
-                </div>
-              </div>
-            </div>
+                                </div>
+                                {/* Apply for Alumni Form (conditionally rendered) */}
+                                {tempUser?.data?.role === 'student' && connectionData?.data?.length === 0 && tempUser?.data?._id === session.user._id && (
+                                    <Link to="#" data-bs-toggle="modal" data-bs-target="#aboutModal" className="linkStyle"
+                                        style={{ position: "absolute", bottom: "1rem", right: "1rem" }}
+                                    >
+                                        <button className=" btn btn-primary btn-outline">Apply For Alumni</button>
+                                    </Link>
+                                )}
+                                <div className={classes.bottomRight}>
+                                    {others && <ConnectionType userId={params.id} />}
+                                    {others && <Report userId={params.id}/>}
+                                </div>
+                            </div>
+                        </div>
 
             {/* Profile Card - Analytics */}
 
@@ -635,72 +595,37 @@ const ProfileComponent = ({
                             </div>
                         </div> */}
 
-            {/* About CustomModal */}
-            <div
-              className={`modal profileModal fade ${
-                showAboutModal ? "show" : ""
-              }`}
-              id="aboutModal"
-              tabIndex={-1}
-              aria-labelledby="articleModalLabel"
-              aria-hidden="true"
-            >
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5
-                      className="modal-title"
-                      id="exampleModalLabel"
-                      style={{ color: "black" }}
-                    >
-                      Add Your Gradesheet
-                    </h5>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div className="modal-body">
-                    <form onSubmit={handleAlumniSubmit}>
-                      <div className="mb-3">
-                        <label
-                          htmlFor="exampleInputEmail1"
-                          className="form-label"
-                          style={{ color: "black" }}
-                        >
-                          Select file in pdf format
-                        </label>
-                        <input
-                          type="file"
-                          accept="application/pdf"
-                          className="form-control"
-                          name="document"
-                        ></input>
-                      </div>
-                      <button
-                        type="submit"
-                        className="btn submitButton"
-                        data-bs-dismiss="modal"
-                        style={{ width: "100%" }}
-                      >
-                        Request For Alumni
-                      </button>
-                    </form>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+                        {/* About CustomModal */}
+                        <div className={`modal profileModal fade ${showAboutModal ? 'show' : ''}`} id="aboutModal" tabIndex={-1} aria-labelledby="articleModalLabel" aria-hidden="true">
+                            <div className="modal-dialog">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="exampleModalLabel" style={{ color: "black" }}>Add Your Gradesheet and college</h5>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <form onSubmit={handleAlumniSubmit}>
+                                            <div className="mb-3">
+                                                <label htmlFor="exampleInputEmail1" className="form-label" style={{ color: "black" }}>Select file in pdf format</label>
+                                                <input type='file' accept="application/pdf" className='form-control' name='document'></input>
+                                            </div>
+                                            {/* <div className="mb-3">
+                                                <label htmlFor="exampleInputEmail1" className="form-label" style={{ color: "black" }}>Select Institute</label>
+                                                <select name="institute" id="institute" className='form-control'>
+                                                    {instituteData?.data?.map((e, ind)=> (
+                                                        <option key={ind} value={e?._id} className='form-control'>{e?.name}</option>
+                                                    ))}
+                                                </select>
+                                            </div> */}
+                                            <button type="submit" className="btn submitButton" data-bs-dismiss="modal" style={{ width: '100%' }}>Request For Alumni</button>
+                                        </form>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
             {/* Profile Card - Working (conditionally rendered) */}
             {usermain?.role === "alumni" && (
@@ -949,308 +874,221 @@ const ProfileComponent = ({
             {/* {console.log(postData?.data)} */}
           </div>
 
-          {/* Right Container */}
-          <div className="container-right content">
-            {others || Object.keys(tempUser?.data).includes("profile") ? (
-              <></>
-            ) : (
-              <button
-                className="btn btn-primary btn-outline"
-                onClick={() => setShowAddressModal(true)}
-              >
-                Complete Your Profile
-              </button>
-            )}
-            <Footer></Footer>
-          </div>
-        </div>
-      )}
-      <SubmitModal
-        open={showAddressModal}
-        setOpen={setShowAddressModal}
-        title={"Complete your profile"}
-        handleSubmit={handleSubmit}
-      >
-        <div className="formContainer card">
-          <div id="detailForm">
-            <h2>Address Details</h2>
-            <div className="twoInput">
-              <div className="div">
-                {/* <label htmlFor="name">Name</label> */}
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Name"
-                  id="name"
-                  required
-                />
-              </div>
-              <div className="div">
-                {/* <label htmlFor="buildingName">Building Name</label> */}
-                <input
-                  type="text"
-                  name="buildingName"
-                  placeholder="Building Name"
-                  id="buildingName"
-                />
-              </div>
-            </div>
-            <div className="oneInput">
-              {/* <label htmlFor="">Adress Line 1</label> */}
-              <input
-                type="text"
-                name="line1"
-                placeholder="Address Line 1"
-                id="line1"
-                required
-              />
-            </div>
-            <div className="oneInput">
-              {/* <label htmlFor="">Adress Line 2</label> */}
-              <input
-                type="text"
-                name="line2"
-                placeholder="Adress Line 2"
-                id="line"
-              />
-            </div>
-            <div className="oneInput">
-              {/* <label htmlFor="">Street</label> */}
-              <input
-                type="text"
-                name="street"
-                placeholder="Street name"
-                id="street"
-                required
-              />
-            </div>
-            <div className="twoInput">
-              <div className="div">
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="city"
-                  id="city"
-                  required
-                />
-              </div>
-              <div className="div">
-                <input
-                  type="text"
-                  name="state"
-                  placeholder="State"
-                  id="state"
-                  required
-                />
-              </div>
-            </div>
-            <div className="twoInput">
-              <div className="div">
-                {/* <label htmlFor="state">State</label> */}
-                <input
-                  type="text"
-                  name="country"
-                  placeholder="country"
-                  id="country"
-                  required
-                />
-              </div>
-              <div className="div">
-                {/* <label htmlFor="pinCode">Pin Code</label> */}
-                <input
-                  type="number"
-                  name="pinCode"
-                  placeholder="Pin Code"
-                  id="pinCode"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </SubmitModal>
-      <CustomModal
-        open={showSkillModal}
-        setOpen={setShowSkillModal}
-        title={"Add Skill"}
-        handleSubmit={handleAddSkill}
-      >
-        <Autocomplete
-          freeSolo
-          options={
-            skillsData?.data
-              ?.filter(
-                (skill) =>
-                  !tempUser?.data?.profile?.skills
-                    ?.map((e) => e?._id)
-                    ?.includes(skill?._id)
-              )
-              ?.map((e) => e?.name) || []
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Add your skills"
-              onChange={(e) => setChangedSkill(e.target.value)}
-            />
-          )}
-          onChange={(_, value) => setChangedSkill(value)}
-        />
-      </CustomModal>
-      <CustomModal
-        open={showEducationModal}
-        setOpen={setShowEducationModal}
-        title={"Add Education"}
-        handleSubmit={handleAddEducation}
-      >
-        <Stack direction="column">
-          <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
-            <InputLabel id="demo-simple-select-label">
-              Type of Education
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={formData.type}
-              label="Education"
-              name="type"
-              onChange={handleChangeFormData}
+                    {/* Right Container */}
+                    <div className="container-right content">
+                        {
+                            (others || Object.keys(tempUser?.data).includes("profile")) ? <></> : <button className='btn btn-primary btn-outline' onClick={() => setShowAddressModal(true)}>Complete Your Profile</button>
+                        }
+                        <Footer></Footer>
+                    </div>
+                </div>
+            }
+            <SubmitModal
+                open={showAddressModal}
+                setOpen={setShowAddressModal}
+                title={"Complete your profile"}
+                handleSubmit={handleSubmit}
             >
-              <MenuItem value={"metric"}>Metric</MenuItem>
-              <MenuItem value={"high school"}>High School</MenuItem>
-              <MenuItem value={"graduation"}>Graduation</MenuItem>
-              <MenuItem value={"post graduation"}>Post Graduation</MenuItem>
-              <MenuItem value={"Ph.D"}>Ph.D</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
-            <InputLabel id="demo-simple-select-label">
-              Select Institute
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={formData.institute}
-              label="Insitute"
-              name="institute"
-              onChange={handleChangeFormData}
+                <div className='formContainer card'>
+                    <div id='detailForm'>
+                        <h2>Address Details</h2>
+                        <div className="twoInput">
+                            <div className="div">
+                                {/* <label htmlFor="name">Name</label> */}
+                                <input type="text" name="name" placeholder='Name' id="name" required />
+                            </div>
+                            <div className="div">
+
+                                {/* <label htmlFor="buildingName">Building Name</label> */}
+                                <input type="text" name="buildingName" placeholder='Building Name' id="buildingName" />
+                            </div>
+                        </div>
+                        <div className="oneInput">
+                            {/* <label htmlFor="">Adress Line 1</label> */}
+                            <input type="text" name="line1" placeholder='Address Line 1' id='line1' required />
+                        </div>
+                        <div className="oneInput">
+                            {/* <label htmlFor="">Adress Line 2</label> */}
+                            <input type="text" name="line2" placeholder='Adress Line 2' id='line' />
+                        </div>
+                        <div className="oneInput">
+                            {/* <label htmlFor="">Street</label> */}
+                            <input type="text" name="street" placeholder='Street name' id='street' required />
+                        </div>
+                        <div className="twoInput">
+                            <div className="div">
+                                <input type="text" name='city' placeholder='city' id='city' required />
+                            </div>
+                            <div className="div">
+                                <input type="text" name="state" placeholder='State' id="state" required />
+                            </div>
+                        </div>
+                        <div className="twoInput">
+                            <div className="div">
+                                {/* <label htmlFor="state">State</label> */}
+                                <input type="text" name="country" placeholder='country' id="country" required />
+                            </div>
+                            <div className="div">
+
+                                {/* <label htmlFor="pinCode">Pin Code</label> */}
+                                <input type="number" name="pinCode" placeholder='Pin Code' id="pinCode" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </SubmitModal>
+            <CustomModal
+                open={showSkillModal}
+                setOpen={setShowSkillModal}
+                title={"Add Skill"}
+                handleSubmit={handleAddSkill}
             >
-              {instituteData?.data?.map((e) => (
-                <MenuItem key={e?._id} value={e?._id}>
-                  {e?.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">
-              Are you currently studying here?
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              name="radio-buttons-group"
-              value={formData.completion.isCurrent}
+                <Autocomplete
+                    freeSolo
+                    options={skillsData?.data?.filter(skill => !tempUser?.data?.profile?.skills?.map(e => e?._id)?.includes(skill?._id))?.map(e => e?.name) || []}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Add your skills" onChange={e => setChangedSkill(e.target.value)} />
+                    )}
+                    onChange={(_, value) => setChangedSkill(value)}
+                />
+            </CustomModal>
+            <CustomModal
+                open={showEducationModal}
+                setOpen={setShowEducationModal}
+                title={"Add Education"}
+                handleSubmit={handleAddEducation}
             >
-              <FormControlLabel
-                value={true}
-                control={<Radio />}
-                label="Yes"
-                name="completion.isCurrent"
-                onChange={handleChangeFormData}
-              />
-              <FormControlLabel
-                value={false}
-                control={<Radio />}
-                label="No"
-                name="completion.isCurrent"
-                onChange={handleChangeFormData}
-              />
-            </RadioGroup>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Joining Date</FormLabel>
-            <TextField
-              type="date"
-              variant="filled"
-              name="joined"
-              onChange={handleChangeFormData}
-              value={formData.joined}
-            />
-          </FormControl>
-        </Stack>
-      </CustomModal>
-      <SubmitModal
-        open={showAchievementModal}
-        setOpen={setShowAchievementModal}
-        title={"Add Achievements"}
-        handleSubmit={handleAddAchievement}
-      >
-        <Box
-          noValidate
-          sx={{ mt: 2, color: "white" }}
-          className="formContainer"
-          padding={"1rem"}
-        >
-          <Stack direction={"column"}>
-            <Stack sx={{ mt: 2 }} direction={"row"} spacing={2}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="firstName"
-                label="Title of the Achievement"
-                name="info"
-                autoComplete="firstName"
-                autoFocus
-                onChange={(e) => setInfo(e.target.value)}
-                sx={{
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                    {
-                      borderColor: "white",
-                    },
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input":
-                    {
-                      color: "white",
-                    },
-                  "& .MuiInputLabel-outlined.Mui-focused": {
-                    color: "white",
-                  },
-                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "white",
-                  },
-                }}
-              />
-            </Stack>
-            <Stack sx={{ mt: 2 }} direction={"row"} spacing={2}>
-              <TextField
-                margin="normal"
-                fullWidth
-                name="description"
-                label="Description of the Achievement"
-                id="userBio"
-                multiline
-                onChange={(e) => setDescription(e.target.value)}
-                rows={4}
-                autoComplete="userBio"
-                sx={{
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                    {
-                      borderColor: "white",
-                    },
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input":
-                    {
-                      color: "white",
-                    },
-                  "& .MuiInputLabel-outlined.Mui-focused": {
-                    color: "white",
-                  },
-                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "white",
-                  },
-                }}
-              />
-            </Stack>
-            {/* <Stack sx={{ mt: 2 }} direction={'column'} spacing={2}>
+                <Stack direction='column'>
+                    <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
+                        <InputLabel id="demo-simple-select-label">Type of Education</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={formData.type}
+                            label="Education"
+                            name="type"
+                            onChange={handleChangeFormData}
+                        >
+                            <MenuItem value={"metric"}>Metric</MenuItem>
+                            <MenuItem value={"high school"}>High School</MenuItem>
+                            <MenuItem value={"graduation"}>Graduation</MenuItem>
+                            <MenuItem value={"post graduation"}>Post Graduation</MenuItem>
+                            <MenuItem value={"Ph.D"}>Ph.D</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
+                        <InputLabel id="demo-simple-select-label">Select Institute</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={formData.institute}
+                            label="Insitute"
+                            name="institute"
+                            onChange={handleChangeFormData}
+                        >
+                            {instituteData?.data?.map((e, ind)=> (
+                                <MenuItem key={ind} value={e?._id}>{e?.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel id="demo-radio-buttons-group-label">Are you currently studying here?</FormLabel>
+                        <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            name="radio-buttons-group"
+                            value={formData.completion.isCurrent}
+                        >
+                            <FormControlLabel
+                                value={true}
+                                control={<Radio />}
+                                label="Yes"
+                                name="completion.isCurrent"
+                                onChange={handleChangeFormData}
+                            />
+                            <FormControlLabel
+                                value={false}
+                                control={<Radio />}
+                                label="No"
+                                name="completion.isCurrent"
+                                onChange={handleChangeFormData}
+                            />
+                        </RadioGroup>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Joining Date</FormLabel>
+                        <TextField
+                            type='date'
+                            variant='filled'
+                            name="joined"
+                            onChange={handleChangeFormData}
+                            value={formData.joined}
+                        />
+                    </FormControl>
+                </Stack>
+            </CustomModal>
+            <SubmitModal
+                open={showAchievementModal}
+                setOpen={setShowAchievementModal}
+                title={"Add Achievements"}
+                handleSubmit={handleAddAchievement}
+            >
+                <Box noValidate sx={{ mt: 2, color: 'white' }} className='formContainer' padding={'1rem'}>
+                    <Stack direction={'column'}>
+                        <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="firstName"
+                                label="Title of the Achievement"
+                                name="info"
+                                autoComplete="firstName"
+                                autoFocus
+                                onChange={(e) => setInfo(e.target.value)}
+                                sx={{
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                                        color: "white"
+                                    },
+                                    "& .MuiInputLabel-outlined.Mui-focused": {
+                                        color: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                }}
+                            />
+                        </Stack>
+                        <Stack sx={{ mt: 2 }} direction={'row'} spacing={2}>
+                            <TextField
+                                margin="normal"
+                                fullWidth
+                                name="description"
+                                label="Description of the Achievement"
+                                id="userBio"
+                                multiline
+                                onChange={(e) => setDescription(e.target.value)}
+                                rows={4}
+                                autoComplete="userBio"
+                                sx={{
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+                                        color: "white"
+                                    },
+                                    "& .MuiInputLabel-outlined.Mui-focused": {
+                                        color: "white"
+                                    },
+                                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "white"
+                                    },
+                                }}
+                            />
+                        </Stack>
+                        {/* <Stack sx={{ mt: 2 }} direction={'column'} spacing={2}>
                             <div style={{ marginBottom: '-1rem', marginTop: '1rem' }}>Add files of proof</div>
                             <TextField
                                 type='file'

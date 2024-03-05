@@ -1,5 +1,7 @@
 import AdminHandler from "@handlers/user/admin";
+import logger from "@server/logger/winston";
 import { verifyAdmin, verifyParams, verifyToken } from "@server/middleware/verify";
+import Institute from "@server/models/institute";
 import User from "@server/models/user";
 import ConnectionRequest from "@server/models/user/connection-request";
 import { ProfileRoles } from "@types_/user";
@@ -16,26 +18,26 @@ app.put("/connection-request/:request/:status", // status = accept / reject
     verifyParams(["request", "status"]),
     async (_, res) => {
         const { keys, values } = res.locals
-        if(!["reject", "accept"].includes((getValue(keys, values, "status") as string))) {
+        if (!["reject", "accept"].includes((getValue(keys, values, "status") as string))) {
             return res.status(404).send(handler.error(handler.fieldInvalid("status", "The value can be either accpet or reject")))
         }
         const connectionRequest = await ConnectionRequest.findByIdAndDelete(getValue(keys, values, "request"))
         if (!connectionRequest) {
             return res.status(404).send(handler.error("Connection Request not found! Try with a valid request"))
         }
-        if(getValue(keys, values, "status") as string === "reject") {
-            return res.status(200).send(handler.success({request: connectionRequest, message: "Successfully rejected the request"}))
+        if (getValue(keys, values, "status") as string === "reject") {
+            return res.status(200).send(handler.success({ request: connectionRequest, message: "Successfully rejected the request" }))
         }
         const user = await User.findById(connectionRequest.from)
-        if(!user) {
+        if (!user) {
             return res.status(404).send(handler.error(handler.STATUS_404))
         }
         user.role = ProfileRoles.alumni
         const updatedUser = await user.save()
-        if(!updatedUser) {
+        if (!updatedUser) {
             return res.status(404).send(handler.error(handler.STATUS_404))
         }
-        return res.status(200).send({user: updatedUser, message: "Updated the user from student to alumni"})
+        return res.status(200).send({ user: updatedUser, message: "Updated the user from student to alumni" })
     }
 )
 
@@ -45,6 +47,19 @@ app.get("/alumni-requests", verifyToken(), verifyAdmin(), async (_, res) => {
         select: "-password"
     }).exec() || []
     return res.status(200).send(handler.success(connectionRequests))
+})
+
+app.get("/institutes", verifyToken(), async (_, res) => {
+    const institutes = await Institute.find({ admin: { $exists: true } }).populate({
+        path: "admin",
+        populate: {
+            path: "admin",
+            select: {
+                role: "institute"
+            }
+        }
+    })
+    return res.status(200).send(handler.success(institutes))
 })
 
 export default app

@@ -29,7 +29,8 @@ export default {
         update: "/user/update",
         updateProfilePhoto: "/user/updateProfilePhoto",
         getLoggedInUser: "/user",
-        delete: "/user/:id"
+        delete: "/user/:id",
+        getByRole: "/users/get-role/:role"
     },
     skills: "/skills",
     skill: {
@@ -92,7 +93,8 @@ export default {
         create: "/institute/create",
         delete: "/institute/:id",
         findAll: "/institutes",
-        findById: "/institutes/:id"
+        findById: "/institutes/:id",
+        findWithAdmins: "/admin/institutes"
     },
     education: {
         create: "/education/create"
