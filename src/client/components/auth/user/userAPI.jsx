@@ -1,3 +1,6 @@
+import urls, { basePath } from "@utils/urls"
+import axios from "axios"
+
 export function fetchUserById(userId) {
   return new Promise(async (resolve) =>{
     const response = await fetch('http://localhost:8080/users/'+userId) 
@@ -8,15 +11,13 @@ export function fetchUserById(userId) {
 }
 
 export function updateUser(update) {
+  const session = JSON.parse(localStorage.getItem("session")) || null
   return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:8080/users/'+update.id, {
-      method: 'PATCH',
-      body: JSON.stringify(update),
-      headers: { 'content-type': 'application/json' },
-    });
-    const data = await response.json();
-    // TODO: on server it will only return some info of user (not password)
-    resolve({ data });
+    const response = await axios.post(basePath+urls.auth.verify, null, {
+      headers: {
+        authorization: `Bearer ${session?.token}`
+      }
+    }).then(res => res.data).then(resolve)
   });
 }
 
