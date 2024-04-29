@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import ChatBox from "../../components/chatBox/ChatBox";
 import { useLocation } from "react-router-dom";
 import Conversation from "../../components/conversation/Conversation";
-import "./Chat.css";
+import "./chat.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
