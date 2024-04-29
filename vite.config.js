@@ -7,23 +7,26 @@ import restart from 'vite-plugin-restart'
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ command }) => {
-  if(command === "serve") {
-    const alias = {}
-    alias["@"] = resolve(__dirname, "./src")
-    const data = (await readDir("./src", { withFileTypes: true }))
-    for(const dir of data) {
-      const name = (dir.isDirectory())?dir.name:dir.name.split(".").slice(0, -1).join(".")
-      alias[`@${name}`] = resolve(__dirname, `./src/${dir.name}`)
-    }
+  const alias = {}
+  alias["@"] = resolve(__dirname, "./src")
+  const data = (await readDir("./src", { withFileTypes: true }))
+  for (const dir of data) {
+    const name = (dir.isDirectory()) ? dir.name : dir.name.split(".").slice(0, -1).join(".")
+    alias[`@${name}`] = resolve(__dirname, `./src/${dir.name}`)
+  }
+  if (command === "serve") {
     return {
-      plugins: [react(), restart({restart: "src"})],
+      plugins: [react(), restart({ restart: "src" })],
       resolve: {
         alias
       }
     }
   }
   return {
-    plugins: [react()]
+    plugins: [react()],
+    resolve: {
+      alias
+    }
   }
 })
 
