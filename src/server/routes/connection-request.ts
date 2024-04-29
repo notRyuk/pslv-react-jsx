@@ -1,7 +1,6 @@
 import ConnectionRequestHandler from "@handlers/user/connection-request";
 import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Institute from "@server/models/institute";
-import Admin from "@server/models/user/admin";
 import Connection from "@server/models/user/connection";
 import ConnectionRequest from "@server/models/user/connection-request";
 import IUser from "@types_/user";

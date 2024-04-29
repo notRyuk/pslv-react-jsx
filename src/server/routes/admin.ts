@@ -1,5 +1,4 @@
 import AdminHandler from "@handlers/user/admin";
-import logger from "@server/logger/winston";
 import { verifyAdmin, verifyParams, verifyToken } from "@server/middleware/verify";
 import Institute from "@server/models/institute";
 import User from "@server/models/user";

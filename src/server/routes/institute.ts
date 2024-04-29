@@ -2,7 +2,6 @@ import InstituteHandler from "@handlers/institute";
 import { verifyAdmin, verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Address from "@server/models/address";
 import Institute from "@server/models/institute";
-import User from "@server/models/user";
 import Admin from "@server/models/user/admin";
 import IUser from "@types_/user";
 import IAdmin from "@types_/user/admin";

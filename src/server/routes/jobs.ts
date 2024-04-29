@@ -1,9 +1,9 @@
 import JobHandler from "@handlers/job"
-import { verifyToken, verifyParams } from "@server/middleware/verify"
+import { verifyParams, verifyToken } from "@server/middleware/verify"
 import Job from "@server/models/job"
-import { Router } from "express"
-import { getValue } from "@utils/object"
 import IUser from "@types_/user"
+import { getValue } from "@utils/object"
+import { Router } from "express"
 
 const app = Router()
 const handler = new JobHandler()
@@ -28,7 +28,7 @@ app.get("/:id", verifyToken(), verifyParams(["id"]),async (_, res) => {
 })
 
 // Search jobs by title
-app.get("/search/:title", verifyToken(), verifyParams(["title"]), async (req, res) => {
+app.get("/search/:title", verifyToken(), verifyParams(["title"]), async (_, res) => {
     const { keys, values } = res.locals;
     const title = getValue(keys, values, "title")
     if (!title) {

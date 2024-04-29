@@ -1,22 +1,29 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES5",
     "jsx": "react-jsx",
     "composite": true,
     "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "module": "ES2015",
+    "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@*": ["./src/*"]
     },
+    "outDir": "build",
+    "ignoreDeprecations": "5.0",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strict": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "rootDir": "src/"
   },
   "include": [
-    "vite.config.mts", 
-    "src/main/server.ts", 
+    "vite.config.mts",
     "config.ts", 
     "src", 
-    "test.ts",
     "globals.d.ts"
-  ]
+  ],
 }

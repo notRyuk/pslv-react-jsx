@@ -10,7 +10,7 @@ const handler = new InteractionHandler();
 const required = ["post", "user", "type"];
 
 // Create Interaction
-app.post("/create", verifyToken(), verifyBody(required), async (req, res) => {
+app.post("/create", verifyToken(), verifyBody(required), async (_, res) => {
     const { keys, values } = res.locals;
     const interaction = await Interaction.create({
         post: getValue(keys, values, "post"),
@@ -26,7 +26,7 @@ app.post("/create", verifyToken(), verifyBody(required), async (req, res) => {
 });
 
 // Retrieve All Interactions
-app.get("/", async (req, res) => {
+app.get("/", async (_, res) => {
     const interactions = await Interaction.find();
     return res.status(200).send(handler.success(interactions));
 });

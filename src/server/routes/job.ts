@@ -1,6 +1,5 @@
 import JobHandler from "@handlers/job";
-import logger from "@server/logger/winston";
-import { verifyBody, verifyToken, verifyParams } from "@server/middleware/verify";
+import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Job from "@server/models/job";
 import Company from "@server/models/job/company";
 import IUser from "@types_/user";

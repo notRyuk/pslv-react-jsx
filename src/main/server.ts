@@ -1,9 +1,16 @@
+if (__filename.endsWith(".js")) {
+    require("module-alias/register")
+    const { addAliases } = require("module-alias")
+    addAliases({
+        "@*": `build/src/*`
+    })
+}
+
 import { ErrorHandler } from "@handlers/error"
 import { DB_URL, PORT } from "@server/config"
 import loggerMw from "@server/logger"
 import logger from "@server/logger/winston"
 import apiRouter from "@server/routes"
-// import { initializeSocketIO } from "@server/socket"
 import compression from "compression"
 import cors from "cors"
 import express, { Request, Response } from "express"
@@ -14,6 +21,7 @@ import { join } from "path"
 import { mw as requestIP } from "request-ip"
 import { Server } from "socket.io"
 import { initializeSocketIOTest } from "@server/socket/socket"
+
 
 const app = express()
 const server = createServer(app)

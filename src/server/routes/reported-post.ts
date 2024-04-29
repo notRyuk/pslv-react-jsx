@@ -74,8 +74,7 @@ app.get("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
 
 app.get("/getPost/:post", verifyToken(), verifyParams(["post"]), async (_, res) => {
     try {
-        const { keys, values, session } = res.locals;
-        const user = (session.user as IUser)._id;
+        const { keys, values } = res.locals;
         const reportedPostId = getValue(keys, values, "post");
 
         const reportedPosts = await ReportedPost.find({

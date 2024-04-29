@@ -1,0 +1,11 @@
+{
+    "watch": [
+        "build"
+    ],
+    "ext": "js,json,env",
+    "ignore": [
+        "src/**/*.spec.ts",
+        "logs"
+    ],
+    "exec": "node build/main/server.js"
+}
