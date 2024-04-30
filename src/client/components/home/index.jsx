@@ -14,7 +14,7 @@ import './styles.scss';
 import { useGetter } from "../../hooks/fetcher";
 import SuggestedUser from "../cards/SuggestedUser";
 
-const HomeComponent = ({ role, user, connection, users, posts }) => {
+const HomeComponent = () => {
     const session = useSelector(selectSession);
     const suggestUrl = basePath + urls.user.suggestedUser.get
     const newsGetUrl = basePath + urls.news.find
@@ -85,6 +85,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
                             {suggestIsLoading && <Loading style={{ padding: "1rem", height: "none" }} />}
                             {!suggestIsLoading && suggestedUser?.data?.length > 0 ? (
                                 <>
+                                    {console.log(suggestedUser.data)}
                                     {suggestedUser.data.map(eachUser => (
                                         <SuggestedUser user={eachUser} key={eachUser._id} suggestMutate={suggestMutate} />
                                     ))}

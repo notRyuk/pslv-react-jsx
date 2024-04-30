@@ -3,11 +3,23 @@ import { verifyParams, verifyToken } from "@server/middleware/verify";
 import Post from "@server/models/feed/post";
 import { getValue } from "@utils/object";
 import { Router } from "express";
+import { createClient } from "@vercel/kv";
 
 const app = Router()
 const handler = new PostHandler()
 
 app.get("/", verifyToken(), async (_, res) => {
+    const kv = createClient({
+        url: process.env.KV_REST_API_URL,
+        token: process.env.KV_REST_API_TOKEN,
+    });
+
+    const posts = await kv.hgetall("allPosts");
+
+    if(posts){
+        
+    }
+
     const allPosts = await Post.find().populate({ path: "user", select: "-password" }).exec();
     return res.status(200).send(handler.success(allPosts));
 });
