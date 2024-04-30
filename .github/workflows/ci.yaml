@@ -19,7 +19,7 @@ jobs:
         run: docker login --username="$DOCKER_USERNAME" --password="$DOCKER_PASSWORD"
       
       - name: Build the Docker Image
-        run: docker build -t notryuk/wbd-server:latest -f Dockerfile.server .
+        run: docker build -t notryuk/mascot-server:latest -f Dockerfile.server .
       
       - name: Push to DockerHub
-        run: docker push notryuk/wbd-server:latest
+        run: docker push notryuk/mascot-server:latest
