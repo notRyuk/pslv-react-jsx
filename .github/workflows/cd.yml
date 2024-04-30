@@ -1,0 +1,20 @@
+name: Server CD Deploy
+
+on:
+  workflow_run:
+    workflows: ["Server CI"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Pull Image from DockerHub
+        run: sudo docker pull notryuk/mascot-server:latest
+
+      - name: Delete old Container
+        run: sudo docker rm -f mascot-server-container || true
+      
+      - name: Re-run the Docker Container
+        run: sudo docker run -d -p 6969:6969 --name mascot-server-container notryuk/mascot-server

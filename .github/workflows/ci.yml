@@ -4,28 +4,11 @@ on:
   push:
     branches:
       - main
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-      
-#       - name: Login to Docker Hub
-#         env:
-#           DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-#           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-#         run: docker login --username="$DOCKER_USERNAME" --password="$DOCKER_PASSWORD"
-      
-#       - name: Build the Docker Image
-#         run: docker build -t notryuk/mascot-server:latest -f Dockerfile.server .
-      
-#       - name: Push to DockerHub
-#         run: docker push notryuk/mascot-server:latest
+      - master
 
 jobs:
   build:
+    if: ${{ startsWith(github.event.head_commit.message, 'server:') }}
     runs-on: ubuntu-latest
     steps:
       -
