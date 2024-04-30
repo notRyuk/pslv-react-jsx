@@ -22,9 +22,7 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
-        run: |
-          
-          docker build --tag="$DOCKER_USERNAME/$DOCKER_IMAGE:latest" -f Dockerfile.server .
+        run: docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE:latest -f Dockerfile.server .
       
       - name: Push to DockerHub
         env:
