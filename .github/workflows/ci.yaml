@@ -47,4 +47,4 @@ jobs:
           context: .
           file: ./Dockerfile.server
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mascot-server:latest
+          tags: notryuk/mascot-server:latest
