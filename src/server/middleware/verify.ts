@@ -5,7 +5,7 @@ import IUser from "@types_/user"
 import { Payload } from "@types_/user/session"
 import { getKeys, getValue, getValues } from "@utils/object"
 import { NextFunction, Request, Response } from "express"
-import jwt, { TokenExpiredError } from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 
 export const verifyBody = (
     required: string[], 
@@ -59,7 +59,7 @@ export const verifyToken = (
         }
     }
     catch(err) {
-        if(err instanceof TokenExpiredError) {
+        if(err) {
             return res.status(401).send(handler.error("Session timed out! Please try to login again."))
         }
         else {
