@@ -19,10 +19,7 @@ jobs:
         run: docker login --username="$DOCKER_USERNAME" --password="$DOCKER_PASSWORD"
       
       - name: Build the Docker Image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest -f Dockerfile.server .
+        run: docker build -t notryuk/wbd-server:latest -f Dockerfile.server .
       
       - name: Push to DockerHub
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
-        run: docker push $DOCKER_USERNAME/$DOCKER_IMAGE:latest
+        run: docker push notryuk/wbd-server:latest
