@@ -14,6 +14,53 @@ const handler = new InstituteHandler()
 const required = [
     "name",
 ]
+
+/**
+ * @swagger
+ * /institute/create:
+ *   post:
+ *     summary: Create an institute
+ *     description: Endpoint to create a new institute
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               address:
+ *                 $ref: '#/components/schemas/Address'
+ *               contact:
+ *                 type: string
+ *               faculty:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               courses:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               awards:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       '200':
+ *         description: Institute created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Institute'
+ *       '401':
+ *         description: Unauthorized access
+ *       '404':
+ *         description: Failed to create institute or admin not found
+ */
+
 app.post("/create",
     verifyToken(),
     verifyAdmin(),
@@ -50,6 +97,35 @@ app.post("/create",
         return res.status(200).send(handler.success(institute))
     }
 )
+
+
+/**
+ * @swagger
+ * /institute/:id:
+ *   delete:
+ *     summary: Delete an institute
+ *     description: Endpoint to delete an institute by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the institute to delete
+ *     responses:
+ *       '200':
+ *         description: Institute deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Institute'
+ *       '401':
+ *         description: Unauthorized access
+ *       '404':
+ *         description: Institute not found
+ */
 
 app.delete("/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), async (_, res) => {
     const { keys, values } = res.locals;

@@ -7,6 +7,34 @@ import { Router } from "express"
 const app = Router()
 const handler = new CompanyHandler()
 
+/**
+ * @swagger
+ * /company/create:
+ *   post:
+ *     summary: Create a company
+ *     description: Endpoint to create a new company
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Company created successfully
+ *       '401':
+ *         description: Unauthorized access
+ *       '404':
+ *         description: Failed to create company
+ */
+
 app.post("/create",
     verifyToken(),
     verifyBody(["name"]),

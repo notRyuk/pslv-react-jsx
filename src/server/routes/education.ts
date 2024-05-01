@@ -8,6 +8,47 @@ import { Router } from "express";
 const app = Router();
 const handler = new EducationHandler();
 
+/**
+ * @swagger
+ * /education/create:
+ *   post:
+ *     summary: Create an education record
+ *     description: Endpoint to create a new education record
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               institute:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               joined:
+ *                 type: string
+ *                 format: date
+ *               completion:
+ *                 type: object
+ *                 properties:
+ *                   isCurrent:
+ *                     type: boolean
+ *               remarks:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Education record created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Profile'
+ *       '401':
+ *         description: Unauthorized access
+ *       '404':
+ *         description: Failed to create education record or profile not found
+ */
 
 app.post(
     "/create",

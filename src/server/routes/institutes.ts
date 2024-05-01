@@ -16,6 +16,34 @@ app.get("/", verifyToken(), async (_, res) => {
     return res.status(200).json(handler.success(institutes));
 })
 
+/**
+ * @swagger
+ * /institutes/:id:
+ *   get:
+ *     summary: Get an institute by ID
+ *     description: Endpoint to get an institute by its ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the institute to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful retrieval of the institute
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Institute'
+ *       '401':
+ *         description: Unauthorized access
+ *       '404':
+ *         description: Institute not found
+ */
+
 app.get("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     const { keys, values } = res.locals;
     const institute = await Institute.findById(getValue(keys, values, "id")).populate([
