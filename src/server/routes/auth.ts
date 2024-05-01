@@ -144,59 +144,60 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
     }
 })
 
-// app.post("/register/institute")
-
-
 /**
-* @swagger
-* /api/auth/login:
-*   post:
-*     summary: User login
-*     description: Authenticate user and generate session token.
-*     requestBody:
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             type: object
-*             properties:
-*               email:
-*                 type: string
-*                 format: email
-*               password:
-*                 type: string
-*     responses:
-*       '200':
-*         description: User logged in successfully
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/components/schemas/UserSession'
-*       '401':
-*         description: Invalid email or password
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/components/schemas/Error'
-*     security: []
-* components:
-*   schemas:
-*     UserSession:
-*       type: object
-*       properties:
-*         user:
-*           type: string
-*           description: The unique identifier of the logged-in user.
-*         token:
-*           type: string
-*           description: JWT token for the user's session.
-*     Error:
-*       type: object
-*       properties:
-*         message:
-*           type: string
-*           description: Description of the error occurred during login.
-*/
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: User login
+ *     description: Login with email and password to authenticate user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Successful login. Returns a session token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/Session'
+ *       '401':
+ *         description: Unauthorized. Incorrect email or password.
+ *       '404':
+ *         description: User not found.
+ *       '500':
+ *         description: Internal Server Error.
+ *     examples:
+ *       example1:
+ *         summary: Example of login request body
+ *         value:
+ *           email: example@example.com
+ *           password: password123
+ * definitions:
+ *   Session:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *       user:
+ *         $ref: '#/definitions/User'
+ *       token:
+ *         type: string
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *   User:
+ *     type: object
+ *     
+ */
+
 
 app.post("/login", verifyBody(["email", "password"], handler), async (_, res) => {
     const { keys, values } = res.locals

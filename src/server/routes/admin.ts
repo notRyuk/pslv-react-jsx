@@ -40,6 +40,40 @@ app.put("/connection-request/:request/:status",
     }
 )
 
+/**
+ * @swagger
+ * /api/admin/alumni-requests:
+ *   get:
+ *     summary: Retrieve all alumni connection requests for the logged-in user
+ *     description: Retrieve all alumni connection requests sent to the logged-in user from other users.
+ *     security:
+ *       - jwt: []
+ *     responses:
+ *       '200':
+ *         description: A successful response with an array of alumni connection requests.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/ConnectionRequest'
+ *       '401':
+ *         description: Unauthorized. Token is missing or invalid.
+ *       '500':
+ *         description: Internal Server Error.
+ *     examples:
+ *       example1:
+ *         summary: Example of authorization header
+ *         value:
+ *           headers:
+ *             Authorization: Bearer <JWT-Token>
+ * definitions:
+ *   ConnectionRequest:
+ *     type: object
+ *     properties:
+ *       // Define properties of the ConnectionRequest object here
+ */
+
 app.get("/alumni-requests", verifyToken(), verifyAdmin(), async (_, res) => {
     const {session} = res.locals
     const user = (session.user as IUser)._id
@@ -49,6 +83,40 @@ app.get("/alumni-requests", verifyToken(), verifyAdmin(), async (_, res) => {
     }).exec() || []
     return res.status(200).send(handler.success(connectionRequests))
 })
+
+/**
+ * @swagger
+ * /api/institutes:
+ *   get:
+ *     summary: Retrieve all institutes
+ *     description: Retrieve all institutes with associated admin users from the database.
+ *     security:
+ *       - jwt: []
+ *     responses:
+ *       '200':
+ *         description: A successful response with an array of institutes.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/Institute'
+ *       '401':
+ *         description: Unauthorized. Token is missing or invalid.
+ *       '500':
+ *         description: Internal Server Error.
+ *     examples:
+ *       example1:
+ *         summary: Example of authorization header
+ *         value:
+ *           headers:
+ *             Authorization: Bearer <JWT-Token>
+ * definitions:
+ *   Institute:
+ *     type: object
+ *     properties:
+ *       // Define properties of the Institute object here
+ */
 
 app.get("/institutes", verifyToken(), async (_, res) => {
     const institutes = await Institute.find({ admin: { $exists: true } }).populate({

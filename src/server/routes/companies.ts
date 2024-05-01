@@ -8,11 +8,6 @@ const handler = new CompanyHandler();
 
 /**
  * @swagger
- * securityDefinitions:
- *  jwt:
- *      type: "apiKey"
- *      name: "Authorization"
- *      in: "header"
  * /api/companies:
  *   get:
  *     summary: Retrieve all companies

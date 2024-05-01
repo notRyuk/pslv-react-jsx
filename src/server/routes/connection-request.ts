@@ -87,6 +87,49 @@ app.delete("/:request/ignore", verifyToken(), verifyParams(["request"]), async (
     return res.status(200).send(handler.success(connectionRequest))
 })
 
+/**
+ * @swagger
+ * /api/connection-request/{request}/mutual/accept:
+ *   put:
+ *     summary: Accept mutual connection request
+ *     description: Accepts a mutual connection request specified by the request ID.
+ *     parameters:
+ *       - in: path
+ *         name: request
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the connection request to accept.
+ *     security:
+ *       - jwt: []
+ *     responses:
+ *       '200':
+ *         description: A successful response with the accepted connection.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/Connection'
+ *       '403':
+ *         description: Forbidden. User does not have permission to accept this connection request.
+ *       '404':
+ *         description: Not Found. Connection request not found or unable to create a connection.
+ *       '401':
+ *         description: Unauthorized. Token is missing or invalid.
+ *       '500':
+ *         description: Internal Server Error.
+ *     examples:
+ *       example1:
+ *         summary: Example of authorization header
+ *         value:
+ *           headers:
+ *             Authorization: Bearer <JWT-Token>
+ * definitions:
+ *   Connection:
+ *     type: object
+ *     properties:
+ *       // Define properties of the Connection object here
+ */
+
 app.put("/:request/mutual/accept", verifyToken(), verifyParams(["request"]), async (_, res) => {
     const { keys, values, session } = res.locals
     const connectionRequest = await ConnectionRequest.findByIdAndDelete(getValue(keys, values, "request")).populate([
@@ -128,6 +171,43 @@ app.put("/:request/mutual/accept", verifyToken(), verifyParams(["request"]), asy
 //     }
 //     return res.status(200).send(handler.success(connectionRequests))
 // })
+
+
+/**
+ * @swagger
+ * /api/connection-request:
+ *   get:
+ *     summary: Retrieve connection requests
+ *     description: Retrieve connection requests sent to the authenticated user.
+ *     security:
+ *       - jwt: []
+ *     responses:
+ *       '200':
+ *         description: A successful response with an array of connection requests.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/ConnectionRequest'
+ *       '401':
+ *         description: Unauthorized. Token is missing or invalid.
+ *       '404':
+ *         description: Not Found. No connection requests found.
+ *       '500':
+ *         description: Internal Server Error.
+ *     examples:
+ *       example1:
+ *         summary: Example of authorization header
+ *         value:
+ *           headers:
+ *             Authorization: Bearer <JWT-Token>
+ * definitions:
+ *   ConnectionRequest:
+ *     type: object
+ *     properties:
+ *       // Define properties of the ConnectionRequest object here
+ */
 
 app.get("/", verifyToken(), async (_, res) => {
     const { session } = res.locals
