@@ -50,7 +50,7 @@ const createRateLimit = () => rateLimit({
 app.set("io", io)
 
 app.use(cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://pslv-react-jsx.vercel.app/", "*"],
     credentials: true
 }))
 app.use(requestIP())
