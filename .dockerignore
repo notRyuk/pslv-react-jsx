@@ -29,6 +29,4 @@ test*.*
 build
 dist
 *.local
-*.env.*
-*.env
 package-lock.json
