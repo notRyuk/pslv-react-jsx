@@ -29,6 +29,7 @@ const registerFields = [
 ]
 
 /**
+<<<<<<< HEAD
  * @swagger
  * /auth/register:
  *   post:
@@ -69,6 +70,71 @@ const registerFields = [
  *       '401':
  *         description: Error during registration
  */
+=======
+* @swagger
+* /api/auth/register:
+*   post:
+*     summary: User registration
+*     description: Register a new user.
+*     requestBody:
+*       required: true
+*       content:
+*         multipart/form-data:
+*           schema:
+*             type: object
+*             properties:
+*               name:
+*                 type: object
+*                 properties:
+*                   first:
+*                     type: string
+*                   last:
+*                     type: string
+*               dob:
+*                 type: string
+*                 format: date
+*               email:
+*                 type: string
+*                 format: email
+*               phone:
+*                 type: string
+*               password:
+*                 type: string
+*               role:
+*                 type: string
+*     responses:
+*       '200':
+*         description: User registered successfully
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/UserSession'
+*       '401':
+*         description: Error occurred during registration
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/Error'
+*     security: []
+* components:
+*   schemas:
+*     UserSession:
+*       type: object
+*       properties:
+*         user:
+*           type: string
+*           description: The unique identifier of the registered user.
+*         token:
+*           type: string
+*           description: JWT token for the registered user's session.
+*     Error:
+*       type: object
+*       properties:
+*         message:
+*           type: string
+*           description: Description of the error occurred during registration.
+*/
+>>>>>>> 05b286b1649750a8783a34ebb41d68343d44afc4
 
 app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, handler), async (req, res) => {
     const { keys, values } = res.locals
@@ -123,6 +189,7 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
 
 // app.post("/register/institute")
 
+<<<<<<< HEAD
 /**
  * @swagger
  * /auth/login:
@@ -148,6 +215,60 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
  *       '404':
  *         description: User not found
  */
+=======
+
+/**
+* @swagger
+* /api/auth/login:
+*   post:
+*     summary: User login
+*     description: Authenticate user and generate session token.
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               email:
+*                 type: string
+*                 format: email
+*               password:
+*                 type: string
+*     responses:
+*       '200':
+*         description: User logged in successfully
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/UserSession'
+*       '401':
+*         description: Invalid email or password
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/Error'
+*     security: []
+* components:
+*   schemas:
+*     UserSession:
+*       type: object
+*       properties:
+*         user:
+*           type: string
+*           description: The unique identifier of the logged-in user.
+*         token:
+*           type: string
+*           description: JWT token for the user's session.
+*     Error:
+*       type: object
+*       properties:
+*         message:
+*           type: string
+*           description: Description of the error occurred during login.
+*/
+
+>>>>>>> 05b286b1649750a8783a34ebb41d68343d44afc4
 app.post("/login", verifyBody(["email", "password"], handler), async (_, res) => {
     const { keys, values } = res.locals
     const user = await User.findOne({ email: getValue(keys, values, "email") }).populate("admin")
@@ -171,6 +292,7 @@ app.post("/verify", verifyToken(handler), (_, res) => {
 })
 
 /**
+<<<<<<< HEAD
  * @swagger
  * /api/auth/get-user/:email:
  *   get:
@@ -215,6 +337,54 @@ app.post("/verify", verifyToken(handler), (_, res) => {
  *           type: string
  *           description: The email address of the user.
  */
+=======
+* @swagger
+* /api/auth/get-user/{email}:
+*   get:
+*     summary: Get user by email
+*     description: Retrieve user information by email.
+*     parameters:
+*       - in: path
+*         name: email
+*         required: true
+*         schema:
+*           type: string
+*         description: Email address of the user to retrieve.
+*     responses:
+*       '200':
+*         description: User information retrieved successfully
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       '404':
+*         description: User not found
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/Error'
+*     security: []
+* components:
+*   schemas:
+*     User:
+*       type: object
+*       properties:
+*         _id:
+*           type: string
+*           description: The unique identifier of the user.
+*         email:
+*           type: string
+*           format: email
+*           description: The email address of the user.
+*     Error:
+*       type: object
+*       properties:
+*         message:
+*           type: string
+*           description: Description of the error occurred when user is not found.
+*/
+
+>>>>>>> 05b286b1649750a8783a34ebb41d68343d44afc4
 
 app.get("/get-user/:email", verifyParams(["email"]), async (_, res) => {
     const { keys, values } = res.locals
