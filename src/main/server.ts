@@ -63,10 +63,13 @@ app.use(loggerMw)
 app.use("/api", apiRouter)
 app.use("/static/files", express.static(join(__dirname, "..", "..", "public")))
 
+app.get("/docker", (_, res) => res.send("This works"))
+
 app.use((err: Error, _: Request, res: Response) => {
     console.error(err.stack);
     res.status(500).send('Internal Server Error');
 });
+
 
 mongoose.connect(DB_URL)
     .then(() => {
