@@ -94,47 +94,6 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
     return res.status(200).send(handler.success(connectionRequest))
 });
 
-/**
- * @swagger
- * /connection-request/{type}:
- *    get:
- *     summary: Get connection requests by type
- *     description: Endpoint to get connection requests by type
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: type
- *         required: true
- *         schema:
- *           type: string
- *         description: Type of connection request
- *     responses:
- *       '200':
- *         description: Successful retrieval of connection requests
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/ConnectionRequest'
- *       '401':
- *         description: Unauthorized access
- *  components:
- *   schemas:
- *     ConnectionRequest:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *           description: The unique identifier of the connection request.
- *         from:
- *           type: string
- *           description: The ID of the user who sent the request.
- *         type:
- *           type: string
- *           description: The type of the connection request
- */
 app.get("/:type", verifyToken(), verifyParams(["type"]), async (_, res) => {
     const { keys, values, session } = res.locals
     const connectionRequests = await ConnectionRequest.find({
