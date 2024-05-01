@@ -85,7 +85,6 @@ const HomeComponent = () => {
                             {suggestIsLoading && <Loading style={{ padding: "1rem", height: "none" }} />}
                             {!suggestIsLoading && suggestedUser?.data?.length > 0 ? (
                                 <>
-                                    {console.log(suggestedUser.data)}
                                     {suggestedUser.data.map(eachUser => (
                                         <SuggestedUser user={eachUser} key={eachUser._id} suggestMutate={suggestMutate} />
                                     ))}
@@ -104,6 +103,7 @@ const HomeComponent = () => {
 
                     <div className="center-content content">
                         <PostOptions isPostChanged={isPostChanged} setIsPostChanged={setIsPostChanged}></PostOptions>
+                        {console.log(tempPosts)}
                         {tempPosts.reverse().map((eachPost) =>
                             <PostCard
                                 key={eachPost._id}

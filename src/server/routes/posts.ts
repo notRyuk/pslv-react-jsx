@@ -14,13 +14,19 @@ app.get("/", verifyToken(), async (_, res) => {
         token: process.env.KV_REST_API_TOKEN,
     });
 
-    const posts = await kv.hgetall("allPosts");
+    const posts = await kv.get("allPosts");
 
     if(posts){
-        
+        const postArray = Object.keys(posts).map(key=>posts[key]);
+        return res.status(200).send(handler.success(postArray));
     }
 
     const allPosts = await Post.find().populate({ path: "user", select: "-password" }).exec();
+    const setPosts = await kv.set(
+        "allPosts",
+        {...allPosts}
+    )
+    
     return res.status(200).send(handler.success(allPosts));
 });
 
