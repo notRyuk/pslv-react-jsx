@@ -57,6 +57,9 @@ const swaggerOptions = {
       },
     },
   },
+<<<<<<< HEAD
+  apis: ["./src/main/server.ts","./src/server/routes/achievements.ts","./src/server/routes/auth.ts" ,"./src/server/routes/company.ts","./src/server/routes/connection-request.ts","./src/server/routes/education.ts","./src/server/routes/connection-request.ts","./src/server/routes/institute.ts","./src/server/routes/institutes.ts"],
+=======
   apis: [
     "./src/main/server.ts",
     "./src/server/routes/achievement.ts",
@@ -92,6 +95,7 @@ const swaggerOptions = {
     "./src/server/routes/users.ts",
     "./src/server/routes/work.ts",
   ],
+>>>>>>> 05b286b1649750a8783a34ebb41d68343d44afc4
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

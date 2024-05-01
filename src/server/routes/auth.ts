@@ -29,6 +29,48 @@ const registerFields = [
 ]
 
 /**
+<<<<<<< HEAD
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     description: Endpoint to register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profilePhoto:
+ *                 type: string
+ *                 format: binary
+ *               name:
+ *                 type: object
+ *                 properties:
+ *                   first:
+ *                     type: string
+ *                   last:
+ *                     type: string
+ *               dob:
+ *                 type: string
+ *                 format: date
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: ["institute", "user"]
+ *     responses:
+ *       '200':
+ *         description: Successful registration
+ *       '401':
+ *         description: Error during registration
+ */
+=======
 * @swagger
 * /api/auth/register:
 *   post:
@@ -92,6 +134,7 @@ const registerFields = [
 *           type: string
 *           description: Description of the error occurred during registration.
 */
+>>>>>>> 05b286b1649750a8783a34ebb41d68343d44afc4
 
 app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, handler), async (req, res) => {
     const { keys, values } = res.locals
@@ -222,6 +265,52 @@ app.post("/verify", verifyToken(handler), (_, res) => {
 })
 
 /**
+<<<<<<< HEAD
+ * @swagger
+ * /api/auth/get-user/:email:
+ *   get:
+ *     summary: Get a user by email
+ *     description: Endpoint to get a user by email
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Email of the user to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful retrieval of the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       '401':
+ *         description: Unauthorized access
+ * 
+ *   components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the user.
+ *         name:
+ *           type: object
+ *           properties:
+ *             first:
+ *               type: string
+ *             last:
+ *               type: string
+ *           description: The name of the user.
+ *         email:
+ *           type: string
+ *           description: The email address of the user.
+ */
+=======
 * @swagger
 * /api/auth/get-user/{email}:
 *   get:
@@ -268,6 +357,7 @@ app.post("/verify", verifyToken(handler), (_, res) => {
 *           description: Description of the error occurred when user is not found.
 */
 
+>>>>>>> 05b286b1649750a8783a34ebb41d68343d44afc4
 
 app.get("/get-user/:email", verifyParams(["email"]), async (_, res) => {
     const { keys, values } = res.locals

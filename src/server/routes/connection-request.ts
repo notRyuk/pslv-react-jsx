@@ -23,6 +23,42 @@ const multer = Multer({
 })
 
 const required = ["to", "type"];
+
+/**
+ * @swagger
+ * /connection-request/create:
+ *   post:
+ *     summary: Create a connection request
+ *     description: Endpoint to create a new connection request
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *               to:
+ *                 type: string
+ *               institute:
+ *                 type: string
+ *               document:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       '200':
+ *         description: Connection request created successfully
+ *       '401':
+ *         description: Unauthorized access
+ *       '404':
+ *         description: Failed to create connection request
+ *       '422':
+ *         description: Unprocessable Entity
+ */
+
 app.post("/create", verifyToken(), multer.single("document"), verifyBody(required), async (req, res) => {
     const { keys, values, session } = res.locals;
     if (!Object.values(ConnectionTypes).includes(getValue(keys, values, "type"))) {
@@ -58,6 +94,47 @@ app.post("/create", verifyToken(), multer.single("document"), verifyBody(require
     return res.status(200).send(handler.success(connectionRequest))
 });
 
+/**
+ * @swagger
+ * /connection-request/{type}:
+ *    get:
+ *     summary: Get connection requests by type
+ *     description: Endpoint to get connection requests by type
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: type
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Type of connection request
+ *     responses:
+ *       '200':
+ *         description: Successful retrieval of connection requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ConnectionRequest'
+ *       '401':
+ *         description: Unauthorized access
+ *  components:
+ *   schemas:
+ *     ConnectionRequest:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the connection request.
+ *         from:
+ *           type: string
+ *           description: The ID of the user who sent the request.
+ *         type:
+ *           type: string
+ *           description: The type of the connection request
+ */
 app.get("/:type", verifyToken(), verifyParams(["type"]), async (_, res) => {
     const { keys, values, session } = res.locals
     const connectionRequests = await ConnectionRequest.find({
@@ -78,6 +155,30 @@ app.get("/:type", verifyToken(), verifyParams(["type"]), async (_, res) => {
 // })
 
 
+/**
+ * @swagger
+ * /connection-request/:request/ignore:
+ *   delete:
+ *     summary: Ignore a connection request
+ *     description: Endpoint to ignore a connection request
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: request
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the connection request to ignore
+ *     responses:
+ *       '200':
+ *         description: Connection request ignored successfully
+ *       '401': 
+ *         description: Unauthorized access
+ *       '404':
+ *         description: Connection request not found
+ */
+
 app.delete("/:request/ignore", verifyToken(), verifyParams(["request"]), async (_, res) => {
     const { keys, values } = res.locals
     const connectionRequest = await ConnectionRequest.findByIdAndDelete(getValue(keys, values, "request"))
@@ -86,6 +187,7 @@ app.delete("/:request/ignore", verifyToken(), verifyParams(["request"]), async (
     }
     return res.status(200).send(handler.success(connectionRequest))
 })
+
 
 /**
  * @swagger
@@ -101,7 +203,7 @@ app.delete("/:request/ignore", verifyToken(), verifyParams(["request"]), async (
  *         required: true
  *         description: The ID of the connection request to accept.
  *     security:
- *       - jwt: []
+ *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: A successful response with the accepted connection.
