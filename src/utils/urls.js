@@ -1,5 +1,5 @@
 
-export const serverPath = "http://localhost:6969"
+export const serverPath = import.meta.env.VITE_SERVER_PATH
 export const basePath = serverPath+"/api"
 
 export default {
