@@ -47,14 +47,29 @@ const swaggerOptions = {
         url: "http://localhost:6969",
       },
     ],
+    components: {
+      securitySchemes: {
+        jwt: {
+          type: "apiKey",
+          name: "Authorization",
+          in: "header",
+        },
+      },
+    },
   },
-  apis: ["./src/main/server.ts","./src/server/routes/achievements.ts"],
+  apis: [
+    "./src/main/server.ts",
+    "./src/server/routes/achievements.ts",
+    "./src/server/routes/auth.ts",
+    "./src/server/routes/companies.ts",
+    "./src/server/routes/address.ts",
+    "./src/server/routes/posts.ts",
+  ],
 };
 
-
-
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+
 
 const createRateLimit = () =>
   rateLimit({
