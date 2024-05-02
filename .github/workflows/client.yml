@@ -33,8 +33,8 @@ jobs:
     runs-on: self-hosted
     steps:
         - name: Pull image from docker hub
-          run: docker pull neam6009/propertywala_frontend:latest
+          run: docker pull notryuk/mascot-client:latest
         - name: Delete old container
-          run: docker rm -f propertyWala-frontend-container
+          run: docker rm -f notryuk/mascot-client-container
         - name: Run Docker Container
-          run: docker run -d -p 5173:80 --name propertyWala-frontend-container neam6009/propertywala_frontend
+          run: docker run -d -p 4173:4173 --name mascot-client-container notryuk/mascot-client:latest
