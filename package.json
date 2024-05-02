@@ -14,7 +14,8 @@
     "preview:client": "vite preview",
     "preview:server": "nodemon --config nodemon.build.json",
     "test:ts": "ts-node -r tsconfig-paths/register test.ts",
-    "test:js": "node -r tsconfig-paths/register test.js"
+    "test:js": "node -r tsconfig-paths/register test.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",

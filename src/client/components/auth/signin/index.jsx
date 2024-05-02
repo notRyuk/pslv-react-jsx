@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 import { checkUserAsync, selectError, selectLoggedInUser, selectLoginStatus } from '../authSlice';
 
-import Hash from '@utils/hashClient';
 import Loading from '../../loading';
 
 export default function SignIn() {
@@ -32,9 +31,9 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
     const email = data.get('email')
     const password = data.get('password')
-    const hashed = await Hash.create(password)
+    // const hashed = await Hash.create(password)
     dispatch(
-      checkUserAsync({ email, password: hashed })
+      checkUserAsync({ email, password })
     );
   };
   return (

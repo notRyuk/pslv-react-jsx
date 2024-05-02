@@ -28,7 +28,15 @@ const server = createServer(app)
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "http://localhost:5173",
+        origin: [
+            "http://localhost:5173", 
+            "https://pslv-react-jsx.vercel.app/", 
+            "https://zt7q67.tunnel.pyjam.as/",
+            "http://localhost:80/",
+            "http://172.235.25.83:80",
+            "http://172.235.25.83:6969",
+            "*"
+        ],
         credentials: true
     }
 })
@@ -57,6 +65,7 @@ app.use(cors({
         "http://localhost:80/",
         "http://172.235.25.83:80",
         "http://172.235.25.83:6969",
+        "*"
     ],
     credentials: true
 }))
@@ -87,3 +96,4 @@ mongoose.connect(DB_URL)
         })
     })
     .catch(logger.error)
+export default app
