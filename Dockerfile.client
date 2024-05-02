@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE  5173
 
-CMD ["npm", "run", "run:client"]
+CMD ["npm", "run", "dev:client"]
