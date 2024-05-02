@@ -28,7 +28,7 @@ const server = createServer(app)
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: [
+        origin:  [
             "http://localhost:5173", 
             "https://pslv-react-jsx.vercel.app/", 
             "https://zt7q67.tunnel.pyjam.as/",

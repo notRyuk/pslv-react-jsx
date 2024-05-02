@@ -7,7 +7,7 @@
     "build:server": "tsc -b tsconfig.node.json",
     "build:client": "vite build",
     "dev": "concurrently \"npm:dev:*\"",
-    "dev:client": "vite",
+    "dev:client": "vite --host",
     "dev:server": "nodemon --config nodemon.dev.json",
     "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "concurrently \"npm:preview:*\"",
