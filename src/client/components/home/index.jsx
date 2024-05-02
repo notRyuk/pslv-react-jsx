@@ -14,7 +14,7 @@ import './styles.scss';
 import { useGetter } from "../../hooks/fetcher";
 import SuggestedUser from "../cards/SuggestedUser";
 
-const HomeComponent = ({ role, user, connection, users, posts }) => {
+const HomeComponent = () => {
     const session = useSelector(selectSession);
     const suggestUrl = basePath + urls.user.suggestedUser.get
     const newsGetUrl = basePath + urls.news.find
@@ -103,6 +103,7 @@ const HomeComponent = ({ role, user, connection, users, posts }) => {
 
                     <div className="center-content content">
                         <PostOptions isPostChanged={isPostChanged} setIsPostChanged={setIsPostChanged}></PostOptions>
+                        {console.log(tempPosts)}
                         {tempPosts.reverse().map((eachPost) =>
                             <PostCard
                                 key={eachPost._id}

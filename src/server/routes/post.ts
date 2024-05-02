@@ -9,6 +9,8 @@ import Hash from "@utils/hash";
 import { getKeys, getValue, getValues } from "@utils/object";
 import { Router } from "express"
 import Multer from "multer";
+import { createClient } from "@vercel/kv";
+import { ObjectId } from "mongoose";
 
 const app = Router()
 const multer = Multer()
@@ -17,30 +19,56 @@ const handler = new PostHandler()
 const required = ["content.text"]
 app.post("/create", verifyToken(), multer.array("content.media"), verifyBody(required), async (req, res) => {
     const { keys, values, session } = res.locals;
-    const user = (session.user as IUser)._id.toString()
-    const files = req.files as Express.Multer.File[]
-    const fileUrls: string[] = []
+    const user = (session.user as IUser)._id.toString();
+    const files = req.files as Express.Multer.File[];
+    const fileUrls: string[] = [];
+    
+    // Process uploaded files
     for(const file of files) {
-        const originalName = file.originalname.split(".")
-        const mimeType = originalName.pop()
-        const fileName = Hash.create(user+"--"+originalName.join(".")).replace(/\//g, "--")
-        const url = await downloadFile(`${fileName}.${mimeType}`, user, file.buffer)
+        const originalName = file.originalname.split(".");
+        const mimeType = originalName.pop();
+        const fileName = Hash.create(user + "--" + originalName.join(".")).replace(/\//g, "--");
+        const url = await downloadFile(`${fileName}.${mimeType}`, user, file.buffer);
         if(url && url.length) {
-            fileUrls.push(url)
+            fileUrls.push(url);
         }
     }
+    
+    // Create the post
     const post = await Post.create({
         user,
         content: {
             text: getValue(keys, values, "content.text"),
             media: fileUrls
         }
-    })
+    });
+    
+    // If post creation failed
     if(!post) {
-        return res.status(404).send(handler.error(handler.STATUS_404))
+        return res.status(404).send(handler.error(handler.STATUS_404));
     }
-    res.status(200).send(handler.success(post))
-})
+    
+    // Update KV store with the new post data
+    const kv = createClient({
+        url: process.env.KV_REST_API_URL,
+        token: process.env.KV_REST_API_TOKEN,
+    });
+    
+    // Fetch existing posts from KV store
+    const allPosts = await kv.get("allPosts");
+    
+    // Update existingPosts with the new post
+    if(allPosts) {
+        const postArray = Object.keys(allPosts).map(key => allPosts[key]);
+        postArray.push(post); // Push the new post into the array
+        await kv.del("allPosts");
+        await kv.set("allPosts", {...postArray});
+    }
+
+    // Send success response with the created post
+    res.status(200).send(handler.success(post));
+});
+
 
 app.put("/:post/interact/:type", verifyToken(), verifyParams(["post", "type"]), async (req, res) => {
     const { keys, values, session } = res.locals
@@ -95,14 +123,49 @@ app.get("/:post/interactions/:type", verifyToken(), verifyParams(["post"]), asyn
     return res.status(200).send(interactions || [])
 })
 
-app.delete("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
-    const { keys, values } = res.locals
-    await Interaction.deleteMany({ post: getValue(keys, values, "id") });
-    const post = await Post.findByIdAndDelete(getValue(keys, values, "id"))
+app.delete("/:id", verifyToken(), verifyParams(["id"]), async (req, res) => {
+    const postId = req.params.id;
+    
+    // Delete interactions associated with the post
+    await Interaction.deleteMany({ post: postId });
+    
+    // Delete the post
+    const post = await Post.findByIdAndDelete(postId);
+    
+    // If post doesn't exist
     if (!post) {
-        return res.status(404).send(handler.error(handler.STATUS_404))
+        return res.status(404).send(handler.error(handler.STATUS_404));
     }
-    return res.status(200).send(handler.success(post))
-})
+
+    const kv = createClient({
+        url: process.env.KV_REST_API_URL,
+        token: process.env.KV_REST_API_TOKEN,
+    });
+
+    // Fetch existing posts from KV store
+    const allPosts = await kv.get("allPosts");
+    
+    // If KV store has posts
+    if (allPosts) {
+        
+        // Convert KV store object to array of posts
+        const postArray: any[] = Object.values(allPosts); // Define postArray as any[]
+
+        // Find index of post with specified ID in the array
+        const index = postArray.findIndex(post => String((post as { _id: ObjectId })._id) === postId);
+
+        // If post with specified ID found, remove it from the array
+        if (index !== -1) {
+            
+            console.log(postArray.length);
+            postArray.splice(index, 1);
+            await kv.del("allPosts");
+            await kv.set("allPosts", {...postArray});
+        }
+    }
+
+    // Send success response with the deleted post
+    return res.status(200).send(handler.success(post));
+});
 
 export default app
