@@ -28,13 +28,14 @@ const server = createServer(app)
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin:  [
-            "http://localhost:5173", 
-            "https://pslv-react-jsx.vercel.app/", 
+        origin: [
+            "http://localhost:5173",
+            "https://pslv-react-jsx.vercel.app/",
             "https://zt7q67.tunnel.pyjam.as/",
             "http://localhost:80/",
             "http://172.235.25.83:80",
             "http://172.235.25.83:6969",
+            "http://172.235.25.83:5173",
             "*"
         ],
         credentials: true
@@ -59,12 +60,13 @@ app.set("io", io)
 
 app.use(cors({
     origin: [
-        "http://localhost:5173", 
-        "https://pslv-react-jsx.vercel.app/", 
+        "http://localhost:5173",
+        "https://pslv-react-jsx.vercel.app/",
         "https://zt7q67.tunnel.pyjam.as/",
         "http://localhost:80/",
         "http://172.235.25.83:80",
         "http://172.235.25.83:6969",
+        "http://172.235.25.83:5173",
         "*"
     ],
     credentials: true
