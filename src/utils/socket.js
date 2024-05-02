@@ -1,6 +1,6 @@
 import { io } from "socket.io-client"
 
-const SOCKET_SERVER = "http://localhost:6969"
+const SOCKET_SERVER = import.meta.env.VITE_SOCKET_SERVER
 
 const socket = io(SOCKET_SERVER, {
     autoConnect: false
