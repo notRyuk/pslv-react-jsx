@@ -21,6 +21,8 @@ import { join } from "path"
 import { mw as requestIP } from "request-ip"
 import { Server } from "socket.io"
 import { initializeSocketIOTest } from "@server/socket/socket"
+import swaggerJsdoc from "swagger-jsdoc"
+import swaggerUi from "swagger-ui-express"
 
 
 const app = express()
@@ -82,6 +84,69 @@ app.use("/api", apiRouter)
 app.use("/static/files", express.static(join(__dirname, "..", "..", "public")))
 
 app.get("/docker", (_, res) => res.send("This works"))
+
+const swaggerOptions = {
+    swaggerDefinition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Library API",
+            version: "1.0.0",
+            description: "A simple Express Library API",
+        },
+        servers: [
+            {
+                url: "http://localhost:6969",
+            },
+        ],
+        components: {
+            securitySchemes: {
+                jwt: {
+                    type: "apiKey",
+                    name: "Authorization",
+                    in: "header",
+                },
+            },
+        },
+    },
+    apis: [
+        "./src/main/server.ts",
+        "./src/server/routes/achievement.ts",
+        "./src/server/routes/achievements.ts",
+        "./src/server/routes/address.ts",
+        "./src/server/routes/admin.ts",
+        "./src/server/routes/application.ts",
+        "./src/server/routes/applications.ts",
+        "./src/server/routes/auth.ts",
+        "./src/server/routes/chat.ts",
+        "./src/server/routes/companies.ts",
+        "./src/server/routes/company.ts",
+        "./src/server/routes/connection-request.ts",
+        "./src/server/routes/connection.ts",
+        "./src/server/routes/connections.ts",
+        "./src/server/routes/course.ts",
+        "./src/server/routes/education.ts",
+        "./src/server/routes/institute.ts",
+        "./src/server/routes/institutes.ts",
+        "./src/server/routes/interaction.ts",
+        "./src/server/routes/job.ts",
+        "./src/server/routes/jobs.ts",
+        "./src/server/routes/message.ts",
+        "./src/server/routes/news.ts",
+        "./src/server/routes/post.ts",
+        "./src/server/routes/posts.ts",
+        "./src/server/routes/profile.ts",
+        "./src/server/routes/reported-post.ts",
+        "./src/server/routes/reported-user.ts",
+        "./src/server/routes/skill.ts",
+        "./src/server/routes/skills.ts",
+        "./src/server/routes/user.ts",
+        "./src/server/routes/users.ts",
+        "./src/server/routes/work.ts",
+    ],
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
 app.use((err: Error, _: Request, res: Response) => {
     console.error(err.stack);

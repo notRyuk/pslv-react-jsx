@@ -7,11 +7,29 @@ import IUser from '@types_/user';
 import IAdmin from '@types_/user/admin';
 import Profile from '@server/models/user/profile';
 import Education from '@server/models/user/education';
+// import { createClient } from "@vercel/kv";
 
 const app = Router();
 const handler = new UserHandler();
 
 app.get('/get-all', verifyToken(), async (_, res) => {    
+
+
+    // const kv = createClient({
+    //     url: process.env.KV_REST_API_URL,
+    //     token: process.env.KV_REST_API_TOKEN,
+    // });
+
+    // const allUsers = await kv.hgetall("allUsers");
+
+    // if (allUsers) {
+    //     console.log("This is the recieved data " + allUsers);
+    // } else {
+    //     // const newUser = await kv.hset("user:me", set);
+    //     console.log("no data");
+    // }
+    // await kv.del('user:me');
+
     const users = await User.find();
     if(!users){
         return res.status(404).json(handler.error(handler.STATUS_404))

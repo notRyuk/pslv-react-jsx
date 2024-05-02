@@ -9,6 +9,87 @@ import { Router } from "express";
 const app = Router();
 const handler = new JobHandler()
 
+/**
+ * @swagger
+ * /api/job/create:
+ *   post:
+ *     summary: Create a new job posting
+ *     description: Create a new job posting in the database.
+ *     security:
+ *       - jwt: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               company:
+ *                 type: string
+ *               experienceYears:
+ *                 type: number
+ *               skills:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               endsAt:
+ *                 type: string
+ *                 format: date-time
+ *               isCompleted:
+ *                 type: boolean
+ *     responses:
+ *       '200':
+ *         description: A successful response with the created job posting.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/Job'
+ *       '400':
+ *         description: Bad request. Failed to create job posting.
+ *       '401':
+ *         description: Unauthorized. Token is missing or invalid.
+ *       '404':
+ *         description: Company not found.
+ *       '500':
+ *         description: Internal Server Error.
+ *     examples:
+ *       example1:
+ *         summary: Example of authorization header
+ *         value:
+ *           headers:
+ *             Authorization: Bearer <JWT-Token>
+ * definitions:
+ *   Job:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *       from:
+ *         type: string
+ *         description: User ID who posted the job.
+ *       title:
+ *         type: string
+ *       description:
+ *         type: string
+ *       company:
+ *         type: string
+ *       experienceYears:
+ *         type: number
+ *       skills:
+ *         type: array
+ *         items:
+ *           type: string
+ *       endsAt:
+ *         type: string
+ *         format: date-time
+ *       isCompleted:
+ *         type: boolean
+ */
+
 app.post("/create",
     verifyToken(),
     verifyBody(["title", "description", "company", "experienceYears"]),
@@ -44,6 +125,47 @@ app.post("/create",
         return res.status(200).json(handler.success(job));
     }
 )
+
+/**
+ * @swagger
+ * /api/job/{id}:
+ *   delete:
+ *     summary: Delete a job by ID
+ *     description: Delete a job from the database by its ID.
+ *     security:
+ *       - jwt: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the job to delete.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Successfully deleted the job.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/Job'
+ *       '404':
+ *         description: Job not found.
+ *       '401':
+ *         description: Unauthorized. Token is missing or invalid.
+ *       '500':
+ *         description: Internal Server Error.
+ *     examples:
+ *       example1:
+ *         summary: Example of authorization header
+ *         value:
+ *           headers:
+ *             Authorization: Bearer <JWT-Token>
+ * definitions:
+ *   Job:
+ *     type: object
+ *     properties:
+ *       // Define properties of the Job object here
+ */
 
 app.delete("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     const { keys, values } = res.locals

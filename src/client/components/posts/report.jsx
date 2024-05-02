@@ -46,10 +46,10 @@ const ReportPostButton = ({ post }) => {
         <div className="modal-dialog modal-md">
           <div className="modal-content" style={{ backgroundColor: "rgb(27, 39, 48)" }}>
             <div className="modal-header pb-0" style={{ color: "#fff" }}>
-              <p className="modal-title" id="exampleModalLabel">
+              <div className="modal-title" id="exampleModalLabel">
                 <h4 className="mb-3" style={{fontWeight:"600"}}>Report Content</h4>
                 <h6>Reason of Report</h6>
-              </p>
+              </div>
               <button
                 type="button"
                 className="btn-close btn-close-white"
