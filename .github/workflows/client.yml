@@ -35,6 +35,6 @@ jobs:
         - name: Pull image from docker hub
           run: sudo docker pull notryuk/mascot-client:latest
         - name: Delete old container
-          run: sudo docker rm -f mascot-server-container || true
+          run: sudo docker rm -f mascot-client-container || true
         - name: Run Docker Container
           run: sudo docker run -d -p 5173:5173 --name mascot-client-container notryuk/mascot-client:latest
