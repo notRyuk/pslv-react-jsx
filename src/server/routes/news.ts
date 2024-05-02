@@ -3,6 +3,8 @@ import { verifyAdmin, verifyBody, verifyParams, verifyToken } from "@server/midd
 import News from "@server/models/feed/news";
 import { getValue } from "@utils/object";
 import { Router } from "express";
+import { createClient } from "@vercel/kv";
+import { ObjectId } from "mongoose";
 
 const app = Router();
 const handler = new NewsHandler();
@@ -62,6 +64,21 @@ app.post("/create", verifyToken(), verifyAdmin(), verifyBody(required), async (_
     if (!news) {
         return res.status(404).send(handler.error(handler.STATUS_404));
     }
+    const kv = createClient({
+        url: process.env.KV_REST_API_URL,
+        token: process.env.KV_REST_API_TOKEN,
+    });
+
+    // Fetch existing posts from KV store
+    const allPosts = await kv.get("allNews");
+
+    // Update existingPosts with the new post
+    if (allPosts) {
+        const postArray = Object.keys(allPosts).map(key => allPosts[key]);
+        postArray.push(news); // Push the new post into the array
+        await kv.del("allNews");
+        await kv.set("allNews", { ...postArray });
+    }
     return res.status(200).send(handler.success(news));
 });
 
@@ -101,7 +118,22 @@ app.post("/create", verifyToken(), verifyAdmin(), verifyBody(required), async (_
 
 
 app.get("/", verifyToken(), async (_, res) => {
+    const kv = createClient({
+        url: process.env.KV_REST_API_URL,
+        token: process.env.KV_REST_API_TOKEN,
+    });
+
+    const posts = await kv.get("allNews");
+
+    if (posts) {
+        const postArray = Object.keys(posts).map(key => posts[key]);
+        return res.status(200).send(handler.success(postArray));
+    }
     const newsList = await News.find();
+    await kv.set(
+        "allPosts",
+        { ...newsList }
+    )
     return res.status(200).send(handler.success(newsList));
 });
 
@@ -283,12 +315,41 @@ app.put("/:id", verifyToken(), verifyAdmin(), verifyBody(required), async (req, 
  */
 
 
-app.delete("/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), async (_, res) => {
+app.delete("/:id", verifyToken(), verifyAdmin(), verifyParams(["id"]), async (req, res) => {
     const { keys, values } = res.locals
+    const newsID = getValue(keys, values, "id");
     const news = await News.findByIdAndDelete(getValue(keys, values, "id"));
     if (!news) {
         return res.status(404).send(handler.error(handler.STATUS_404));
     }
+
+    const kv = createClient({
+        url: process.env.KV_REST_API_URL,
+        token: process.env.KV_REST_API_TOKEN,
+    });
+
+    // Fetch existing posts from KV store
+    const allPosts = await kv.get("allNews");
+
+    // If KV store has posts
+    if (allPosts) {
+
+        // Convert KV store object to array of posts
+        const postArray: any[] = Object.values(allPosts); // Define postArray as any[]
+
+        // Find index of post with specified ID in the array
+        const index = postArray.findIndex(post => String((post as { _id: ObjectId })._id) === newsID);
+
+        // If post with specified ID found, remove it from the array
+        if (index !== -1) {
+
+            console.log(postArray.length);
+            postArray.splice(index, 1);
+            await kv.del("allNews");
+            await kv.set("allNews", { ...postArray });
+        }
+    }
+
     return res.status(200).send(handler.success(news));
 });
 
