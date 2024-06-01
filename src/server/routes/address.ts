@@ -8,6 +8,8 @@ const app = Router()
 const handler = new AddressHandler()
 
 const required = ["line1", "street", "city", "state", "pinCode"]
+
+
 app.post("/create", verifyToken(), verifyBody(required), async (_, res) => {
     const { keys, values } = res.locals
     const address = await Address.create({

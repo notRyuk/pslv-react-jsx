@@ -15,15 +15,13 @@ import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import classes from "./styles.module.scss";
 
-import Hash from '@utils/hashClient';
 
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import urls, { basePath } from '../../../../utils/urls';
 import Details from '../../details';
 import { selectCreatedUser } from '../authSlice';
-import { useGetter } from '../../../hooks/fetcher';
-import urls, { basePath } from '../../../../utils/urls';
-import axios from 'axios';
-import { toast } from 'react-toastify';
 
 export default function SignUp() {
   const [credential, setCredential] = useState({})
@@ -47,10 +45,10 @@ export default function SignUp() {
     const res = await axios.get(basePath + urls.auth.getUserByEmail.replace(":email", email))
     if (!Object.keys(res?.data?.data).includes("email")) {
       const password = data.get('password')
-      const hashed = await Hash.create(password)
+      // const hashed = await Hash.create(password)
       setCredential({
         email,
-        password: hashed,
+        password,
         role: selectedValue,
       })
       setCredentialAdded(true)

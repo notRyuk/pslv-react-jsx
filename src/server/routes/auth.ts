@@ -27,6 +27,72 @@ const registerFields = [
     "password",
     "role"
 ]
+
+/**
+* @swagger
+* /api/auth/register:
+*   post:
+*     summary: User registration
+*     description: Register a new user.
+*     requestBody:
+*       required: true
+*       content:
+*         multipart/form-data:
+*           schema:
+*             type: object
+*             properties:
+*               name:
+*                 type: object
+*                 properties:
+*                   first:
+*                     type: string
+*                   last:
+*                     type: string
+*               dob:
+*                 type: string
+*                 format: date
+*               email:
+*                 type: string
+*                 format: email
+*               phone:
+*                 type: string
+*               password:
+*                 type: string
+*               role:
+*                 type: string
+*     responses:
+*       '200':
+*         description: User registered successfully
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/UserSession'
+*       '401':
+*         description: Error occurred during registration
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/Error'
+*     security: []
+* components:
+*   schemas:
+*     UserSession:
+*       type: object
+*       properties:
+*         user:
+*           type: string
+*           description: The unique identifier of the registered user.
+*         token:
+*           type: string
+*           description: JWT token for the registered user's session.
+*     Error:
+*       type: object
+*       properties:
+*         message:
+*           type: string
+*           description: Description of the error occurred during registration.
+*/
+
 app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, handler), async (req, res) => {
     const { keys, values } = res.locals
     let user = new User({
@@ -78,7 +144,60 @@ app.post("/register", multer.single("profilePhoto"), verifyBody(registerFields, 
     }
 })
 
-// app.post("/register/institute")
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: User login
+ *     description: Login with email and password to authenticate user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Successful login. Returns a session token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/Session'
+ *       '401':
+ *         description: Unauthorized. Incorrect email or password.
+ *       '404':
+ *         description: User not found.
+ *       '500':
+ *         description: Internal Server Error.
+ *     examples:
+ *       example1:
+ *         summary: Example of login request body
+ *         value:
+ *           email: example@example.com
+ *           password: password123
+ * definitions:
+ *   Session:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *       user:
+ *         $ref: '#/definitions/User'
+ *       token:
+ *         type: string
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *   User:
+ *     type: object
+ *     
+ */
+
 
 app.post("/login", verifyBody(["email", "password"], handler), async (_, res) => {
     const { keys, values } = res.locals
@@ -101,6 +220,54 @@ app.post("/login", verifyBody(["email", "password"], handler), async (_, res) =>
 app.post("/verify", verifyToken(handler), (_, res) => {
     return res.status(200).send(handler.success(res.locals.session))
 })
+
+/**
+* @swagger
+* /api/auth/get-user/{email}:
+*   get:
+*     summary: Get user by email
+*     description: Retrieve user information by email.
+*     parameters:
+*       - in: path
+*         name: email
+*         required: true
+*         schema:
+*           type: string
+*         description: Email address of the user to retrieve.
+*     responses:
+*       '200':
+*         description: User information retrieved successfully
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       '404':
+*         description: User not found
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/Error'
+*     security: []
+* components:
+*   schemas:
+*     User:
+*       type: object
+*       properties:
+*         _id:
+*           type: string
+*           description: The unique identifier of the user.
+*         email:
+*           type: string
+*           format: email
+*           description: The email address of the user.
+*     Error:
+*       type: object
+*       properties:
+*         message:
+*           type: string
+*           description: Description of the error occurred when user is not found.
+*/
+
 
 app.get("/get-user/:email", verifyParams(["email"]), async (_, res) => {
     const { keys, values } = res.locals
