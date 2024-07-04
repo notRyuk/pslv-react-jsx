@@ -5,26 +5,25 @@ import {
     verifyParams,
     verifyToken,
 } from "@server/middleware/verify";
+import Achievement from "@server/models/achievement";
+import Address from "@server/models/address";
+import Interaction from "@server/models/feed/interaction";
+import Post from "@server/models/feed/post";
+import Institute from "@server/models/institute";
 import User from "@server/models/user";
 import Admin from "@server/models/user/admin";
 import Connection from "@server/models/user/connection";
 import ConnectionRequest from "@server/models/user/connection-request";
+import Education from "@server/models/user/education";
+import Profile from "@server/models/user/profile";
 import IUser from "@types_/user";
 import IConnection from "@types_/user/connection";
 import IConnectionRequest from "@types_/user/connection-request";
+import ISession from "@types_/user/session";
+import { downloadFile } from "@utils/file";
 import { getValue } from "@utils/object";
 import { Request, Response, Router } from "express";
-import ISession from "@types_/user/session";
 import Multer from "multer";
-import { downloadFile } from "@utils/file";
-import Post from "@server/models/feed/post";
-import Interaction from "@server/models/feed/interaction";
-import Profile from "@server/models/user/profile";
-import Education from "@server/models/user/education";
-import Achievement from "@server/models/achievement";
-import Address from "@server/models/address";
-import Institute from "@server/models/institute";
-import { createClient } from "@vercel/kv";
 
 const app = Router();
 const handler = new UserHandler();
@@ -32,24 +31,6 @@ const multer = Multer();
 
 app.get("/all-users", verifyToken(), async (_, res) => {
     const { session } = res.locals;
-
-    const kv = createClient({
-        url: process.env.KV_REST_API_URL,
-        token: process.env.KV_REST_API_TOKEN,
-    });
-
-    const suggestedUsers = await kv.hgetall(
-        `suggestedUsers:${(session.user as IUser)._id}`
-    );
-
-    if (suggestedUsers) {
-        const usersArray = Object.keys(suggestedUsers).map(key => suggestedUsers[key]);
-        return res.status(200).send(handler.success(usersArray));
-    }
-    else {
-        // const newUser = await kv.hset("user:me", set);
-        console.log("no data");
-    }
     // await kv.del(`suggestedUsers:${(session.user as IUser)._id}`);
     const connectionRequests = await ConnectionRequest.find({
         $or: [
@@ -94,16 +75,7 @@ app.get("/all-users", verifyToken(), async (_, res) => {
     const allUsers = await User.find({
         _id: { $nin: [(session.user as IUser)._id, ...allUserIds] },
     });
-
-    const suggestedUsersHashKey = `suggestedUsers:${
-        (session.user as IUser)._id
-    }`;
-
-    await kv.hset(
-        suggestedUsersHashKey,
-        {...allUsers}
-    );
-
+    
     return res.status(200).send(handler.success(allUsers));
 });
 

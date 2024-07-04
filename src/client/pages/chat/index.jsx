@@ -1,15 +1,14 @@
-import React, { useRef, useState } from "react";
-import ChatBox from "../../components/chatBox/ChatBox";
-import { useLocation } from "react-router-dom";
-import Conversation from "../../components/conversation/Conversation";
-import "./chat.css";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { io } from "socket.io-client";
-import { selectLoggedInUser, selectSession } from "../../components/auth/authSlice";
 import axios from "axios";
-import urls, { basePath } from "../../../utils/urls";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { io } from "socket.io-client";
+import urls, { basePath, socketServerPath } from "../../../utils/urls";
+import { selectLoggedInUser, selectSession } from "../../components/auth/authSlice";
+import ChatBox from "../../components/chatBox/ChatBox";
+import Conversation from "../../components/conversation/Conversation";
 import Loading from "../../components/loading";
+import "./chat.css";
 
 const Chat = () => {
   const location = useLocation()
@@ -25,37 +24,37 @@ const Chat = () => {
   const [receivedMessage, setReceivedMessage] = useState(null);
   const [isChatChanged, setIsChatChanged] = useState(false);
   const [loading, setLoading] = useState(true)
-  useEffect(()=>{
-    const getChat = async()=>{
-      try{
+  useEffect(() => {
+    const getChat = async () => {
+      try {
         const { data } = await axios.get(basePath + urls.chat.findChat.replace(":userId", userId), {
-            headers: {
-                authorization: `Bearer ${session.token}`
-            }
+          headers: {
+            authorization: `Bearer ${session.token}`
+          }
         });
-        if(Object.keys(data.data).length !== 0){
+        if (Object.keys(data.data).length !== 0) {
           setCurrentChat(data.data)
           return;
         }
-        else{
-          const res = await axios.post(basePath + urls.chat.create, {user : userId}, {
-              headers: {
-                  authorization: `Bearer ${session.token}`
-              }
+        else {
+          const res = await axios.post(basePath + urls.chat.create, { user: userId }, {
+            headers: {
+              authorization: `Bearer ${session.token}`
+            }
           })
 
-          if(res?.data?.data){
+          if (res?.data?.data) {
             setCurrentChat(res?.data?.data)
             setIsChatChanged(!isChatChanged)
             setLoading(true)
           }
         }
       }
-      catch(error){
+      catch (error) {
         console.log(error);
       }
     }
-    if(userId !== null) getChat();
+    if (userId !== null) getChat();
   }, [userId])
 
   // Get the chat in chat section
@@ -63,14 +62,14 @@ const Chat = () => {
     const getChats = async () => {
       try {
         const { data } = await axios.get(basePath + urls.chat.userChat, {
-            headers: {
-                authorization: `Bearer ${session.token}`
-            }
+          headers: {
+            authorization: `Bearer ${session.token}`
+          }
         });
         setChats(data.data);
       } catch (error) {
         console.log(error);
-      } finally{
+      } finally {
         setLoading(false)
       }
     };
@@ -79,7 +78,7 @@ const Chat = () => {
 
   // Connect to Socket.io
   useEffect(() => {
-    socket.current = io("ws://zt7q67.tunnel.pyjam.as");
+    socket.current = io(socketServerPath);
     socket.current.emit("new-user-add", user._id);
     socket.current.on("get-users", (users) => {
       setOnlineUsers(users);
@@ -88,8 +87,9 @@ const Chat = () => {
 
   // Send Message to socket server
   useEffect(() => {
-    if (sendMessage!==null) {
-      socket.current.emit("send-message", sendMessage);}
+    if (sendMessage !== null) {
+      socket.current.emit("send-message", sendMessage);
+    }
   }, [sendMessage]);
 
 
@@ -111,7 +111,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="Chat" style={{marginTop: "5rem"}}>
+    <div className="Chat" style={{ marginTop: "5rem" }}>
       {/* Left Side */}
       <div className="Left-side-chat">
         {/* <LogoSearch /> */}
@@ -131,9 +131,9 @@ const Chat = () => {
                   online={checkOnlineStatus(chat)}
                 />
               </div>
-            )): <span>
-                  No chats found!!
-                </span>}
+            )) : <span>
+              No chats found!!
+            </span>}
           </div>
         </div>
       </div>

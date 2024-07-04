@@ -3,30 +3,12 @@ import { verifyParams, verifyToken } from "@server/middleware/verify";
 import Post from "@server/models/feed/post";
 import { getValue } from "@utils/object";
 import { Router } from "express";
-import { createClient } from "@vercel/kv";
 
 const app = Router()
 const handler = new PostHandler()
 
 app.get("/", verifyToken(), async (_, res) => {
-    const kv = createClient({
-        url: process.env.KV_REST_API_URL,
-        token: process.env.KV_REST_API_TOKEN,
-    });
-
-    const posts = await kv.get("allPosts");
-
-    if (posts) {
-        const postArray = Object.keys(posts).map(key => posts[key]);
-        return res.status(200).send(handler.success(postArray));
-    }
-
     const allPosts = await Post.find().populate({ path: "user", select: "-password" }).exec();
-    await kv.set(
-        "allPosts",
-        { ...allPosts }
-    )
-
     return res.status(200).send(handler.success(allPosts));
 });
 
@@ -35,6 +17,8 @@ app.get("/:id", verifyToken(), verifyParams(["id"]), async (_, res) => {
     const posts = await Post.find({ user: getValue(keys, values, "id") }).populate({ path: "user", select: "-password" }).exec();
     return res.status(200).send(handler.success(posts || []))
 })
+
+
 app.get("/get-by-postId/:id", verifyToken(), verifyParams(["id"]), async (req, res) => {
     try {
         const postId = req.params.id;

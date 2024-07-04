@@ -1,5 +1,5 @@
 import PostHandler from "@handlers/feed/post";
-import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify"
+import { verifyBody, verifyParams, verifyToken } from "@server/middleware/verify";
 import Interaction from "@server/models/feed/interaction";
 import Post from "@server/models/feed/post";
 import { InteractionType } from "@types_/feed/interaction";
@@ -7,10 +7,8 @@ import IUser from "@types_/user";
 import { downloadFile } from "@utils/file";
 import Hash from "@utils/hash";
 import { getKeys, getValue, getValues } from "@utils/object";
-import { Router } from "express"
+import { Router } from "express";
 import Multer from "multer";
-import { createClient } from "@vercel/kv";
-import { ObjectId } from "mongoose";
 
 const app = Router()
 const multer = Multer()
@@ -46,23 +44,6 @@ app.post("/create", verifyToken(), multer.array("content.media"), verifyBody(req
     // If post creation failed
     if (!post) {
         return res.status(404).send(handler.error(handler.STATUS_404));
-    }
-
-    // Update KV store with the new post data
-    const kv = createClient({
-        url: process.env.KV_REST_API_URL,
-        token: process.env.KV_REST_API_TOKEN,
-    });
-
-    // Fetch existing posts from KV store
-    const allPosts = await kv.get("allPosts");
-
-    // Update existingPosts with the new post
-    if (allPosts) {
-        const postArray = Object.keys(allPosts).map(key => allPosts[key]);
-        postArray.push(post); // Push the new post into the array
-        await kv.del("allPosts");
-        await kv.set("allPosts", { ...postArray });
     }
 
     // Send success response with the created post
@@ -136,34 +117,6 @@ app.delete("/:id", verifyToken(), verifyParams(["id"]), async (req, res) => {
     if (!post) {
         return res.status(404).send(handler.error(handler.STATUS_404));
     }
-
-    const kv = createClient({
-        url: process.env.KV_REST_API_URL,
-        token: process.env.KV_REST_API_TOKEN,
-    });
-
-    // Fetch existing posts from KV store
-    const allPosts = await kv.get("allPosts");
-
-    // If KV store has posts
-    if (allPosts) {
-
-        // Convert KV store object to array of posts
-        const postArray: any[] = Object.values(allPosts); // Define postArray as any[]
-
-        // Find index of post with specified ID in the array
-        const index = postArray.findIndex(post => String((post as { _id: ObjectId })._id) === postId);
-
-        // If post with specified ID found, remove it from the array
-        if (index !== -1) {
-
-            console.log(postArray.length);
-            postArray.splice(index, 1);
-            await kv.del("allPosts");
-            await kv.set("allPosts", { ...postArray });
-        }
-    }
-
     // Send success response with the deleted post
     return res.status(200).send(handler.success(post));
 });

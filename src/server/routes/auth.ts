@@ -205,6 +205,7 @@ app.post("/login", verifyBody(["email", "password"], handler), async (_, res) =>
     if (!user) {
         return res.status(404).send(handler.error(handler.STATUS_404))
     }
+    console.log(getValue(keys, values, "password") as string, user.password)
     if (!Hash.simpleCompare(getValue(keys, values, "password") as string, user.password)) {
         return res.status(401).send(handler.error("Incorrect password, try again."))
     }
